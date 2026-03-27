@@ -8,6 +8,7 @@ struct Dice
 {
 	int count;			//주사위 갯수
 	int side;			//주사위 면 수
+	int id;				//주사위 ID
 
 
 	Dice(int counts = 1, int sides = 6) : count(counts), side(sides) {}
