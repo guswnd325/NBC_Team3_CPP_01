@@ -7,7 +7,7 @@
 
 enum class BuyStatus
 {
-	Success, // 판매 성공
+	Success, // 구매 성공
 	Possessed,
 	InsufficientGold // 골드 부족해서 못삼 ㅠㅠ
 };
@@ -17,6 +17,6 @@ class ShopManager
 private:
 
 public:
-	static BuyStatus BuyItem(int index, Character* character);
+	BuyStatus BuyItem(int index, Character* character);
 };
 
