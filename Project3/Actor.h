@@ -7,7 +7,7 @@ class Actor
 {
 private:
 	std::string name;
-	int hp, gold, atk, def, exp;
+	int hp, atk, def, exp;
 public:
 	void SetName(std::string name) { this -> name = name; }
 	std::string GetName() { return name; }
@@ -17,9 +17,6 @@ public:
 	void SetHP(int value) { hp = value; }
 	int GetHP() { return hp; }
 	
-	void SetGold(int value) { gold = value; }
-	int GetGold() { return gold; }
-
 	void SetAtk(int value) { atk = value; }
 	int GetAtk() { return atk; }
 

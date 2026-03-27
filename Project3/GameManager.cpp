@@ -74,7 +74,8 @@ void GameManager::CreateCharacter()
 		break;
 	}
 
-	player = new Character(job);
+	player = new Character();
+	player->InitializeCharacter(job);
 }
 
 void GameManager::StartGame()

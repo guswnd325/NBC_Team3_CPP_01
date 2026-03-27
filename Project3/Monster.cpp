@@ -13,13 +13,13 @@ void Monster::InitializeMonster() {
 	{
 	case MonsterType::Slime:
 		SetName("슬라임");
-		SetHP(20); SetAtk(5); SetDef(0); SetExp(10); SetGold(5); 
+		SetHP(20); SetAtk(5); SetDef(0); SetExp(10); 
 		SetRewards(20, 1, 101, 4);
 		SetDiceCount(1); SetDiceSides(6);
 		break;
 	case MonsterType::Goblin:
 		SetName("고블린");
-		SetHP(40); SetAtk(10); SetDef(5); SetExp(20); SetGold(10);
+		SetHP(40); SetAtk(10); SetDef(5); SetExp(20);
 		SetRewards(50, 1, 102, 7);
 		SetDiceCount(2); SetDiceSides(4);
 		break;
@@ -30,7 +30,7 @@ void Monster::InitializeMonster() {
 		SetDiceCount(1); SetDiceSides(12);
 		break;
 	case MonsterType::Troll:
-		SetHP(80); SetAtk(20); SetDef(15); SetExp(40); SetGold(30);
+		SetHP(80); SetAtk(20); SetDef(15); SetExp(40);
 		SetRewards(200, 1, 105, 10);
 		SetDiceCount(2); SetDiceSides(6);
 		break;

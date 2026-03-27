@@ -131,12 +131,17 @@
     <ClInclude Include="CombatManager.h" />
     <ClInclude Include="DiceManager.h" />
     <ClInclude Include="GameManager.h" />
+    <ClInclude Include="Gears.h" />
     <ClInclude Include="Inventory.h" />
+    <ClInclude Include="ItemSpawnManager.h" />
     <ClInclude Include="Monster.h" />
     <ClInclude Include="MonsterManager.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="RestManager.h" />
     <ClInclude Include="ShopManager.h" />
+    <ClInclude Include="SlotItems.h" />
+    <ClInclude Include="StatDelta.h" />
+    <ClInclude Include="Tools.h" />
     <ClInclude Include="UpgradeManager.h" />
   </ItemGroup>
   <ItemGroup>
@@ -147,6 +152,7 @@
     <ClCompile Include="DiceManager.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="Inventory.cpp" />
+    <ClCompile Include="ItemSpawnManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Monster.cpp" />
     <ClCompile Include="MonsterManager.cpp" />

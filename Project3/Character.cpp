@@ -1,10 +1,26 @@
 #include "Character.h"
 
-Character::Character()
+void Character::InitializeCharacter(std::string name)
 {
+	SetName(name);
 }
 
-Character::Character(std::string job)
+Inventory & Character::GetInventory()
 {
-	SetName(job);
+	return inventory;
+}
+
+int Character::GetGold()
+{
+	return gold;
+}
+
+void Character::EquipGear(int id)
+{
+	inventory.Equip(id);
+}
+
+void Character::UseDice(int id)
+{
+	inventory.UseDice(id);
 }

@@ -55,6 +55,9 @@
     <Filter Include="소스 파일\MonsterManager">
       <UniqueIdentifier>{cc2e44c1-3ae3-4c05-a11a-3f6cd3af9dc2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Tools">
+      <UniqueIdentifier>{93b0e6e2-5ff7-4dcb-a103-bed7546d90d8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actor.h">
@@ -99,6 +102,21 @@
     <ClInclude Include="MonsterManager.h">
       <Filter>소스 파일\MonsterManager</Filter>
     </ClInclude>
+    <ClInclude Include="Tools.h">
+      <Filter>소스 파일\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="StatDelta.h">
+      <Filter>소스 파일\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="SlotItems.h">
+      <Filter>소스 파일\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemSpawnManager.h">
+      <Filter>소스 파일\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="Gears.h">
+      <Filter>소스 파일\Item</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Character.cpp">
@@ -142,6 +160,9 @@
     </ClCompile>
     <ClCompile Include="MonsterManager.cpp">
       <Filter>소스 파일\MonsterManager</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemSpawnManager.cpp">
+      <Filter>소스 파일\Item</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
