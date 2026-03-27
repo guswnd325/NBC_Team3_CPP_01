@@ -1,0 +1,123 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="헤더 파일">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="소스 파일\Character">
+      <UniqueIdentifier>{7e8a79b5-b11f-42ab-b2da-9bda65a02ccf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Monster">
+      <UniqueIdentifier>{31494023-75a6-4db9-8e31-dd8cbbb4e65b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\GameManager">
+      <UniqueIdentifier>{db8eb44e-cb20-4363-8673-37968df27e61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Shop">
+      <UniqueIdentifier>{e349ff5b-05dc-4589-9a30-9058fcdf3ac3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Item">
+      <UniqueIdentifier>{bd226476-91fe-4e66-bac5-1b1f9704077d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Rendering">
+      <UniqueIdentifier>{59f40a36-656e-4cb8-9b41-628cb866c05a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Dice">
+      <UniqueIdentifier>{8ac9e3f5-7383-45b3-bc81-8cf9ea387951}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Inventory">
+      <UniqueIdentifier>{c93d262d-5028-45c9-856b-92ccea429316}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Combat">
+      <UniqueIdentifier>{6a97ea3f-badb-44ba-9378-602d884ea0d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Rest">
+      <UniqueIdentifier>{3584c8d2-3435-4d94-8a37-e00aeee1cf3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Upgrade">
+      <UniqueIdentifier>{16786307-28c0-4dd0-9b81-abf1fd90224d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Actor">
+      <UniqueIdentifier>{f94dc105-58d9-4261-bdb3-9774a3fb11e1}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Actor.h">
+      <Filter>소스 파일\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="Character.h">
+      <Filter>소스 파일\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Monster.h">
+      <Filter>소스 파일\Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseItem.h">
+      <Filter>소스 파일\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="DiceManager.h">
+      <Filter>소스 파일\Dice</Filter>
+    </ClInclude>
+    <ClInclude Include="Inventory.h">
+      <Filter>소스 파일\Inventory</Filter>
+    </ClInclude>
+    <ClInclude Include="CombatManager.h">
+      <Filter>소스 파일\Combat</Filter>
+    </ClInclude>
+    <ClInclude Include="UpgradeManager.h">
+      <Filter>소스 파일\Upgrade</Filter>
+    </ClInclude>
+    <ClInclude Include="RestManager.h">
+      <Filter>소스 파일\Rest</Filter>
+    </ClInclude>
+    <ClInclude Include="ShopManager.h">
+      <Filter>소스 파일\Shop</Filter>
+    </ClInclude>
+    <ClInclude Include="GameManager.h">
+      <Filter>소스 파일\GameManager</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Character.cpp">
+      <Filter>소스 파일\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Monster.cpp">
+      <Filter>소스 파일\Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseItem.cpp">
+      <Filter>소스 파일\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="DiceManager.cpp">
+      <Filter>소스 파일\Dice</Filter>
+    </ClCompile>
+    <ClCompile Include="Inventory.cpp">
+      <Filter>소스 파일\Inventory</Filter>
+    </ClCompile>
+    <ClCompile Include="CombatManager.cpp">
+      <Filter>소스 파일\Combat</Filter>
+    </ClCompile>
+    <ClCompile Include="UpgradeManager.cpp">
+      <Filter>소스 파일\Upgrade</Filter>
+    </ClCompile>
+    <ClCompile Include="RestManager.cpp">
+      <Filter>소스 파일\Rest</Filter>
+    </ClCompile>
+    <ClCompile Include="ShopManager.cpp">
+      <Filter>소스 파일\Shop</Filter>
+    </ClCompile>
+    <ClCompile Include="GameManager.cpp">
+      <Filter>소스 파일\GameManager</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
