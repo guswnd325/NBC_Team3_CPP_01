@@ -17,9 +17,10 @@ void CombatManager::GenerateAreaChoices()
 
 void CombatManager::DisplayChoices()
 {
-    std::cout << "\n================================" << std::endl;
-    std::cout << "   이동할 지역을 선택하세요" << std::endl;
-    std::cout << "================================" << std::endl;
+    std::cout << "┌───────────────────────────────────────────┐" << std::endl;
+    std::cout << "│          ◈ 탐험 지역 선택 ◈           │" << std::endl;
+    std::cout << "├───────────────────────────────────────────┤" << std::endl;
+    std::cout << "│  어디로 이동하시겠습니까?                 │" << std::endl;
 
     for (int i = 0; i < currentChoices.size(); ++i) {
         std::string englishName = currentChoices[i];
@@ -30,9 +31,9 @@ void CombatManager::DisplayChoices()
             koreanName = englishName; // 한국어가 없으면 영어라도 출력
         }
 
-        std::cout << " [" << i + 1 << "] " << koreanName << std::endl;
+        std::cout << "│ " << " [" << i + 1 << "] " << koreanName << "│ " << std::endl;
     }
-    std::cout << "--------------------------------" << std::endl;
+    std::cout << "└───────────────────────────────────────────┘" << std::endl;
 }
 
 //이거 반환 값 그대로 MonsterManager의 SpawnManager에 넣으면 됩니다
@@ -40,7 +41,7 @@ std::string CombatManager::SelectArea() {
     int input;
 
     while (true) {
-        std::cout << "이동할 지역 번호를 입력하세요 (1~3) : ";
+        std::cout << " > 이동할 좌표 입력하라 : ";
 
         // 1. 입력 성공 여부와 범위 확인
         if (std::cin >> input && input >= 1 && input <= 3) {

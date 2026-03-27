@@ -19,16 +19,16 @@ private:
 
     std::unordered_map<std::string, std::string> areaDisplayname =
     {
-        {"Forest", "숲"},
-        {"Desert", "사막"},
-        {"Cave", "동굴"},
-        {"Temple", "신전"},
-        {"Jungle", "정글"},
-        {"Mine", "폐광"},
-        {"Ocean", "해저"},
+        {"Forest", " 숲 "},
+        {"Desert", " 사막"},
+        {"Cave", " 동굴"},
+        {"Temple", " 신전"},
+        {"Jungle", " 정글"},
+        {"Mine", " 폐광"},
+        {"Ocean", " 해저"},
         {"Alley", "뒷골목"},
-        {"Mountain", "산"},
-        {"Nest", "둥지"}
+        {"Mountain", " 산 "},
+        {"Nest", " 둥지"}
     };
 
     //플레이어에게 보여줄 선택지 갯수
