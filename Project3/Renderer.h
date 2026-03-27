@@ -4,6 +4,7 @@ class Renderer
 public:
     void RenderMenu();                            // 메뉴 출력
     void RenderCreatePlayer();
+    void RenderMainMenu();
     void Clear();                                 // 화면 초기화
 
 public:

@@ -5,7 +5,6 @@ Character::Character()
 }
 
 Character::Character(std::string job)
-	: job(job)
 {
-
+	SetName(job);
 }

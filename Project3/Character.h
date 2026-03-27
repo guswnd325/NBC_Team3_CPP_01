@@ -1,10 +1,9 @@
 #pragma once
 #include <string>
+#include "Actor.h"
 
-class Character
+class Character : public Actor
 {
-private:
-	std::string job;
 public:
 	Character();
 	Character(std::string job);

@@ -24,6 +24,18 @@ void Renderer::RenderCreatePlayer()
     std::cout << "입력 : ";
 }
 
+void Renderer::RenderMainMenu()
+{
+    std::cout << "====================" << std::endl;
+    std::cout << "   나의 캐릭터 직업 정하기   " << std::endl;
+    std::cout << "====================" << std::endl;
+    std::cout << "1. 탐사" << std::endl;
+    std::cout << "2. 상점" << std::endl;
+    std::cout << "3. 휴식" << std::endl;
+    std::cout << "====================" << std::endl;
+    std::cout << "입력 : ";
+}
+
 void Renderer::Clear()
 {
     system("cls");
