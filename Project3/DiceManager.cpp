@@ -1,4 +1,5 @@
 #include "DiceManager.h"
+#include "Character.h"
 #include <windows.h>
 #include <mmsystem.h>
 

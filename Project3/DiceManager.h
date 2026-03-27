@@ -5,7 +5,6 @@
 #include "Actor.h"
 
 
-
 struct Dice
 {
 	int side;			//주사위 면 수
@@ -15,7 +14,7 @@ struct Dice
 
 	int GetId()
 	{
-		return id;
+		return side;
 	}
 
 	int GetSide()
