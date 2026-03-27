@@ -49,6 +49,9 @@
     <Filter Include="소스 파일\Actor">
       <UniqueIdentifier>{f94dc105-58d9-4261-bdb3-9774a3fb11e1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\BattleManager">
+      <UniqueIdentifier>{199cd856-5939-4002-8fa5-9be8b76e5ce2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actor.h">
@@ -84,6 +87,12 @@
     <ClInclude Include="GameManager.h">
       <Filter>소스 파일\GameManager</Filter>
     </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>소스 파일\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="BattleManager.h">
+      <Filter>소스 파일\BattleManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Character.cpp">
@@ -118,6 +127,12 @@
     </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>소스 파일\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="BattleManager.cpp">
+      <Filter>소스 파일\BattleManager</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

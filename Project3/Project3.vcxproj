@@ -126,18 +126,21 @@
   <ItemGroup>
     <ClInclude Include="Actor.h" />
     <ClInclude Include="BaseItem.h" />
+    <ClInclude Include="BattleManager.h" />
     <ClInclude Include="Character.h" />
     <ClInclude Include="CombatManager.h" />
     <ClInclude Include="DiceManager.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="Inventory.h" />
     <ClInclude Include="Monster.h" />
+    <ClInclude Include="Renderer.h" />
     <ClInclude Include="RestManager.h" />
     <ClInclude Include="ShopManager.h" />
     <ClInclude Include="UpgradeManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BaseItem.cpp" />
+    <ClCompile Include="BattleManager.cpp" />
     <ClCompile Include="Character.cpp" />
     <ClCompile Include="CombatManager.cpp" />
     <ClCompile Include="DiceManager.cpp" />
@@ -145,6 +148,7 @@
     <ClCompile Include="Inventory.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Monster.cpp" />
+    <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="RestManager.cpp" />
     <ClCompile Include="ShopManager.cpp" />
     <ClCompile Include="UpgradeManager.cpp" />

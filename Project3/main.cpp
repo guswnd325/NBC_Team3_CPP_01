@@ -1,9 +1,12 @@
 #include <iostream>
 
+#include "GameManager.h"
+
 using namespace std;
 
 int main(void)
 {
-	cout << "Hello, New team 3" << endl;
+	GameManager::GetInstance()->Run();
+
 	return 0;
 }
