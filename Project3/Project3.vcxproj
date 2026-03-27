@@ -133,6 +133,7 @@
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="Inventory.h" />
     <ClInclude Include="Monster.h" />
+    <ClInclude Include="MonsterManager.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="RestManager.h" />
     <ClInclude Include="ShopManager.h" />
@@ -148,6 +149,7 @@
     <ClCompile Include="Inventory.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Monster.cpp" />
+    <ClCompile Include="MonsterManager.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="RestManager.cpp" />
     <ClCompile Include="ShopManager.cpp" />

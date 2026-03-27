@@ -52,6 +52,9 @@
     <Filter Include="소스 파일\BattleManager">
       <UniqueIdentifier>{199cd856-5939-4002-8fa5-9be8b76e5ce2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\MonsterManager">
+      <UniqueIdentifier>{cc2e44c1-3ae3-4c05-a11a-3f6cd3af9dc2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actor.h">
@@ -93,6 +96,9 @@
     <ClInclude Include="BattleManager.h">
       <Filter>소스 파일\BattleManager</Filter>
     </ClInclude>
+    <ClInclude Include="MonsterManager.h">
+      <Filter>소스 파일\MonsterManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Character.cpp">
@@ -133,6 +139,9 @@
     </ClCompile>
     <ClCompile Include="BattleManager.cpp">
       <Filter>소스 파일\BattleManager</Filter>
+    </ClCompile>
+    <ClCompile Include="MonsterManager.cpp">
+      <Filter>소스 파일\MonsterManager</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

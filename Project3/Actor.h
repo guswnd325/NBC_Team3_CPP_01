@@ -9,6 +9,7 @@ private:
 	std::string name;
 	int hp, gold, atk, def, exp;
 public:
+	void SetName(std::string name) { this -> name = name; }
 	std::string GetName() { return name; }
 	
 	bool IsDead() { return hp <= 0; }
