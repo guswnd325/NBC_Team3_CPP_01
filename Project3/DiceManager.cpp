@@ -1,4 +1,4 @@
-ï»¿#include "DiceManager.h"
+#include "DiceManager.h"
 #include <windows.h>
 #include <mmsystem.h>
 
@@ -24,7 +24,7 @@ int DiceManager::Roll(const Dice& diceInfo)
 	int totalSum = 0;
 	std::uniform_int_distribution<int> dis(1, diceInfo.side);
 
-	for (int i = 0; i < diceInfo.count; i++)
+	for (int i = 0; i < 2; i++)
 	{
 		int roll = dis(gen);
 		totalSum += roll;
@@ -32,9 +32,9 @@ int DiceManager::Roll(const Dice& diceInfo)
 		std::cout << "[ " << roll << " ]";
 	}
 
-	//ìµœì¢… ì£¼ì‚¬ìœ„ í•© ê²°ê³¼
+	//ÃÖÁ¾ ÁÖ»çÀ§ ÇÕ °á°ú
 
-	std::cout << "[ì´í•© : " << totalSum << "] " << std::endl;
+	std::cout << "[ÃÑÇÕ : " << totalSum << "] " << std::endl;
 	return totalSum;
 }
 
@@ -42,6 +42,6 @@ void DiceManager::UpgradeDice(Dice& targetDice, int amount)
 {
 	targetDice.side += amount;
 
-	std::cout << "ì£¼ì‚¬ìœ„ì˜ ìµœëŒ€ ìˆ˜ì¹˜ê°€ " << targetDice.side << " (ìœ¼)ë¡œ ì¦ê°€í–ˆìŠµë‹ˆë‹¤." << std::endl;
+	std::cout << "ÁÖ»çÀ§ÀÇ ÃÖ´ë ¼öÄ¡°¡ " << targetDice.side << " (À¸)·Î Áõ°¡Çß½À´Ï´Ù." << std::endl;
 
 }
