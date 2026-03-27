@@ -82,7 +82,7 @@ int Inventory::GetInventoryGearIndex(int id)
 			return i;
 		}
 	}
-	return -1;
+	return NOT_FOUND;
 }
 
 int Inventory::GetInventoryDiceIndex(int id)
@@ -94,7 +94,7 @@ int Inventory::GetInventoryDiceIndex(int id)
 			return i;
 		}
 	}
-	return -1;
+	return NOT_FOUND;
 }
 
 bool Inventory::AddGear(BaseItem* gear)
