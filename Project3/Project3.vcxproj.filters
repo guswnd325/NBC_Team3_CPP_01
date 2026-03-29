@@ -58,6 +58,9 @@
     <Filter Include="소스 파일\Tools">
       <UniqueIdentifier>{93b0e6e2-5ff7-4dcb-a103-bed7546d90d8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Audio">
+      <UniqueIdentifier>{4f4e7a4e-3528-4a8c-b73d-8d79b1a34f80}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actor.h">
@@ -117,6 +120,9 @@
     <ClInclude Include="Gears.h">
       <Filter>소스 파일\Item</Filter>
     </ClInclude>
+    <ClInclude Include="AudioManager.h">
+      <Filter>소스 파일\Audio</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Character.cpp">
@@ -163,6 +169,9 @@
     </ClCompile>
     <ClCompile Include="ItemSpawnManager.cpp">
       <Filter>소스 파일\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioManager.cpp">
+      <Filter>소스 파일\Audio</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
