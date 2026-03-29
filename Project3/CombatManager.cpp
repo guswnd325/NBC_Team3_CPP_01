@@ -70,12 +70,12 @@ void CombatManager::ReduceHp(Actor* attacker, Actor* defender)
     if (newHealth < 0) newHealth = 0;
 
     defender->SetHP(newHealth);
-    std::cout << defender->GetName() << "의 남은 HP: " << defender->GetHP() << std::endl;
+    std::cout << defender->GetName() << "의 남은 HP: " << defender->GetHP( ) << std::endl;
 }
 
 
 //게임 매니저에서 이것만 호출하면 됩니다
-void CombatManager::Run(Actor* player)
+void CombatManager::Run(Character* player)
 {
     GenerateAreaChoices();
     DisplayChoices();

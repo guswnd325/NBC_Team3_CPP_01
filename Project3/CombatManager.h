@@ -49,7 +49,7 @@ public:
         battleManager = new BattleManager(r);
     };
 
-    ~CombatManager() { delete battleManager; }
+    ~CombatManager() {delete battleManager;}
 
     //맵 무작위 생성 (3개)
     void GenerateAreaChoices();
@@ -60,7 +60,7 @@ public:
 
 
     //맵을 무작위로 생성하고, 선택지 보여주는 함수
-    void Run(Actor* player);
+    void Run(Character* player);
 
     //체력깍는 로직
     void ReduceHp(Actor* actor, Actor* monster);
