@@ -1,7 +1,8 @@
 #pragma once
 #include "Character.h"
 #include "Renderer.h"
-#include "BattleManager.h"
+
+#include "MonsterManager.h"
 #include "CombatManager.h"
 #include "ShopManager.h"
 #include "RestManager.h"
@@ -14,6 +15,7 @@ private:
 	Character* player;
 	Renderer* renderer;
 
+	MonsterManager* monsterManager;
 	CombatManager* combatManager;
 	ShopManager* shopManager;
 	RestManager* restManager;

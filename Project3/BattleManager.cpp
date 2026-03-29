@@ -5,3 +5,8 @@ BattleManager::BattleManager(Renderer* renderer)
 {
 
 }
+
+void BattleManager::Run(Character* player)
+{
+
+}
