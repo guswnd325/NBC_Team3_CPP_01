@@ -13,6 +13,7 @@ private:
 	int gold;
 public:
 	Character();
+	~Character();
 	void InitializeCharacter(std::string name);
 	Inventory* GetInventory();
 	int GetGold();

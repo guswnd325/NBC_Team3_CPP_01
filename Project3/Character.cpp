@@ -9,6 +9,11 @@ Character::Character()
 	gold = defaultGold;
 }
 
+Character::~Character()
+{
+	delete inventory;
+}
+
 void Character::InitializeCharacter(std::string name)
 {
 	SetName(name);
