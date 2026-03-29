@@ -74,7 +74,7 @@ void CombatManager::ReduceHp(Actor* attacker, Actor* defender)
 
 
 //게임 매니저에서 이것만 호출하면 됩니다
-void CombatManager::RandomDisplay()
+void CombatManager::Run(Actor* player)
 {
     GenerateAreaChoices();
     DisplayChoices();
@@ -82,28 +82,6 @@ void CombatManager::RandomDisplay()
 
 
 
-//전투 하나 작동 방식
-void CombatManager::Battle(Monster* monster, Actor* actor)
-{
-    int actorRoll = 10; //actor->RollDice(); //10은 더미 데이터
-    int monsterRoll = monster->RollAttackDice();
-
-    if (actorRoll > monsterRoll)
-    {
-        std::cout << "당신의 주사위 값이 더 높습니다. " << std::endl;
-        ReduceHp(actor, monster);
-    }
-    else if (actorRoll < monsterRoll)
-    {
-        std::cout << "당신의 주사위 값이 더 낮습니다. " << std::endl;
-        ReduceHp(monster, actor);
-    }
-    else
-    {
-        std::cout << "당신의 주사위 값과 동일합니다. " << std::endl;
-        ReduceHp(actor, monster);
-    }
-}
 
 
 
