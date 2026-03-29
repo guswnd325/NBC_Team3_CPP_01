@@ -1,4 +1,5 @@
 #include "CombatManager.h"
+#include "BattleManager.h"
 
 void CombatManager::GenerateAreaChoices()
 {
@@ -79,7 +80,11 @@ void CombatManager::Run(Actor* player)
     GenerateAreaChoices();
     DisplayChoices();
     std::string selectedArea = SelectArea();
-    monsterManager->SpawnMonster(selectedArea);
+    Monster* monster = monsterManager->SpawnMonster(selectedArea);
+
+    //monster주석처리
+    //battleManager->Run(player, monster);
+
  
 }
 

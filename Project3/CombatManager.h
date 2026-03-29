@@ -24,6 +24,7 @@ private:
     //Renderer Class에 대한 참조
     Renderer* renderer;
     MonsterManager* monsterManager;
+    BattleManager* battleManager;
 
     std::unordered_map<std::string, std::string> areaDisplayname =
     {
@@ -44,7 +45,11 @@ private:
 
 public:
     //Renderer Class을 포함한 생성자
-    CombatManager(Renderer* r, MonsterManager* m) : renderer(r), monsterManager(m){};
+    CombatManager(Renderer* r, MonsterManager* m) : renderer(r), monsterManager(m) {
+        battleManager = new BattleManager(r);
+    };
+
+    ~CombatManager() { delete battleManager; }
 
     //맵 무작위 생성 (3개)
     void GenerateAreaChoices();
