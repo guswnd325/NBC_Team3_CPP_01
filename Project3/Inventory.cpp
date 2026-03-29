@@ -1,5 +1,62 @@
 #include "Inventory.h"
 #include "BaseItem.h"
+#include "Character.h"
+#include "Renderer.h"
+
+Inventory::Inventory()
+{
+	for (int i = 0; i < (int)SlotItems::SlotMax; i++)
+	{
+		slots[i] = nullptr;
+	}
+}
+
+void Inventory::Run()
+{
+	while (true)
+	{
+		//renderer->RenderInventory();
+
+		int select;
+
+
+		std::cin >> select;
+
+		bool fail = std::cin.fail();
+
+		// 숫자 이외의 입력 및 0은 종료처리
+		if (!select || fail)
+		{
+			std::cin.clear();
+			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+			break;
+		}
+
+		// 장착 또는 교체
+
+		std::pair<EquipStatus, BaseItem * >status = EquipByIndex(select);
+		
+		std::string changedItem = status.second->GetName();
+
+		SlotItems type = status.second->GetType();
+		std::string prevItem = slots[(int)type]->GetName();
+		
+		switch (status.first)
+		{
+			case EquipStatus::Equip:
+			{
+				//renderer->RenderMessage("[" + itemName + "]" + "아이템을 장착하였습니다.");
+			}
+			break;
+			case EquipStatus::Changed:
+			{
+
+				//renderer->RenderMessage("[" + prevItem + "]" + "아이템을 " + "[" + changedItem + "]으로 교체하였습니다.");
+			}
+			break;
+		}
+	}
+}
 
 const std::vector<ItemSlot> &Inventory::GetGearStorege()
 {
@@ -24,31 +81,33 @@ void Inventory::Release()
 	}
 }
 
-EquipStatus Inventory::Equip(int index)
+std::pair<EquipStatus, BaseItem *> Inventory::EquipByIndex(int index)
 {
-	// 장비 착용 여부 확인
-	// user
 	BaseItem* gear = gearStorege[index].item;
 
 	int type = (int)gear->GetType();
+
+	// 문제없이 장비 착용
 	if (nullptr == slots[(int)type])
 	{
 		slots[(int)type] = gear;
-		return EquipStatus::Equip;
+		return { EquipStatus::Equip, gear };
 	}
 
+	// 같은 장비로 교체하는 경우
 	if (slots[(int)type]->GetName() == gear->GetName())
 	{
-		return EquipStatus::Overlap;
+		return { EquipStatus::Overlap, gear };
 	}
-	else // 장비 장착 중이지만, 다른 장비로 교체하는 경우
+	// 장비 장착 중이지만, 다른 장비로 교체하는 경우
+	else 
 	{
 		slots[(int)type] = gear;
-		return EquipStatus::Changed;
+		return { EquipStatus::Changed, gear };
 	}
 }
 
-EquipStatus Inventory::Equip(BaseItem* gear)
+EquipStatus Inventory::EquipByBaseItem(BaseItem* gear)
 {
 
 	// 장비 착용 여부 확인
@@ -116,7 +175,7 @@ bool Inventory::AddGear(BaseItem* gear)
 	// 장착중인 아이템 없으면 자동 장착
 	if (slots[(int)type] == nullptr)
 	{
-		Equip(gear);
+		EquipByBaseItem(gear);
 		return true; // 자동 장착된 경우 True 반환
 	}
 

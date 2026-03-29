@@ -1,11 +1,17 @@
 #include "Character.h"
+#include "Renderer.h"
+
+Character::Character()
+{
+	inventory = new Inventory();
+}
 
 void Character::InitializeCharacter(std::string name)
 {
 	SetName(name);
 }
 
-Inventory & Character::GetInventory()
+Inventory * Character::GetInventory()
 {
 	return inventory;
 }
@@ -17,10 +23,10 @@ int Character::GetGold()
 
 void Character::EquipGear(int id)
 {
-	inventory.Equip(id);
+	inventory->EquipByIndex(id);
 }
 
 void Character::UseDice(int id)
 {
-	inventory.UseDice(id);
+	inventory->UseDice(id);
 }

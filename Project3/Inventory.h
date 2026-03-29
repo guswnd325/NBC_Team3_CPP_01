@@ -5,15 +5,24 @@
 #include <vector>
 #include "SlotItems.h"
 #include "DiceManager.h"
+
 #define NOT_FOUND -1
 
 class BaseItem;
+class Renderer;
+
+enum class InventorySelect
+{
+	Equip,
+	UnEquip
+};
 
 enum class EquipStatus
 {
-	Equip, // 문제없이 장비된 경우 반환
-	Overlap, // 같은 장비를 착용하길 시도하는 경우 반환
-	Changed	// 장비가 교체되었을 때 반환
+	Equip,      // 문제없이 장비된 경우 반환
+	Overlap,    // 같은 장비를 착용하길 시도하는 경우 반환
+	Changed,	// 장비가 교체되었을 때 반환
+	UnEquip,     // 장비가 해제됨
 };
 
 struct ItemSlot 
@@ -34,7 +43,6 @@ public:
 class Inventory
 {
 private:
-
 	// 슬롯(장비)
 	BaseItem * slots[(int)SlotItems::SlotMax];
 	
@@ -43,9 +51,12 @@ private:
 	
 
 	// 저장소(주사위)
+	// 저장소(주사위)
 	std::vector<DiceSlot> diceStorege;
 
 public:
+	Inventory(); // : renderer(renderer) {}
+
 	// 메모리 해제
 	void Release();
 
@@ -53,8 +64,8 @@ public:
 	const std::vector<DiceSlot> &GetDiceStorege();
 	
 	// 장비 착용
-	EquipStatus Equip(int index);
-	EquipStatus Equip(BaseItem * gear);
+	std::pair<EquipStatus, BaseItem *> EquipByIndex(int index);
+	EquipStatus EquipByBaseItem(BaseItem * gear);
 
 	void AddDice(Dice* dice);
 	void UseDice(int id);
@@ -63,6 +74,8 @@ public:
 
 	int GetInventoryGearIndex(int id);
 	int GetInventoryDiceIndex(int id);
+
+	void Run();
 	
 };
 

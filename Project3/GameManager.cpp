@@ -99,33 +99,8 @@ void GameManager::StartGame()
 		}
 		case 2:
 		{
-			// renderer->RenderShop();
+			shopManager->Run(player);
 
-			int input;
-			std::cin >> input;
-
-			// 유효 범위 체크
-			if (input < 1 || input >(int)Gears::SlotMax)
-			{
-				// renderer->RenderError("잘못된 입력입니다.");
-				break;
-			}
-
-			// 사용자 입력 1~5 → Gears enum 0~4로 변환
-			BuyStatus status = shopManager->BuyItem(input - 1, player);
-
-			switch (status)
-			{
-			case BuyStatus::Success:
-				// renderer->RenderMessage("구매 성공!");
-				break;
-			case BuyStatus::InsufficientGold:
-				// renderer->RenderMessage("골드 부족!");
-				break;
-			case BuyStatus::Possessed:
-				// renderer->RenderMessage("이미 보유 중!");
-				break;
-			}
 			break;
 		}
 		case 3:
@@ -153,7 +128,7 @@ GameManager::GameManager()
 
 	// 추후 각 클래스에서 Render 기능을 사용하기 위해 인자로 renderer를 보내줘야 함.
 	monsterManager = new MonsterManager();
-	combatManager = new CombatManager(renderer, monsterManager);
+	combatManager = new CombatManager(monsterManager);
 	shopManager = new ShopManager();
 	restManager = new RestManager();
 }

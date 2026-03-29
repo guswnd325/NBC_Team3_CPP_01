@@ -9,6 +9,7 @@ private:
 	std::string name;
 	int hp, atk, def, exp;
 public:
+	Actor() : hp(1), atk(1), def(1), exp(1) {}
 	void SetName(std::string name) { this -> name = name; }
 	std::string GetName() { return name; }
 	

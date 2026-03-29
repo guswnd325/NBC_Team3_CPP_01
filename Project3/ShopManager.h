@@ -4,19 +4,21 @@
 #include "ItemSpawnManager.h"
 #include "BaseItem.h"
 #include "Character.h"
+#include "Renderer.h"
 
 enum class BuyStatus
 {
 	Success, // ±¸¸Å ¼º°ø
 	Possessed,
-	InsufficientGold // °ñµå ºÎÁ·ÇØ¼­ ¸ø»ï ¤Ð¤Ð
+	InsufficientGold, // °ñµå ºÎÁ·ÇØ¼­ ¸ø»ï ¤Ð¤Ð
+	Default,
 };
 
 class ShopManager
 {
-private:
-
 public:
-	BuyStatus BuyItem(int index, Character* character);
+	ShopManager();
+	std::pair<BuyStatus, BaseItem*> BuyItem(int index, Character* character);
+	void Run(Character* character);
 };
 

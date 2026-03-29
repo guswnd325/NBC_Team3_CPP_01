@@ -8,6 +8,22 @@
 #define RESET   "\033[0m"
 #define YELLOW  "\033[33m"
 
+Renderer::Renderer()
+{
+
+}
+
+Renderer::~Renderer()
+{
+
+}
+
+Renderer& Renderer::GetInstance()
+{
+    static Renderer instance;
+    return instance;
+}
+
 void Renderer::RenderMenu()
 {
 
