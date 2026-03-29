@@ -2,7 +2,7 @@
 #include <ctime>
 
 Monster* MonsterManager::SpawnMonster(std::string areaName) {
-    MonsterType selectedType;
+    MonsterType selectedType = MonsterType::Slime;
 
     if (areaName == "Forest") {
         selectedType = (rand() % 10 < 7) ? MonsterType::Slime : MonsterType::Goblin;

@@ -13,12 +13,27 @@ void Monster::InitializeMonster() {
 	{
 	case MonsterType::Slime:
 		SetName("슬라임");
+		visual = {
+			"      .---.      ",
+			"   ./:::::(\\     ", // 명암처리와 하이라이트(\\)
+			"  /::::::::::\\   ", // 입체감 있는 몸체
+			" |::::\033[94mO\033[0m:::::\033[94mO\033[0m:|  ", // 눈 부분 파란색 강조(선택사항)
+			"  \\::::::::::/   ",
+			"   '~~\033[91m_~_\033[0m~~' "
+		};
 		SetHP(20); SetAtk(5); SetDef(0); SetExp(10); 
 		SetRewards(20, 1, 101, 4);
 		SetDiceCount(1); SetDiceSides(6);
 		break;
 	case MonsterType::Goblin:
 		SetName("고블린");
+		visual = {
+			"   ^  __  ^     ",
+			"  / \\/  \\/ \\    ",
+			" (  O    O  )   ",
+			"  \\   vv   /    ",
+			"   '------'     "
+		};
 		SetHP(40); SetAtk(10); SetDef(5); SetExp(20);
 		SetRewards(50, 1, 102, 7);
 		SetDiceCount(2); SetDiceSides(4);

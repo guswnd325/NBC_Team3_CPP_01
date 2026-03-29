@@ -20,6 +20,7 @@ class Monster : public Actor{
 private:
 	MonsterType type;
 	MonsterGrade grade;
+	std::vector<std::string> visual;
 	int rewardGold;
 	int recoverAmount;
 	int diceCount;
@@ -51,5 +52,6 @@ public:
 
 	int RollAttackDice();
 	void InitializeMonster();
+	const std::vector<std::string>& GetVisual() const { return visual; }
 };
 
