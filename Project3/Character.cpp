@@ -29,6 +29,16 @@ int Character::GetGold()
 	return gold;
 }
 
+void Character::SetGold(int value)
+{
+	gold = value;
+}
+
+void Character::AddGold(int amount)
+{
+	gold += amount;
+}
+
 void Character::EquipGear(int id)
 {
 	inventory->EquipByIndex(id);

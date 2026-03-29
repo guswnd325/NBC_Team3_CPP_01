@@ -48,6 +48,6 @@ public:
     void DisplayChoices();
     std::string SelectArea();
 
-    void Run(Character* player);
+    BattleResult Run(Character* player);
     void ReduceHp(Actor* actor, Actor* monster);
 };

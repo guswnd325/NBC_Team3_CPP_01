@@ -9,27 +9,27 @@
 class GameManager
 {
 private:
-	Character* player;
+    Character* player;
 
-	MonsterManager* monsterManager;
-	CombatManager* combatManager;
-	ShopManager* shopManager;
-	RestManager* restManager;
-
-private:
-	GameManager();
-	~GameManager();
-
-public:
-	static GameManager& GetInstance();
-
-	GameManager(const GameManager&) = delete;
-	GameManager& operator=(const GameManager&) = delete;
-
-public:
-	void Run();
+    MonsterManager* monsterManager;
+    CombatManager* combatManager;
+    ShopManager* shopManager;
+    RestManager* restManager;
 
 private:
-	void CreateCharacter();
-	void StartGame();
+    GameManager();
+    ~GameManager();
+
+public:
+    static GameManager& GetInstance();
+
+    GameManager(const GameManager&) = delete;
+    GameManager& operator=(const GameManager&) = delete;
+
+public:
+    void Run();
+
+private:
+    void CreateCharacter();
+    void StartGame();
 };

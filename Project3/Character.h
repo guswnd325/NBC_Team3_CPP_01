@@ -17,6 +17,8 @@ public:
 	void InitializeCharacter(std::string name);
 	Inventory* GetInventory();
 	int GetGold();
+	void SetGold(int value);
+	void AddGold(int amount);
 	void EquipGear(int id);
 	void UseDice(int id);
 };

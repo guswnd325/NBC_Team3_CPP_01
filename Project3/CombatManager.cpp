@@ -75,15 +75,14 @@ void CombatManager::ReduceHp(Actor* attacker, Actor* defender)
 
 
 //게임 매니저에서 이것만 호출하면 됩니다
-void CombatManager::Run(Character* player)
+BattleResult  CombatManager::Run(Character* player)
 {
     GenerateAreaChoices();
     DisplayChoices();
     std::string selectedArea = SelectArea();
     Monster* monster = monsterManager->SpawnMonster(selectedArea);
 
-    //monster주석처리
-    battleManager->Run(player, monster);
+    return battleManager->Run(player, monster);
 }
 
 
