@@ -13,7 +13,6 @@ private:
 
 	Character* player;
 	Renderer* renderer;
-	BattleManager* battleManager;
 
 	CombatManager* combatManager;
 	ShopManager* shopManager;

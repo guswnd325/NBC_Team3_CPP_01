@@ -94,7 +94,7 @@ void GameManager::StartGame()
 		case 1: 
 		{
 			// combatManager 함수 호출
-			combatManager->RandomDisplay();
+			combatManager->Run(player);
 			break;
 		}
 		case 2:
@@ -150,10 +150,9 @@ GameManager::GameManager()
 	: player(nullptr)
 {
 	renderer = new Renderer();
-	battleManager = new BattleManager(renderer);
 
 	// 추후 각 클래스에서 Render 기능을 사용하기 위해 인자로 renderer를 보내줘야 함.
-	combatManager = new CombatManager();
+	combatManager = new CombatManager(renderer);
 	shopManager = new ShopManager();
 	restManager = new RestManager();
 }
@@ -163,7 +162,6 @@ GameManager::~GameManager()
 	delete restManager;
 	delete shopManager;
 	delete combatManager;
-	delete battleManager;
 	delete player;
 
 	delete renderer;
