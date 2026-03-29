@@ -8,7 +8,6 @@
 #include <unordered_map>
 #include "Monster.h"
 #include "MonsterManager.h"
-#include "GameManager.h"
 #include "Renderer.h"
 #include "BattleManager.h"
 #include "Actor.h"
