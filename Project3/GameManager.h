@@ -1,6 +1,5 @@
 #pragma once
 #include "Character.h"
-#include "Renderer.h"
 
 #include "MonsterManager.h"
 #include "CombatManager.h"
@@ -10,10 +9,7 @@
 class GameManager
 {
 private:
-	static GameManager* instance;
-
 	Character* player;
-	Renderer* renderer;
 
 	MonsterManager* monsterManager;
 	CombatManager* combatManager;
@@ -25,7 +21,10 @@ private:
 	~GameManager();
 
 public:
-	static GameManager* GetInstance();
+	static GameManager& GetInstance();
+
+	GameManager(const GameManager&) = delete;
+	GameManager& operator=(const GameManager&) = delete;
 
 public:
 	void Run();
@@ -34,4 +33,3 @@ private:
 	void CreateCharacter();
 	void StartGame();
 };
-

@@ -1,9 +1,6 @@
 #pragma once
-#include "Renderer.h"
 #include "Character.h"
 #include "Monster.h"
-
-
 
 class BattleManager
 {
@@ -18,4 +15,3 @@ private:
     //void CalculateDamage(Character* attacker, Character* defender);
     //bool IsOver();
 };
-

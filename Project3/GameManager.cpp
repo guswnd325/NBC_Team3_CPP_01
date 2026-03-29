@@ -1,15 +1,13 @@
 #include "GameManager.h"
+#include "Renderer.h"
 #include <iostream>
 
 // ---------------------------------------------------------------
 // 싱글톤
 // ---------------------------------------------------------------
-GameManager* GameManager::instance = nullptr;
-
-GameManager* GameManager::GetInstance()
+GameManager& GameManager::GetInstance()
 {
-	if (instance == nullptr)
-		instance = new GameManager();
+	static GameManager instance;
 	return instance;
 }
 
@@ -18,9 +16,11 @@ GameManager* GameManager::GetInstance()
 // ---------------------------------------------------------------
 void GameManager::Run()
 {
+	Renderer& renderer = Renderer::GetInstance();
+
 	while (true)
 	{
-		renderer->RenderMenu();
+		renderer.RenderMenu();
 
 		int input;
 		std::cin >> input;
@@ -29,24 +29,22 @@ void GameManager::Run()
 		{
 		case 1:
 			CreateCharacter();
-
 			StartGame();
-
 			break;
 		case 2:
-		
 			return;
 		default:
 			break;
 		}
 	}
-
 }
 
 void GameManager::CreateCharacter()
 {
-	renderer->Clear();
-	renderer->RenderCreatePlayer();
+	Renderer& renderer = Renderer::GetInstance();
+
+	renderer.Clear();
+	renderer.RenderCreatePlayer();
 
 	if (player != nullptr)
 	{
@@ -80,42 +78,31 @@ void GameManager::CreateCharacter()
 
 void GameManager::StartGame()
 {
+	Renderer& renderer = Renderer::GetInstance();
+
 	while (!player->IsDead())
 	{
-		renderer->Clear();
-		//renderer->RenderStatus(player);
-		renderer->RenderMainMenu();
+		renderer.Clear();
+		renderer.RenderMainMenu();
 
 		int input;
 		std::cin >> input;
 
 		switch (input)
 		{
-		case 1: 
-		{
-			// combatManager 함수 호출
+		case 1:
 			combatManager->Run(player);
 			break;
-		}
 		case 2:
-		{
 			shopManager->Run(player);
-
 			break;
-		}
 		case 3:
-		{
 			// restManager 함수 호출
-			
 			break;
-		}
 		default:
-			//renderer->RenderError("잘못된 입력입니다.");
 			break;
 		}
 	}
-
-
 }
 
 // ---------------------------------------------------------------
@@ -124,9 +111,6 @@ void GameManager::StartGame()
 GameManager::GameManager()
 	: player(nullptr)
 {
-	renderer = new Renderer();
-
-	// 추후 각 클래스에서 Render 기능을 사용하기 위해 인자로 renderer를 보내줘야 함.
 	monsterManager = new MonsterManager();
 	combatManager = new CombatManager(monsterManager);
 	shopManager = new ShopManager();
@@ -140,6 +124,4 @@ GameManager::~GameManager()
 	delete combatManager;
 	delete monsterManager;
 	delete player;
-
-	delete renderer;
 }
