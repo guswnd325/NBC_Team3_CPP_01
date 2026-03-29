@@ -7,6 +7,8 @@
 #include <iostream>
 #include <unordered_map>
 #include "Monster.h"
+#include "MonsterManager.h"
+#include "GameManager.h"
 #include "Renderer.h"
 #include "BattleManager.h"
 #include "Actor.h"
@@ -21,6 +23,7 @@ private:
 
     //Renderer Class에 대한 참조
     Renderer* renderer;
+    MonsterManager* monsterManager;
 
     std::unordered_map<std::string, std::string> areaDisplayname =
     {
@@ -41,7 +44,7 @@ private:
 
 public:
     //Renderer Class을 포함한 생성자
-    CombatManager(Renderer* r) : renderer(r) {};
+    CombatManager(Renderer* r, MonsterManager* m) : renderer(r), monsterManager(m){};
 
     //맵 무작위 생성 (3개)
     void GenerateAreaChoices();

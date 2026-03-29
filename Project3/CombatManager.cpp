@@ -78,6 +78,9 @@ void CombatManager::Run(Actor* player)
 {
     GenerateAreaChoices();
     DisplayChoices();
+    std::string selectedArea = SelectArea();
+    monsterManager->SpawnMonster(selectedArea);
+ 
 }
 
 
