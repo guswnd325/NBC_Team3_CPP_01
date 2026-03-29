@@ -10,9 +10,8 @@ void ShopManager::Run(Character* character)
 {
 	while (true)
 	{
-		//Renderer::GetInstance().RenderShop();
-		//renderer->RenderShop();
-
+		//Renderer::GetInstance().ShowShop();
+		
 		int buyItemIndex;
 
 		std::cin >> buyItemIndex;
@@ -31,23 +30,25 @@ void ShopManager::Run(Character* character)
 
 		std::pair<BuyStatus, BaseItem *> status = BuyItem(buyItemIndex, character);
 
+		std::string message = "";
+
 		switch (status.first)
 		{
 			case BuyStatus::Success:
 			{
 				std::string itemName = status.second->GetName();
-				//renderer->RenderMessage("[" + itemName + "]" + "을/를 구매하였습니다.");
+				message = "[" + itemName + "]" + "을/를 구매하였습니다.";
 			}
 			break;
 			case BuyStatus::InsufficientGold:
 			{
-				int dist = abs(character->GetGold() - status.second->GetPrice());
-				//renderer->RenderMessage("골드가 [" + dist + "]" + "만큼 부족합니다.");
+				std::string dist = std::to_string(abs(character->GetGold() - status.second->GetPrice()));
+				message = "골드가 [" + dist + "]" + "만큼 부족합니다.";
 			}
 			break;
 		}
-
-
+		// 처리 결과 출력
+		// Renderer::GetInstance().RenderMessage(message);
 	}
 }
 

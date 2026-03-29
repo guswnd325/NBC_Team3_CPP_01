@@ -11,11 +11,11 @@ private:
 	std::string name;
 	int price;
 	int id;
-	StatDelta statDelta; // 아이템으로 인해 변화되는 수치 구조체
+	StatDelta statDelta; // 아이템으로 인해 변화되는 수치를 담는 구조체
 	SlotItems type; // item Index
 	
 public:
-	BaseItem(std::string name, SlotItems type, StatDelta statDelta, int price) : name(name), type(type), statDelta(statDelta), price(price) {}
+	BaseItem(std::string name, SlotItems type, StatDelta statDelta, int price, int id) : name(name), type(type), statDelta(statDelta), price(price), id(id) {}
 	virtual ~BaseItem();
 	
 	const StatDelta& GetStatDelta() const;
@@ -31,36 +31,36 @@ public:
 	virtual void UnEquip(Character * character);
 };
 
-class SliverSword : public BaseItem
+class SilverSword : public BaseItem
 {
 public:
-	SliverSword() : BaseItem("SliverSword", SlotItems::Weapon, StatDelta(), 100) {}
+	SilverSword() : BaseItem("SilverSword", SlotItems::Weapon, {}, 100, (int)Gears::SilverSword) {}
 };
 
 
 class GoldHelmet : public BaseItem
 {
 public:
-	GoldHelmet() : BaseItem("GoldHelmet", SlotItems::Helmet, StatDelta(), 100) {}
+	GoldHelmet() : BaseItem("GoldHelmet", SlotItems::Helmet, StatDelta(), 100, (int)Gears::GoldHelmet) {}
 };
 
 
 class GoldBodyArmor : public BaseItem
 {
 public:
-	GoldBodyArmor() : BaseItem("GoldBodyArmor", SlotItems::BodyArmor, StatDelta(), 100) {}
+	GoldBodyArmor() : BaseItem("GoldBodyArmor", SlotItems::BodyArmor, StatDelta(), 100, (int)Gears::GoldBodyArmor) {}
 };
 
 
 class GoldBoots : public BaseItem
 {
 public:
-	GoldBoots() : BaseItem("GoldBoots", SlotItems::Helmet, StatDelta(), 100) {}
+	GoldBoots() : BaseItem("GoldBoots", SlotItems::Helmet, StatDelta(), 100, (int)Gears::GoldBoots) {}
 
 };
 
-class SliverRing : public BaseItem
+class SilverRing : public BaseItem
 {
 public:
-	SliverRing() : BaseItem("SliverRing", SlotItems::Accessory, StatDelta(), 100) {}
+	SilverRing() : BaseItem("SilverRing", SlotItems::Accessory, StatDelta(), 100, (int)Gears::SilverRing) {}
 };

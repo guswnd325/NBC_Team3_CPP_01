@@ -15,8 +15,7 @@ void Inventory::Run()
 {
 	while (true)
 	{
-		//renderer->RenderInventory();
-
+		// Renderer::GetInstance().ShowInventory();
 		int select;
 
 
@@ -33,28 +32,31 @@ void Inventory::Run()
 		}
 
 		// 장착 또는 교체
-
-		std::pair<EquipStatus, BaseItem * >status = EquipByIndex(select);
+		EquipResult info = EquipByIndex(select);
 		
-		std::string changedItem = status.second->GetName();
+		std::string changedItem = info.item->GetName();
 
-		SlotItems type = status.second->GetType();
+		SlotItems type = info.prevItem->GetType();
 		std::string prevItem = slots[(int)type]->GetName();
 		
-		switch (status.first)
+		std::string message = "";
+
+		switch (info.status)
 		{
 			case EquipStatus::Equip:
 			{
-				//renderer->RenderMessage("[" + itemName + "]" + "아이템을 장착하였습니다.");
+				message = "[" + changedItem + "]" + "아이템을 장착하였습니다.";
 			}
 			break;
 			case EquipStatus::Changed:
 			{
-
-				//renderer->RenderMessage("[" + prevItem + "]" + "아이템을 " + "[" + changedItem + "]으로 교체하였습니다.");
+				message = "[" + prevItem + "]" + "아이템을 " + "[" + changedItem + "]으로 교체하였습니다.";
 			}
 			break;
 		}
+
+		// 처리 결과 출력
+		// Renderer::GetInstance().RenderMessage(message);
 	}
 }
 
@@ -81,30 +83,38 @@ void Inventory::Release()
 	}
 }
 
-std::pair<EquipStatus, BaseItem *> Inventory::EquipByIndex(int index)
+EquipResult Inventory::EquipByIndex(int index)
 {
 	BaseItem* gear = gearStorege[index].item;
 
 	int type = (int)gear->GetType();
 
+	EquipResult result;
+
 	// 문제없이 장비 착용
 	if (nullptr == slots[(int)type])
 	{
-		slots[(int)type] = gear;
-		return { EquipStatus::Equip, gear };
+		result.prevItem = slots[(int)type];
+		result.item = gear;
+		result.status = EquipStatus::Equip;
 	}
 
 	// 같은 장비로 교체하는 경우
 	if (slots[(int)type]->GetName() == gear->GetName())
 	{
-		return { EquipStatus::Overlap, gear };
+		result.prevItem = slots[(int)type];
+		result.item = gear;
+		result.status = EquipStatus::Overlap;
 	}
 	// 장비 장착 중이지만, 다른 장비로 교체하는 경우
 	else 
 	{
-		slots[(int)type] = gear;
-		return { EquipStatus::Changed, gear };
+		result.prevItem = slots[(int)type];
+		result.item = gear;
+		result.status = EquipStatus::Changed;
 	}
+
+	return result;
 }
 
 EquipStatus Inventory::EquipByBaseItem(BaseItem* gear)

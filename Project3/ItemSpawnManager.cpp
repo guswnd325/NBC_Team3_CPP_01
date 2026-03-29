@@ -6,8 +6,8 @@ BaseItem * ItemSpawnManager::MakeItem(int type)
 {
 	switch (type)
 	{
-	case (int)Gears::SliverSword:
-		return new SliverSword();
+	case (int)Gears::SilverSword:
+		return new SilverSword();
 
 	case (int)Gears::GoldHelmet:
 		return new GoldHelmet();
@@ -18,8 +18,8 @@ BaseItem * ItemSpawnManager::MakeItem(int type)
 	case (int)Gears::GoldBoots:
 		return new GoldBoots();
 
-	case (int)Gears::SliverRing:
-		return new SliverRing();
+	case (int)Gears::SilverRing:
+		return new SilverRing();
 	}
 
 	return nullptr;

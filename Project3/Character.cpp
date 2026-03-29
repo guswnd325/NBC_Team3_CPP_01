@@ -1,9 +1,12 @@
 #include "Character.h"
 #include "Renderer.h"
 
+constexpr int defaultGold = 100;
+
 Character::Character()
 {
 	inventory = new Inventory();
+	gold = defaultGold;
 }
 
 void Character::InitializeCharacter(std::string name)

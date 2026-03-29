@@ -2,11 +2,11 @@
 
 enum class Gears // 기어 인덱스 관리용 enum
 {
-	SliverSword,
+	SilverSword,
 	GoldHelmet,
 	GoldBodyArmor,
 	GoldBoots,
-	SliverRing,
+	SilverRing,
 
 	SlotMax,
 };

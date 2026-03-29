@@ -9,13 +9,6 @@
 #define NOT_FOUND -1
 
 class BaseItem;
-class Renderer;
-
-enum class InventorySelect
-{
-	Equip,
-	UnEquip
-};
 
 enum class EquipStatus
 {
@@ -23,6 +16,13 @@ enum class EquipStatus
 	Overlap,    // 같은 장비를 착용하길 시도하는 경우 반환
 	Changed,	// 장비가 교체되었을 때 반환
 	UnEquip,     // 장비가 해제됨
+};
+
+struct EquipResult
+{
+	EquipStatus status;
+	BaseItem* item;
+	BaseItem* prevItem;
 };
 
 struct ItemSlot 
@@ -49,13 +49,11 @@ private:
 	// 저장소(장비) 
 	std::vector<ItemSlot> gearStorege;
 	
-
-	// 저장소(주사위)
 	// 저장소(주사위)
 	std::vector<DiceSlot> diceStorege;
 
 public:
-	Inventory(); // : renderer(renderer) {}
+	Inventory();
 
 	// 메모리 해제
 	void Release();
@@ -64,7 +62,7 @@ public:
 	const std::vector<DiceSlot> &GetDiceStorege();
 	
 	// 장비 착용
-	std::pair<EquipStatus, BaseItem *> EquipByIndex(int index);
+	EquipResult EquipByIndex(int index);
 	EquipStatus EquipByBaseItem(BaseItem * gear);
 
 	void AddDice(Dice* dice);
