@@ -83,9 +83,7 @@ void CombatManager::Run(Character* player)
     Monster* monster = monsterManager->SpawnMonster(selectedArea);
 
     //monster주석처리
-    //battleManager->Run(player, monster);
-
- 
+    battleManager->Run(player, monster);
 }
 
 

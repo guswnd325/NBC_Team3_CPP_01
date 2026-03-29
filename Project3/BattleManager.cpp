@@ -6,7 +6,7 @@ BattleManager::BattleManager(Renderer* renderer)
 
 }
 
-void BattleManager::Run(Character* player)
+void BattleManager::Run(Character* player, Monster* monster)
 {
 
 }

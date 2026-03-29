@@ -1,6 +1,9 @@
 #pragma once
 #include "Renderer.h"
 #include "Character.h"
+#include "Monster.h"
+
+
 
 class BattleManager
 {
@@ -10,7 +13,7 @@ public:
     BattleManager(Renderer* renderer);
 
 public:
-    void Run(Character* player);
+    void Run(Character* player, Monster* monster);
 
 private:
     //void StartBattle(Character* player, Character* enemy);
