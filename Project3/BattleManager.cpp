@@ -123,7 +123,7 @@ bool BattleManager::TryEscape(Character* player, Monster* monster, int& outMonst
 // ---------------------------------------------------------------
 void BattleManager::CalculateDamage(Actor* attacker, Actor* defender, int Roll)
 {
-    int damage = std::max(1, attacker->GetAtk() - defender->GetDef()) + Roll;
+    int damage = std::max(1, attacker->GetAtk() + Roll - defender->GetDef());
     int newHp = std::max(0, defender->GetHP() - damage);
 
     defender->SetHP(newHp);
