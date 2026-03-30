@@ -22,14 +22,22 @@ struct Dice
 {
     int minSide;
     int maxSide;
+    int upgradeCount;
     DiceID id;
 
-    Dice(DiceID diceId) { SetByID(diceId); }
+    Dice(DiceID diceId) : upgradeCount(0) {
+        SetByID(diceId);
+    }
 
-    // 단순히 현재 ID를 알려주는 기능은 구조체에 적합합니다.
     DiceID GetId() const { return id; }
     int GetMin() const { return minSide; }
     int GetMax() const { return maxSide; }
+    int GetUpgradeCount() const { return upgradeCount; }
+
+    void SetUpgradeCount(int count) {
+        upgradeCount = (count < 0) ? 0 : count;
+    }
+    
 
     // ID 기반 초기 설정
     void SetByID(DiceID diceId) {
