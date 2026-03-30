@@ -14,6 +14,20 @@
 class CombatManager
 {
 private:
+
+    std::unordered_map<std::string, int> areaUnlockLevel = {
+       {"Forest",   1},   // √ ±‚ «ÿ±›
+       {"Mine",     1},   // √ ±‚ «ÿ±›  (∆Û±§)
+       {"Mountain", 1},   // √ ±‚ «ÿ±›  (ªÍ)
+       {"Desert",   2},
+       {"Cave",     8},
+       {"Alley",    12},
+       {"Jungle",   16},
+       {"Temple",   20},
+       {"Ocean",    25},
+       {"Nest",     30},
+    };
+
     std::vector<std::string> areaName = {
     "Forest", "Desert", "Cave", "Temple", "Jungle", "Mine", "Ocean", "Alley", "Mountain", "Nest"
     };
@@ -21,6 +35,8 @@ private:
     MonsterManager* monsterManager;
     BattleManager* battleManager;
 
+
+    std::vector<std::string> unlockedAreas;
     std::unordered_map<std::string, std::string> areaDisplayname =
     {
         {"Forest", " Ω£ "},
@@ -50,4 +66,5 @@ public:
 
     BattleResult Run(Character* player);
     void ReduceHp(Actor* actor, Actor* monster);
+    void UnlockAreas(int level);
 };

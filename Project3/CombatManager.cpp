@@ -4,16 +4,27 @@
 
 void CombatManager::GenerateAreaChoices()
 {
-    std::vector<std::string> shuffle = areaName;
+    if (unlockedAreas.empty())
+        UnlockAreas(1);
 
+    std::vector<std::string> shuffle = unlockedAreas; 
     std::random_device rd;
     std::mt19937 Rand(rd());
     std::shuffle(shuffle.begin(), shuffle.end(), Rand);
-
     currentChoices.clear();
     for (int i = 0; i < 3; i++)
     {
         currentChoices.push_back(shuffle[i]);
+    }
+}
+
+void CombatManager::UnlockAreas(int level)
+{
+    unlockedAreas.clear();
+    for (auto& pair : areaUnlockLevel)
+    {
+        if (level >= pair.second)
+            unlockedAreas.push_back(pair.first);
     }
 }
 
@@ -62,6 +73,7 @@ void CombatManager::ReduceHp(Actor* attacker, Actor* defender)
 //게임 매니저에서 이것만 호출하면 됩니다
 BattleResult  CombatManager::Run(Character* player)
 {
+    UnlockAreas(player->GetLevel());
     GenerateAreaChoices();
     DisplayChoices();
     std::string selectedArea = SelectArea();
