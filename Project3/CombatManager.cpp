@@ -7,8 +7,8 @@ void CombatManager::GenerateAreaChoices()
     std::vector<std::string> shuffle = areaName;
 
     std::random_device rd;
-    std::mt19937 g(rd());
-    std::shuffle(shuffle.begin(), shuffle.end(), g);
+    std::mt19937 Rand(rd());
+    std::shuffle(shuffle.begin(), shuffle.end(), Rand);
 
     currentChoices.clear();
     for (int i = 0; i < 3; i++)

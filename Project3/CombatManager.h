@@ -15,7 +15,7 @@ class CombatManager
 {
 private:
     std::vector<std::string> areaName = {
-    "Forest", "Desert", "Cave"
+    "Forest", "Desert", "Cave", "Temple", "Jungle", "Mine", "Ocean", "Alley", "Mountain", "Nest"
     };
 
     MonsterManager* monsterManager;

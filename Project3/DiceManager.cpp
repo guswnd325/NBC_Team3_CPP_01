@@ -38,7 +38,7 @@ void DiceManager::DiceAnimationRoll(const std::vector<int>& results)
     srand(static_cast<unsigned int>(time(nullptr)));
     AudioManager::GetInstance().PlaySFX(SFXList::dice_roll);
 
-    // 첫 프레임 출력 (공간 확보)
+   
     for (int line = 0; line < FRAME_LINES; ++line) {
         std::cout << "\t";
         for (int d = 0; d < diceCount; ++d) {
@@ -47,7 +47,7 @@ void DiceManager::DiceAnimationRoll(const std::vector<int>& results)
         std::cout << "\n";
     }
 
-    // 애니메이션 루프
+    
     for (int i = 1; i < 16; ++i) {
         std::cout << "\033[" << FRAME_LINES << "A";
 
@@ -61,7 +61,7 @@ void DiceManager::DiceAnimationRoll(const std::vector<int>& results)
             for (int d = 0; d < diceCount; ++d) {
                 std::cout << frames[frameIdxs[d]][line] << "  ";
             }
-            std::cout << "\n"; // ← 공백 제거
+            std::cout << "\n"; 
         }
         std::cout.flush();
 
@@ -69,7 +69,7 @@ void DiceManager::DiceAnimationRoll(const std::vector<int>& results)
         std::this_thread::sleep_for(std::chrono::milliseconds(delay));
     }
 
-    // 마지막 프레임 - 실제 결과값 표시
+    
     std::cout << "\033[" << FRAME_LINES << "A";
     for (int line = 0; line < FRAME_LINES; ++line) {
         std::cout << "\r\t";
@@ -86,7 +86,7 @@ void DiceManager::DiceAnimationRoll(const std::vector<int>& results)
     cursorInfo.bVisible = TRUE;
     SetConsoleCursorInfo(hOut, &cursorInfo);
 
-    // ★ 각 주사위 결과값 출력
+    
     std::cout << "\n\t";
     for (int d = 0; d < diceCount; ++d) {
         std::cout << "[  " << results[d] << "  ]" << "  ";
