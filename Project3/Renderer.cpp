@@ -233,7 +233,69 @@ void Renderer::RenderAreaChoices(const std::vector<std::string>& choices, const 
 
     PrintBottom(UI_WIDTH);
 }
+void Renderer::RenderRestMenu() {
+    PrintTop(UI_WIDTH);
+    PrintCenterLine("[ 캠프파이어 (휴식소) ]", UI_WIDTH, WHITE);
+    PrintDivider(UI_WIDTH);
+    PrintLeftLine("[1] 주사위 강화 (티켓 소모)", UI_WIDTH, YELLOW);
+    PrintLeftLine("[2] 체력 회복   (주사위 굴리기)", UI_WIDTH, BRIGHT_GREEN);
+    PrintLeftLine("[0] 마을로 돌아가기", UI_WIDTH, WHITE);
+    PrintBottom(UI_WIDTH);
+    std::cout << BRIGHT_GREEN << " > 옵션을 선택 : " << RESET;
+}
 
+void Renderer::RenderDiceUpgradeList(const std::vector<DiceSlot>& storage) {
+    PrintTop(UI_WIDTH);
+    PrintCenterLine("[ 강화할 주사위 선택 ]", UI_WIDTH, WHITE);
+    PrintDivider(UI_WIDTH);
+
+    if (storage.empty()) {
+        PrintLeftLine(" (강화할 수 있는 주사위가 없습니다.)", UI_WIDTH, GRAY);
+    }
+    else {
+        for (int i = 0; i < storage.size(); i++) {
+            std::string diceInfo = "[" + std::to_string(i + 1) + "] " +
+                storage[i].dice->DiceIdToString() +
+                " (" + std::to_string(storage[i].count) + "개)";
+            PrintLeftLine(diceInfo, UI_WIDTH, CYAN);
+        }
+    }
+    PrintDivider(UI_WIDTH);
+    PrintLeftLine("[0] 취소하고 돌아가기", UI_WIDTH, WHITE);
+    PrintBottom(UI_WIDTH);
+    std::cout << BRIGHT_GREEN << " > 주사위 번호 입력 : " << RESET;
+}
+
+void Renderer::RenderHealResult(int healValue, int prevHP, int curHP) {
+    Clear();
+    PrintTop(UI_WIDTH);
+    PrintCenterLine("[ 회복 결과 ]", UI_WIDTH, WHITE);
+    PrintDivider(UI_WIDTH);
+    std::string msg = "체력이 " + std::to_string(healValue) + "만큼 회복되었습니다!";
+    PrintCenterLine(msg, UI_WIDTH, BRIGHT_GREEN);
+    std::string hpMsg = std::to_string(prevHP) + " -> " + std::to_string(curHP);
+    PrintCenterLine(hpMsg, UI_WIDTH, WHITE);
+    PrintBottom(UI_WIDTH);
+    Delay(2000);
+}
+
+void Renderer::RenderUpgradeResult(UpgradeStatus status, int prevLevel, int curLevel) {
+    Clear();
+    PrintTop(UI_WIDTH);
+    if (status == UpgradeStatus::Success) {
+        PrintCenterLine("[ 강화 성공! ]", UI_WIDTH, YELLOW);
+        PrintDivider(UI_WIDTH);
+        std::string msg = "강화 레벨: " + std::to_string(prevLevel) + " -> " + std::to_string(curLevel);
+        PrintCenterLine(msg, UI_WIDTH, WHITE);
+    }
+    else {
+        PrintCenterLine("[ 강화 실패 ]", UI_WIDTH, RED);
+        PrintDivider(UI_WIDTH);
+        PrintCenterLine("이미 최대 강화 레벨입니다.", UI_WIDTH, WHITE);
+    }
+    PrintBottom(UI_WIDTH);
+    Delay(2000);
+}
 
 void Renderer::Clear()
 {

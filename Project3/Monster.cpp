@@ -38,6 +38,10 @@ void Monster::InitializeMonster() {
 		SetRewards(50, 1, DiceID::D1_3, 7);
 		SetDiceCount(2); SetDiceSides(4);
 		break;
+	case MonsterType::Orc:
+		SetHP(50); SetAtk(1); SetDef(10); SetExp(30);
+		SetRewards(80, 1, DiceID::D2_3, 10);
+		SetDiceCount(3); SetDiceSides(4);
 	case MonsterType::Golem:
 		SetName("°ñ·½");
 		SetHP(150); SetAtk(25); SetDef(20); SetExp(100);
