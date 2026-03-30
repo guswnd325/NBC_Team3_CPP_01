@@ -7,6 +7,7 @@ constexpr int defaultRestTicket = 0;
 
 Character::Character()
 {
+	levelUpExp = 60;
 	inventory = new Inventory();
 	gold = defaultGold;
 	restTicket = defaultRestTicket;
@@ -84,4 +85,20 @@ void Character::SetRestTicket(int value)
 int Character::GetRestTicket() const
 {
 	return restTicket;
+}
+
+void Character::LevelUp()
+{
+	level++;
+	levelUpExp *= 1.5;
+}
+
+float Character::GetLevelUpExp() const
+{
+	return levelUpExp;
+}
+
+int Character::GetLevel() const
+{
+	return level;
 }
