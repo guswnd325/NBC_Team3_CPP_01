@@ -132,7 +132,7 @@ void GameManager::StartGame()
 		}
 		
 		case 4:
-			restManager->Run();
+			refurbishManager->Run();
 
 			break;
 		default:
@@ -150,12 +150,12 @@ GameManager::GameManager()
 	monsterManager = new MonsterManager();
 	combatManager = new CombatManager(monsterManager);
 	shopManager = new ShopManager();
-	restManager = new RestManager();
+	refurbishManager = new RefurbishManager();
 }
 
 GameManager::~GameManager()
 {
-	delete restManager;
+	delete refurbishManager;
 	delete shopManager;
 	delete combatManager;
 	delete monsterManager;

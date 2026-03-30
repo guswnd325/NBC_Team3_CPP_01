@@ -49,13 +49,13 @@ struct RestResult
 
 
 // Base Class
-class RestManager
+class RefurbishManager
 {
 private:
     DiceManager diceManager;
 public:
-    RestManager();
-    ~RestManager();
+    RefurbishManager();
+    ~RefurbishManager();
     
     UpgradeResult UpgradeDice(int index, UpgradeType type, Character* character);
 

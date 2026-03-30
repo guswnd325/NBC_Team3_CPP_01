@@ -138,12 +138,11 @@
     <ClInclude Include="Monster.h" />
     <ClInclude Include="MonsterManager.h" />
     <ClInclude Include="Renderer.h" />
-    <ClInclude Include="RestManager.h" />
+    <ClInclude Include="RefurbishManager.h" />
     <ClInclude Include="ShopManager.h" />
     <ClInclude Include="SlotItems.h" />
     <ClInclude Include="StatDelta.h" />
     <ClInclude Include="Tools.h" />
-    <ClInclude Include="UpgradeManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AudioManager.cpp" />
@@ -159,9 +158,8 @@
     <ClCompile Include="Monster.cpp" />
     <ClCompile Include="MonsterManager.cpp" />
     <ClCompile Include="Renderer.cpp" />
-    <ClCompile Include="RestManager.cpp" />
+    <ClCompile Include="RefurbishManager.cpp" />
     <ClCompile Include="ShopManager.cpp" />
-    <ClCompile Include="UpgradeManager.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

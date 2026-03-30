@@ -4,7 +4,7 @@
 #include "MonsterManager.h"
 #include "CombatManager.h"
 #include "ShopManager.h"
-#include "RestManager.h"
+#include "RefurbishManager.h"
 
 class Renderer;
 
@@ -16,7 +16,7 @@ private:
     MonsterManager* monsterManager;
     CombatManager* combatManager;
     ShopManager* shopManager;
-    RestManager* restManager;
+    RefurbishManager* refurbishManager;
 
 private:
     GameManager();

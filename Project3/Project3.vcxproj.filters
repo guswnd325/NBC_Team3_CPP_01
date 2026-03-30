@@ -40,12 +40,6 @@
     <Filter Include="소스 파일\Combat">
       <UniqueIdentifier>{6a97ea3f-badb-44ba-9378-602d884ea0d7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Rest">
-      <UniqueIdentifier>{3584c8d2-3435-4d94-8a37-e00aeee1cf3a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Upgrade">
-      <UniqueIdentifier>{16786307-28c0-4dd0-9b81-abf1fd90224d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\Actor">
       <UniqueIdentifier>{f94dc105-58d9-4261-bdb3-9774a3fb11e1}</UniqueIdentifier>
     </Filter>
@@ -60,6 +54,9 @@
     </Filter>
     <Filter Include="소스 파일\Audio">
       <UniqueIdentifier>{4f4e7a4e-3528-4a8c-b73d-8d79b1a34f80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Refurbish">
+      <UniqueIdentifier>{3584c8d2-3435-4d94-8a37-e00aeee1cf3a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -84,11 +81,8 @@
     <ClInclude Include="CombatManager.h">
       <Filter>소스 파일\Combat</Filter>
     </ClInclude>
-    <ClInclude Include="UpgradeManager.h">
-      <Filter>소스 파일\Upgrade</Filter>
-    </ClInclude>
-    <ClInclude Include="RestManager.h">
-      <Filter>소스 파일\Rest</Filter>
+    <ClInclude Include="RefurbishManager.h">
+      <Filter>소스 파일\Refurbish</Filter>
     </ClInclude>
     <ClInclude Include="ShopManager.h">
       <Filter>소스 파일\Shop</Filter>
@@ -143,11 +137,8 @@
     <ClCompile Include="CombatManager.cpp">
       <Filter>소스 파일\Combat</Filter>
     </ClCompile>
-    <ClCompile Include="UpgradeManager.cpp">
-      <Filter>소스 파일\Upgrade</Filter>
-    </ClCompile>
-    <ClCompile Include="RestManager.cpp">
-      <Filter>소스 파일\Rest</Filter>
+    <ClCompile Include="RefurbishManager.cpp">
+      <Filter>소스 파일\Refurbish</Filter>
     </ClCompile>
     <ClCompile Include="ShopManager.cpp">
       <Filter>소스 파일\Shop</Filter>

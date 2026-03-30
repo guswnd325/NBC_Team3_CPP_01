@@ -1,17 +1,17 @@
-#include "RestManager.h"
+#include "RefurbishManager.h"
 #include "GameManager.h"
 
-RestManager::RestManager()
+RefurbishManager::RefurbishManager()
 {
 
 }
 
-RestManager::~RestManager()
+RefurbishManager::~RefurbishManager()
 {
 
 }
 
-UpgradeResult RestManager::UpgradeDice(int index, UpgradeType type, Character* character)
+UpgradeResult RefurbishManager::UpgradeDice(int index, UpgradeType type, Character* character)
 {
 	// 해당 인덱스의 다이스 정보를 불러옴
 	std::vector<DiceSlot> storege = character->GetInventory()->GetDiceStorege();
@@ -77,7 +77,7 @@ UpgradeResult RestManager::UpgradeDice(int index, UpgradeType type, Character* c
 	}
 }
 
-RestResult RestManager::Rest(Character *character)
+RestResult RefurbishManager::Rest(Character *character)
 {
 	RestResult result;
 
@@ -109,7 +109,7 @@ RestResult RestManager::Rest(Character *character)
 	return result;
 }
 
-void RestManager::Run()
+void RefurbishManager::Run()
 {
 	while (true)
 	{
