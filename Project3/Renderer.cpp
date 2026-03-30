@@ -374,6 +374,76 @@ void Renderer::RenderBuyResult(BuyStatus status, BaseItem* item, int playerGold)
     Delay(2000);
 }
 
+void Renderer::RenderInventory(BaseItem* slots[], const std::vector<ItemSlot>& gearStorage, const std::vector<DiceSlot>& diceStorage) {
+    PrintTop(UI_WIDTH);
+    PrintCenterLine("[ 장비 슬롯 ]", UI_WIDTH, WHITE);
+    PrintDivider(UI_WIDTH);
+
+    const char* slotNames[] = { "무기", "헬멧", "갑옷", "신발", "장신구" };
+    for (int i = 0; i < 5; i++) {
+        std::string itemName = (slots[i] != nullptr) ? slots[i]->GetName() : "---";
+        PrintLeftLine(std::string(slotNames[i]) + " : " + itemName, UI_WIDTH, (slots[i] ? YELLOW : GRAY));
+    }
+
+    PrintDivider(UI_WIDTH);
+    PrintCenterLine("[ 소지 장비 ]", UI_WIDTH, WHITE);
+
+    if (gearStorage.empty()) {
+        PrintLeftLine(" (비어 있음)", UI_WIDTH, GRAY);
+    }
+    else {
+        for (int i = 0; i < gearStorage.size(); i++) {
+            std::string info = "[" + std::to_string(i + 1) + "] " +
+                gearStorage[i].item->GetName() + " (" +
+                std::to_string(gearStorage[i].count) + "개)";
+            PrintLeftLine(info, UI_WIDTH, CYAN);
+        }
+    }
+
+    PrintDivider(UI_WIDTH);
+    PrintCenterLine("[ 소지 주사위 ]", UI_WIDTH, WHITE);
+
+    if (diceStorage.empty()) {
+        PrintLeftLine(" (비어 있음)", UI_WIDTH, GRAY);
+    }
+    else {
+        for (int i = 0; i < diceStorage.size(); i++) {
+            std::string info = " - " + diceStorage[i].dice->DiceIdToString() +
+                " (" + std::to_string(diceStorage[i].count) + "개)";
+            PrintLeftLine(info, UI_WIDTH, BRIGHT_GREEN);
+        }
+    }
+
+    PrintDivider(UI_WIDTH);
+    PrintLeftLine("[0] 메뉴로 돌아가기", UI_WIDTH, RED);
+    PrintBottom(UI_WIDTH);
+    std::cout << BRIGHT_GREEN << " > 장착(교체)할 장비 번호 선택 : " << RESET;
+}
+
+void Renderer::RenderEquipResult(const EquipResult& result) {
+    Clear();
+    PrintTop(UI_WIDTH);
+
+    std::string message = "";
+    std::string itemName = result.item->GetName();
+
+    switch (result.status) {
+    case EquipStatus::Equip:
+        message = "[" + itemName + "] 장착 완료!";
+        break;
+    case EquipStatus::Changed:
+        message = "[" + result.prevItem + "] -> [" + itemName + "] 교체 완료!";
+        break;
+    case EquipStatus::Overlap:
+        message = "이미 [" + itemName + "]을(를) 착용 중입니다.";
+        break;
+    }
+
+    PrintCenterLine(message, UI_WIDTH, YELLOW);
+    PrintBottom(UI_WIDTH);
+    Delay(2000);
+}
+
 void Renderer::Clear()
 {
     system("cls");

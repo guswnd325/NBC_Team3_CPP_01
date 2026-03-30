@@ -6,6 +6,7 @@
 #include <string>
 #include <Windows.h>
 #include <unordered_map>
+#include "Inventory.h"
 #include "buyStatus.h"
 
 class BaseItem;
@@ -36,6 +37,7 @@ public:
     Renderer();
     ~Renderer();
 
+    void RenderInventory(BaseItem* slots[], const std::vector<ItemSlot>& gearStorage, const std::vector<DiceSlot>& diceStorage);
     void RenderShopItemList(const std::vector<BaseItem*>& itemLists);
     void RenderBuyResult(BuyStatus status, BaseItem* item, int currentGold);
     void RenderAreaChoices(const std::vector<std::string>& choices, const std::unordered_map<std::string, std::string>& displayMap);
@@ -44,6 +46,7 @@ public:
     void RenderBattleStart(Monster* monster);  // 전투 시작 화면 출력
     void RenderUpgradeResult(UpgradeStatus status, int prevLevel, int curLevel); // 강화 결과 출력
     void RenderStatus(Character* player);   // 플레이어 상태 출력
+    void RenderEquipResult(const EquipResult& result);
     void RenderDiceUpgradeOption();
     void RenderTicketInsufficient();
     //void RenderBattleLog(const string& message);  // 전투 로그 출력

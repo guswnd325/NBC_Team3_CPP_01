@@ -45,12 +45,12 @@ void Monster::InitializeMonster() {
 	case MonsterType::Golem:
 		SetName("°ñ·½");
 		SetHP(150); SetAtk(25); SetDef(20); SetExp(100);
-		SetRewards(150, 1, DiceID::D1_4, 10);
+		SetRewards(150, 1, DiceID::D2_4, 10);
 		SetDiceCount(1); SetDiceSides(12);
 		break;
 	case MonsterType::Troll:
 		SetHP(80); SetAtk(20); SetDef(15); SetExp(40);
-		SetRewards(200, 1, DiceID::D1_6, 10);
+		SetRewards(200, 1, DiceID::D3_8, 10);
 		SetDiceCount(2); SetDiceSides(6);
 		break;
 	case MonsterType::MaxRabbit:
