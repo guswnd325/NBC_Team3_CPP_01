@@ -181,30 +181,31 @@ void BattleManager::GiveNormalReward(Character* player, Monster* monster)
     // TODO: 휴식권 1회 추가 → RestManager 구현 후 연동
     std::cout << "골드 +" << gold << " 획득!" << std::endl;
     std::cout << "휴식권 1회 획득! (현재 골드: " << player->GetGold() << ")" << std::endl;
+    std::cout << "경험치" << monster->GetExp() << "획득!(현재 경험치 : " << player->GetExp() << ")" << std::endl;
 }
 
 void BattleManager::GiveRiskyReward(Character* player, Monster* monster)
 {
     // TODO: Renderer::GetInstance().RenderRiskyReward()
-    // TODO: 리스크 보상 시나리오 확정 후 구현
     std::cout << "[ 리스크 보상 도전! ]" << std::endl;
 
     int playerRoll = diceManager.Roll(player);
     int monsterGetDice = monster->GetDiceChallengeValue();
 
-    //std::cout << "도전 결과 : " << roll << std::endl;
-    std::cout << "(리스크 보상 상세 내용 미구현)" << std::endl;
-
     if (playerRoll >= monsterGetDice)
     {
         std::cout << "성공!" << std::endl;
         player->GetInventory()->AddDice(monster->GetRewardDiceID());
-        Sleep(3000);
     }
     else
     {
         std::cout << "실패!" << std::endl;
-        Sleep(3000);
     }
 
+    player->SetExp(player->GetExp() + monster->GetExp());
+    if (player->GetExp() >= player->GetLevelUpExp())
+        player->LevelUp();
+
+    std::cout << "경험치" << monster->GetExp() << "획득!(현재 경험치 : " << player->GetExp() << ")" << std::endl;
+    Sleep(3000);
 }
