@@ -109,7 +109,8 @@ void Renderer::RenderMainMenu() {
     PrintDivider(UI_WIDTH);
     PrintLeftLine("[1] 탐  사 (새로운 지역을 조사합니다)", UI_WIDTH);
     PrintLeftLine("[2] 상  점 (아이템을 구매하거나 팝니다)", UI_WIDTH);
-    PrintLeftLine("[3] 휴  식 (체력을 회복하고 재정비합니다)", UI_WIDTH);
+    PrintLeftLine("[3] 장비창 (인벤토리)", UI_WIDTH);
+    PrintLeftLine("[4] 휴  식 (체력을 회복하고 재정비합니다)", UI_WIDTH);
     PrintBottom(UI_WIDTH);
     std::cout << BRIGHT_GREEN << " > 행동을 선택해라 : " << RESET;
 }
@@ -208,6 +209,30 @@ void Renderer::RenderStatus(Character* player) {
     PrintBottom(UI_WIDTH);
 }
 
+void Renderer::RenderAreaChoices(const std::vector<std::string>& choices, const std::unordered_map<std::string, std::string>& displayMap) {
+
+    PrintTop(UI_WIDTH);
+    PrintCenterLine("[ 탐험 지역 선택 ]", UI_WIDTH, WHITE);
+    PrintDivider(UI_WIDTH);
+
+    PrintLeftLine("어디로 이동하시겠습니까?", UI_WIDTH, CYAN);
+    PrintDivider(UI_WIDTH);
+
+    for (int i = 0; i < choices.size(); ++i) {
+        std::string engName = choices[i];
+        std::string korName = engName;
+
+        auto it = displayMap.find(engName);
+        if (it != displayMap.end()) {
+            korName = it->second;
+        }
+
+        std::string choiceText = " [" + std::to_string(i + 1) + "] " + korName;
+        PrintLeftLine(choiceText, UI_WIDTH, YELLOW);
+    }
+
+    PrintBottom(UI_WIDTH);
+}
 
 
 void Renderer::Clear()
@@ -215,3 +240,20 @@ void Renderer::Clear()
     system("cls");
 }
 
+void Renderer::Delay(int ms) {
+    Sleep(ms);
+}
+
+void Renderer::PrintTyping(const std::string& text, int speed) {
+    for (int i = 0; i < text.length(); i++) {
+        if ((unsigned char)text[i] >= 0x80) {
+            std::cout << text[i] << text[i + 1] << std::flush;
+            i++;
+        }
+        else {
+            std::cout << text[i] << std::flush;
+        }
+        Sleep(speed);
+    }
+    std::cout << std::endl;
+}

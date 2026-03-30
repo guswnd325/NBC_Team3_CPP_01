@@ -1,6 +1,8 @@
 #pragma once
 #include "Character.h"
 #include "Monster.h"
+#include <Windows.h>
+#include <unordered_map>
 
 class Renderer
 {
@@ -12,6 +14,8 @@ public:
     void RenderRewardSelect();
     void RenderBattleAction();
     void Clear();                                 // 화면 초기화
+    void Delay(int ms);
+    void PrintTyping(const std::string& text, int speed = 30);
 
     static int GetVisualLength(const std::string& str);
     static void PrintCenterLine(const std::string& text, int width, std::string color = "\033[37m");
@@ -25,7 +29,7 @@ public:
     Renderer();
     ~Renderer();
 
-    
+    void RenderAreaChoices(const std::vector<std::string>& choices, const std::unordered_map<std::string, std::string>& displayMap);
     void RenderBattleStart(Monster* monster);  // 전투 시작 화면 출력
     void RenderStatus(Character* player);   // 플레이어 상태 출력
     //void RenderBattleLog(const string& message);  // 전투 로그 출력
