@@ -22,7 +22,7 @@ void Monster::InitializeMonster() {
 			"   '~~\033[91m_~_\033[0m~~' "
 		};
 		SetHP(40); SetAtk(2); SetDef(0); SetExp(15);
-		SetRewards(30, 1, DiceID::D1_2, 4);
+		SetRewards(30, 1, DiceID::D1_2, 8);
 		SetDiceCount(1); SetDiceSides(6);
 		break;
 	case MonsterType::Goblin:
@@ -35,61 +35,61 @@ void Monster::InitializeMonster() {
 			"   '------'     "
 		};
 		SetHP(60); SetAtk(3); SetDef(2); SetExp(25);
-		SetRewards(60, 1, DiceID::D2_3, 6);
+		SetRewards(60, 1, DiceID::D2_3, 12);
 		SetDiceCount(2); SetDiceSides(4);
 		break;
 	case MonsterType::Ghost:
 		SetName("¿Ø∑…");
 		SetHP(80); SetAtk(8); SetDef(4); SetExp(45);
-		SetRewards(90, 1, DiceID::D1_3, 10);
+		SetRewards(90, 1, DiceID::D1_3, 20);
 		SetDiceCount(2); SetDiceSides(5);
 		break;
 	case MonsterType::Zombie:
 		SetName("¡ª∫Ò");
 		SetHP(150); SetAtk(2); SetDef(8); SetExp(60);
-		SetRewards(130, 1, DiceID::D2_3, 8);
+		SetRewards(130, 1, DiceID::D2_3, 16);
 		SetDiceCount(4); SetDiceSides(3);
 		break;
 	case MonsterType::Orc:
 		SetName("ø¿≈©");
 		SetHP(280); SetAtk(18); SetDef(12); SetExp(120);
-		SetRewards(280, 1, DiceID::D3_8, 15);
+		SetRewards(280, 1, DiceID::D3_8, 30);
 		SetDiceCount(2); SetDiceSides(8);
 		break;
 	case MonsterType::Golem:
 		SetName("∞Ò∑Ω");
 		SetHP(500); SetAtk(30); SetDef(50); SetExp(300);
-		SetRewards(800, 1, DiceID::D2_4, 22);
+		SetRewards(800, 1, DiceID::D2_4, 44);
 		SetDiceCount(1); SetDiceSides(12);
 		break;
 	case MonsterType::Troll:
 		SetName("∆Æ∑—");
-		SetRewards(250, 1, DiceID::D3_8, 15);
+		SetRewards(250, 1, DiceID::D3_8, 30);
 		SetHP(230); SetAtk(15); SetDef(12); SetExp(100);
 		SetDiceCount(2); SetDiceSides(8);
 		break;
 	case MonsterType::Dragon:
 		SetName("∑πµÂ µÂ∑°∞Ô");
 		SetHP(1200); SetAtk(40); SetDef(40); SetExp(800);
-		SetRewards(1500, 1, DiceID::D3_8, 24);
+		SetRewards(1500, 1, DiceID::D3_8, 48);
 		SetDiceCount(3); SetDiceSides(10);
 		break;
 	case MonsterType::MaxRabbit:
 		SetName("∏∏∑æ≈‰≥¢");
-		SetRewards(2000, 1, DiceID::D3_6, 25);
+		SetRewards(2000, 1, DiceID::D3_6, 50);
 		SetHP(888); SetAtk(35); SetDef(50); SetExp(1500);
 		SetDiceCount(10); SetDiceSides(6);
 		break;
 	case MonsterType::Mermaid:
 		SetName("¿ŒæÓ");
 		SetHP(320); SetAtk(10); SetDef(20); SetExp(150);
-		SetRewards(450, 1, DiceID::D2_4, 16);
+		SetRewards(450, 1, DiceID::D2_4, 32);
 		SetDiceCount(4); SetDiceSides(4);
 		break;
 	case MonsterType::Kraken:
 		SetName("Ω…«ÿ ≈©∂ÛƒÀ");
 		SetHP(450); SetAtk(12); SetDef(25); SetExp(200);
-		SetRewards(600, 1, DiceID::D3_6, 20);
+		SetRewards(600, 1, DiceID::D3_6, 40);
 		SetDiceCount(6); SetDiceSides(4);
 		break;
 	default:
