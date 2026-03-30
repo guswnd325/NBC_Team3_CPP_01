@@ -12,7 +12,7 @@ constexpr int upgradeUnit = 1;
 
 enum class RestOption
 {
-    Upgrade,
+    Upgrade = 1,
     Heal
 };
 

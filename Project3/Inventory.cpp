@@ -53,8 +53,8 @@ void Inventory::Run()
 			// DiceIDToString()
 			for (int i = 0; i < diceStorege.size(); i++)
 			{
-				//std::cout << "[" + std::to_string(i + 1) + "] " + diceStorege[i].dice->DiceIdToString(diceStorege[i].dice->GetId()) + " " + std::to_string(diceStorege[i].count) + "EA" << std::endl;
-				std::cout << "[" + std::to_string(i + 1) + "] " + std::to_string((int)diceStorege[i].dice->GetId()) + " " + std::to_string(diceStorege[i].count) + "EA" << std::endl;
+				std::cout << "[" + std::to_string(i + 1) + "] " + diceStorege[i].dice->DiceIdToString() + " " + std::to_string(diceStorege[i].count) + "EA" << std::endl;
+				//std::cout << "[" + std::to_string(i + 1) + "] " + std::to_string((int)diceStorege[i].dice->GetId()) + " " + std::to_string(diceStorege[i].count) + "EA" << std::endl;
 			}
 
 

@@ -132,7 +132,7 @@ void GameManager::StartGame()
 		}
 		
 		case 4:
-			//restManager->Run(player);
+			restManager->Run();
 
 			break;
 		default:

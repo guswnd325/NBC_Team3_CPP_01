@@ -2,7 +2,8 @@
 #include "Renderer.h"
 
 constexpr int defaultGold = 200;
-constexpr int defaultRestTicket = 0;
+constexpr int defaultHP = 50;
+constexpr int defaultRestTicket = 5;
 
 Character::Character()
 {
@@ -18,6 +19,7 @@ Character::~Character()
 
 void Character::InitializeCharacter(std::string name)
 {
+	SetHP(defaultHP);
 	SetName(name);
 }
 

@@ -118,10 +118,10 @@ void RestManager::Run()
 		std::string message = "";
 
 		// renderer.RenderRestSelect() ?
-		// [0] 메뉴로 돌아가기
-		// [1] 강화(주사위를 강화합니다)
-		// [2] 체력 회복(주사위로 체력을 회복합니다)
-
+		std::cout << "[0] 메뉴로 돌아가기" << std::endl;
+		std::cout << "[1] 강화(주사위를 강화합니다)" << std::endl;
+		std::cout << "[2] 체력 회복(주사위로 체력을 회복합니다)" << std::endl << std::endl;
+		std::cout << "옵션을 선택 : ";
 		int select;
 
 		std::cin >> select;
@@ -132,7 +132,7 @@ void RestManager::Run()
 			// 메뉴로 돌아감
 			break;
 		}
-		else if(std::cin.fail())
+		else if (std::cin.fail())
 		{
 			std::cin.clear();
 			std::cin.ignore((std::numeric_limits<std::streamsize>::max)(), '\n');
@@ -155,21 +155,32 @@ void RestManager::Run()
 			{
 				case HealStatus::Success:
 				{
-					message = "체력이 " + to_string(info.healValue) + "만큼 회복 되었습니다.";
+					message = "체력이 " + to_string(info.healValue) + "만큼 회복 되었습니다. (" + to_string(character->GetHP()-info.healValue) + " -> " + to_string(character->GetHP()) + ")";
 					break;
+
 				}
 				case HealStatus::TicketInsufficient:
 				{
 					message = "회복 티켓이 부족합니다.";
 					break;
+
+
 				}
 				case HealStatus::MaxHP:
 				{
 					message = "이미 최대 체력입니다.";
 					break;
+
 				}
 			}
-			
+
+			{
+				renderer.Clear();
+
+				std::cout << message << std::endl;
+				Sleep(2000);
+			}
+
 			// renderer.RenderMessage(message);
 			// renderer.Delay(5);
 
@@ -180,15 +191,30 @@ void RestManager::Run()
 
 			if (character->GetRestTicket() <= 0)
 			{
-				message = "강화 티켓이 부족합니다.";
+				message = "티켓이 부족합니다.";
+				{
+					renderer.Clear();
+					std::cout << message << std::endl;
+					Sleep(2000);
+				}
 				// renderer.RenderMessage(message);
 				// renderer.Delay(5);
-				break;
+				continue;
+
 			}
 
 			// 주사위 인덱스
 			message = "강화할 주사위를 선택\n";
 			// renderer.RenderDiceStorege();
+
+			std::cout << "== 주사위 인벤토리 ==" << std::endl;
+			// DiceIDToString()
+			std::vector<DiceSlot> storege = character->GetInventory()->GetDiceStorege();
+			for (int i = 0; i < storege.size(); i++)
+			{
+				std::cout << "[" + std::to_string(i + 1) + "] " + storege[i].dice->DiceIdToString() + " " + std::to_string(storege[i].count) + "EA" << std::endl;
+				//std::cout << "[" + std::to_string(i + 1) + "] " + std::to_string((int)diceStorege[i].dice->GetId()) + " " + std::to_string(diceStorege[i].count) + "EA" << std::endl;
+			}
 
 			int index;
 			std::cin >> index;
@@ -248,15 +274,21 @@ void RestManager::Run()
 				{
 					message = "이미 최대 업그레이드 되었습니다.";
 					break;
+
 				}
 				case UpgradeStatus::Success:
 				{
 					message = "강화 성공!" + to_string(info.upgradeLevel - 1) + " -> " + to_string(info.upgradeLevel);
 					// or message = "강화 성공!" + to_string(info.upgradeLevel) + " -> " + to_string(info.upgradeLevel+1);
 					break;
+
 				}
 			}
-		
+
+			{
+				std::cout << message << std::endl;
+				Sleep(2000);
+			}
 			
 			// 처리 결과 출력
 			// renderer.RenderMessage(message);
