@@ -22,6 +22,7 @@ int DiceManager::Roll(Character* character)
 {
     int totalSum = 0;
 
+    // 캐릭터의 인벤토리에서 주사위 목록을 가져옵니다.
     auto& diceList = character->GetInventory()->GetDiceStorege();
 
     for (const auto& slot : diceList)
@@ -29,26 +30,23 @@ int DiceManager::Roll(Character* character)
         Dice* dice = slot.dice;
         int count = slot.count;
 
-        std::uniform_int_distribution<int> dis(1, dice->side);
+        if (dice == nullptr) continue; // 방어 코드: 주사위가 없는 경우 제외
+
+        // 핵심 수정: 1~side가 아니라 주사위 객체가 가진 min~max 범위를 사용합니다.
+        std::uniform_int_distribution<int> dis(dice->minSide, dice->maxSide);
 
         for (int i = 0; i < count; i++)
         {
             int roll = dis(gen);
             totalSum += roll;
 
-            std::cout << "[" << dice->side << "면체: " << roll << "] ";
+            // 출력 메시지도 범위에 맞게 수정
+            std::cout << "[" << dice->minSide << "~" << dice->maxSide << " 범위: " << roll << "] ";
         }
     }
 
-    std::cout << "총합: " << totalSum << std::endl;
+    std::cout << "\n총합: " << totalSum << std::endl;
 
     return totalSum;
 }
 
-void DiceManager::UpgradeDice(Dice& targetDice, int amount)
-{
-	targetDice.side += amount;
-
-	std::cout << "주사위의 최대 수치가 " << targetDice.side << " (으)로 증가했습니다." << std::endl;
-
-}
