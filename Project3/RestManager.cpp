@@ -116,6 +116,7 @@ void RestManager::Run()
 		Character* character = GameManager::GetInstance().GetCharacter();
 		
 		std::string message = "";
+
 		// renderer.RenderRestSelect() ?
 		// [0] 메뉴로 돌아가기
 		// [1] 강화(주사위를 강화합니다)
