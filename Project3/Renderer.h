@@ -42,7 +42,7 @@ public:
     void RenderBuyResult(BuyStatus status, BaseItem* item, int currentGold);
     void RenderAreaChoices(const std::vector<std::string>& choices, const std::unordered_map<std::string, std::string>& displayMap);
     void RenderDiceUpgradeList(const std::vector<DiceSlot>& storage); // 강화 가능 주사위 목록
-    void RenderHealResult(int healValue, int prevHP, int curHP); // 회복 결과 출력
+    void RenderHealResult(int healValue, int prevHP, int curHP,int maxHP); // 회복 결과 출력
     void RenderBattleStart(Monster* monster);  // 전투 시작 화면 출력
     void RenderUpgradeResult(UpgradeStatus status, int prevLevel, int curLevel); // 강화 결과 출력
     void RenderStatus(Character* player);   // 플레이어 상태 출력

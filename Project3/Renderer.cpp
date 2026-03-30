@@ -271,15 +271,25 @@ void Renderer::RenderDiceUpgradeList(const std::vector<DiceSlot>& storage) {
     std::cout << BRIGHT_GREEN << " > 주사위 번호 입력 : " << RESET;
 }
 
-void Renderer::RenderHealResult(int healValue, int prevHP, int curHP) {
+void Renderer::RenderHealResult(int healValue, int prevHP, int curHP, int maxHP) {
     Clear();
     PrintTop(UI_WIDTH);
     PrintCenterLine("[ 회복 결과 ]", UI_WIDTH, WHITE);
     PrintDivider(UI_WIDTH);
-    std::string msg = "체력이 " + std::to_string(healValue) + "만큼 회복되었습니다!";
-    PrintCenterLine(msg, UI_WIDTH, BRIGHT_GREEN);
-    std::string hpMsg = std::to_string(prevHP) + " -> " + std::to_string(curHP);
-    PrintCenterLine(hpMsg, UI_WIDTH, WHITE);
+    if (prevHP >= maxHP) {
+        PrintCenterLine("이미 체력이 가득 차 있습니다!", UI_WIDTH, YELLOW);
+        PrintCenterLine("현재 HP: " + std::to_string(maxHP) + " / " + std::to_string(maxHP), UI_WIDTH, WHITE);
+    }
+    else {
+        std::string msg = "체력이 " + std::to_string(healValue) + "만큼 회복되었습니다!";
+        PrintCenterLine(msg, UI_WIDTH, BRIGHT_GREEN);
+        std::string hpMsg = std::to_string(prevHP) + " -> " + std::to_string(curHP);
+        PrintCenterLine(hpMsg, UI_WIDTH, WHITE);
+
+        if (curHP >= maxHP) {
+            PrintCenterLine("( FULL HP!! )", UI_WIDTH, CYAN);
+        }
+    }
     PrintBottom(UI_WIDTH);
     Delay(2000);
 }
