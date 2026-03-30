@@ -6,6 +6,11 @@ ShopManager::ShopManager()
 
 }
 
+const std::vector<BaseItem*>& ShopManager::GetItemLists()
+{
+	return itemLists;
+}
+
 void ShopManager::Run(Character* character)
 {
 	while (true)
@@ -25,12 +30,8 @@ void ShopManager::Run(Character* character)
 		std::string message = "";
 
 		// 숫자 이외의 입력 및 0은 종료처리
-		if (!buyItemIndex)
-		{
-			// 메뉴로 돌아가기
-			break;
-		}
-		else if (std::cin.fail())
+		
+		if (std::cin.fail())
 		{
 			std::cin.clear();
 			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -39,11 +40,17 @@ void ShopManager::Run(Character* character)
 			// renderer.Delay(4);
 			continue;
 		}
+		else if (!buyItemIndex)
+		{
+			// 메뉴로 돌아가기
+			break;
+		}
+		// 인덱스 over 체크
 
-		// 상점 -> 판매 아이템 리스트 출력해줌 -> 인덱스 입력하라고 함
-
+		//if (buyItemIndex)
+		
 		std::pair<BuyStatus, BaseItem *> status = BuyItem(buyItemIndex, character);
-
+		
 		switch (status.first)
 		{
 			case BuyStatus::Success:
@@ -83,10 +90,17 @@ std::pair<BuyStatus, BaseItem *> ShopManager::BuyItem(int index, Character * cha
 		return {BuyStatus::Success, item };
 	}
 	// 구매 실패(골드 부족)
-	else// if (itemPrice > playerGold)
+	else if (itemPrice > playerGold)
 	{
 		return { BuyStatus::InsufficientGold,  item };
 	}
+
+	/*
+	else if
+	{
+		return { BuyStatus::Possessed,  item };
+	}
+	*/
 
 	//
 	//return { BuyStatus::Default, "Dummy" };

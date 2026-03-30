@@ -16,8 +16,10 @@ enum class BuyStatus
 
 class ShopManager
 {
+    std::vector<BaseItem*> itemLists;
 public:
     ShopManager();
+    const std::vector<BaseItem*>& GetItemLists();
     std::pair<BuyStatus, BaseItem*> BuyItem(int index, Character* character);
     void Run(Character* character);
 };

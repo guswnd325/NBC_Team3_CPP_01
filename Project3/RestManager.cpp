@@ -33,7 +33,7 @@ UpgradeResult RestManager::UpgradeDice(int index, UpgradeType type, Character* c
 		
 
 		// 강화된 주사위 min, max 값을 통해 Add Dice
-		int min, max;
+		int min = 0, max = 0;
 		
 		
 		if (type == UpgradeType::Min) 
@@ -192,12 +192,8 @@ void RestManager::Run()
 			std::cin >> index;
 
 			// 숫자 이외의 입력 및 0은 종료처리
-			if (!index)
-			{
-				// 메뉴로 쫒아내기
-				break;
-			}
-			else if(std::cin.fail())
+			
+			if(std::cin.fail())
 			{
 				std::cin.clear();
 				std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -207,6 +203,14 @@ void RestManager::Run()
 
 				continue;
 			}
+			else if (!index)
+			{
+				// 메뉴로 쫒아내기
+				break;
+			}
+
+			// 인덱스 오버 체크
+			//if (indexOver)
 
 			// 강화 종류 선택
 			message = "강화 옵션을 선택해주세요(1=최소값 증가, 2=최대값 증가)";
@@ -215,12 +219,8 @@ void RestManager::Run()
 			std::cin >> select;
 
 			// 숫자 이외의 입력 및 0은 종료처리
-			if (!select)
-			{
-				// 메뉴로 나가!!
-				break;
-			} 
-			else if (std::cin.fail())
+			 
+			if (std::cin.fail())
 			{
 				std::cin.clear();
 				std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -230,7 +230,11 @@ void RestManager::Run()
 
 				continue;
 			}
-
+			else if (!select)
+			{
+				// 메뉴로 나가!!
+				break;
+			}
 
 			UpgradeResult info = UpgradeDice(index, (UpgradeType)select, character);
 
