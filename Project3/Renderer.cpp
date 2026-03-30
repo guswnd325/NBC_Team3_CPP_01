@@ -84,11 +84,24 @@ void Renderer::PrintLeftLine(const std::string& text, int width, std::string col
 const int UI_WIDTH = 60;
 
 void Renderer::RenderMenu() {
+    Clear();
     PrintTop(UI_WIDTH);
-    PrintCenterLine("Dice Agent", UI_WIDTH, WHITE);
+
+    // PrintCenterLine을 이용해 한 줄씩 출력 (자동 너비 계산)
+    PrintCenterLine(R"(      .-------.    ____  _ ____ ____      )", UI_WIDTH, WHITE);
+    PrintCenterLine(R"(     /   o   /|   |  _ \(_) ___|  __|     )", UI_WIDTH, WHITE);
+    PrintCenterLine(R"(    /  o    / o|  | | | | | |   | |__      )", UI_WIDTH, WHITE);
+    PrintCenterLine(R"(   /   o   / o |  | |_| | | |___|  __|     )", UI_WIDTH, WHITE);
+    PrintCenterLine(R"(  '-------' o /   |____/|_|\____|____|     )", UI_WIDTH, WHITE);
+    PrintCenterLine(R"(  | o     |  /      _   ____ ____ _  _ ___ )", UI_WIDTH, WHITE);
+    PrintCenterLine(R"(  |    o  | /      /_\ | __ |___ |\ |  |   )", UI_WIDTH, WHITE);
+    PrintCenterLine(R"(  | o     |/      /_  \|__] |___ | \|  |   )", UI_WIDTH, WHITE);
+    PrintCenterLine(R"(  '-------'                                )", UI_WIDTH, WHITE);
+
     PrintDivider(UI_WIDTH);
-    PrintLeftLine("[1] START GAME", UI_WIDTH, YELLOW);
-    PrintLeftLine("[2] EXIT", UI_WIDTH, RED);
+    PrintCenterLine("[1] START GAME", UI_WIDTH, YELLOW);
+
+    PrintCenterLine("[2] EXIT", UI_WIDTH, RED);
     PrintBottom(UI_WIDTH);
     std::cout << BRIGHT_GREEN << " > InPut :" << RESET;
 }
@@ -243,7 +256,7 @@ void Renderer::RenderRestMenu() {
     PrintCenterLine("[ 캠프파이어 (휴식소) ]", UI_WIDTH, WHITE);
     PrintDivider(UI_WIDTH);
     PrintLeftLine("[1] 주사위 강화 (티켓 소모)", UI_WIDTH, YELLOW);
-    PrintLeftLine("[2] 체력 회복   (주사위 굴리기)", UI_WIDTH, BRIGHT_GREEN);
+    PrintLeftLine("[2] 체력 회복   (티켓 소모, 주사위)", UI_WIDTH, BRIGHT_GREEN);
     PrintLeftLine("[0] 마을로 돌아가기", UI_WIDTH, WHITE);
     PrintBottom(UI_WIDTH);
     std::cout << BRIGHT_GREEN << " > 옵션을 선택 : " << RESET;

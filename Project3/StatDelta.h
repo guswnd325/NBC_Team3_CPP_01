@@ -3,14 +3,11 @@
 struct StatDelta
 {
 public:
-	int hp, mp, atk, def, luck;
+	int atk, def;
 
-	StatDelta(int hp = 0, int mp = 0, int atk = 0, int def = 0, int luck = 0)
+	StatDelta(int atk = 0, int def = 0)
 	{
-		this->hp = hp;
-		this->mp = mp;
 		this->atk = atk;
 		this->def = def;
-		this->luck = luck;
 	}
 };

@@ -54,7 +54,6 @@ void BaseItem::Equip(Character * character)
 	// StatDelta 스탯 플레이어 적용
 	character->SetAtk(character->GetAtk() + statDelta.atk);
 	character->SetDef(character->GetDef() + statDelta.def);
-	character->SetHP(Tools<int>::Clamp(character->GetHP() + statDelta.hp, 0, MAX_HP));
 }
 
 void BaseItem::UnEquip(Character* character)
@@ -62,7 +61,6 @@ void BaseItem::UnEquip(Character* character)
 	// StatDelta 스탯 플레이어에서 빼기
 	character->SetAtk(character->GetAtk() - statDelta.atk);
 	character->SetDef(std::max(1, character->GetDef() - statDelta.def));
-	character->SetHP(Tools<int>::Clamp(character->GetHP() - statDelta.hp, 0, MAX_HP));
 }
 
 const StatDelta& BaseItem::GetStatDelta() const

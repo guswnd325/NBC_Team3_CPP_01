@@ -34,65 +34,65 @@ public:
 class Sword : public BaseItem
 {
 public:
-	Sword() : BaseItem("½Â¸®ÀÇ °Ë", SlotItems::Weapon, {}, 100, (int)Gears::Sword) {}
+	Sword() : BaseItem("½Â¸®ÀÇ °Ë", SlotItems::Weapon, StatDelta(10), 200, (int)Gears::Sword) {}
 };
 
 class Bow : public BaseItem
 {
 public:
-	Bow() : BaseItem("½Â¸®ÀÇ È°", SlotItems::Weapon, {}, 100, (int)Gears::Bow) {}
+	Bow() : BaseItem("½Â¸®ÀÇ È°", SlotItems::Weapon, StatDelta(20), 1000, (int)Gears::Bow) {}
 };
 
 class Mace : public BaseItem
 {
 public:
-	Mace() : BaseItem("¹Ú°æÈ£ Æ©ÅÍ´ÔÀÇ Ã¶Åð", SlotItems::Weapon, {}, 100, (int)Gears::Mace) {}
+	Mace() : BaseItem("¹Ú°æÈ£ Æ©ÅÍ´ÔÀÇ Ã¶Åð", SlotItems::Weapon, StatDelta(30), 2000, (int)Gears::Mace) {}
 };
 
 class Helmet : public BaseItem
 {
 public:
-	Helmet() : BaseItem("ÀüÁø¿ì ¸Å´ÏÀú´ÔÀÇ Çï¸ä", SlotItems::Helmet, StatDelta(), 100, (int)Gears::Helmet) {}
+	Helmet() : BaseItem("ÀüÁø¿ì ¸Å´ÏÀú´ÔÀÇ Çï¸ä", SlotItems::Helmet, StatDelta(0, 5), 300, (int)Gears::Helmet) {}
 };
 
 class Halo : public BaseItem
 {
 public:
-	Halo() : BaseItem("Çö¹¬´ÔÀÇ ÇìÀÏ·Î", SlotItems::Helmet, StatDelta(), 100, (int)Gears::Helmet) {}
+	Halo() : BaseItem("Çö¹¬´ÔÀÇ ÇìÀÏ·Î", SlotItems::Helmet, StatDelta(0, 5), 300, (int)Gears::Helmet) {}
 };
 
 class PaperArmor : public BaseItem
 {
 public:
-	PaperArmor() : BaseItem("Á¾ÀÌ °©¿Ê", SlotItems::BodyArmor, StatDelta(), 100, (int)Gears::PaperArmor) {}
+	PaperArmor() : BaseItem("Á¾ÀÌ °©¿Ê", SlotItems::BodyArmor, StatDelta(0, 10), 500, (int)Gears::PaperArmor) {}
 };
 
 class BallisticPlate : public BaseItem
 {
 public:
-	BallisticPlate() : BaseItem("¹æÅºÇÃ·¹ÀÌÆ®", SlotItems::BodyArmor, StatDelta(), 100, (int)Gears::BallisticPlate) {}
+	BallisticPlate() : BaseItem("¹æÅºÇÃ·¹ÀÌÆ®", SlotItems::BodyArmor, StatDelta(0, 15), 1000, (int)Gears::BallisticPlate) {}
 };
 
 class MilitaryBoots : public BaseItem
 {
 public:
-	MilitaryBoots() : BaseItem("±ºÈ­", SlotItems::Boots, StatDelta(), 100, (int)Gears::MilitaryBoots) {}
+	MilitaryBoots() : BaseItem("±ºÈ­", SlotItems::Boots, StatDelta(0, 5), 100, (int)Gears::MilitaryBoots) {}
 };
 
 class DragonscalePlateSabatons : public BaseItem
 {
 public:
-	DragonscalePlateSabatons() : BaseItem("¿ëºñ´Ã ÆÇ±Ý ÀåÈ­", SlotItems::Boots, StatDelta(), 100, (int)Gears::DragonscalePlateSabatons) {}
+	DragonscalePlateSabatons() : BaseItem("¿ëºñ´Ã ÆÇ±Ý ÀåÈ­", SlotItems::Boots, StatDelta(0, 10), 800, (int)Gears::DragonscalePlateSabatons) {}
 };
 
 class TutorTears : public BaseItem
 {
 public:
-	TutorTears() : BaseItem("°­µ¿¿í Æ©ÅÍ´ÔÀÇ ´«¹°", SlotItems::Accessory, {}, 100, (int)Gears::TutorTears) {}
+	TutorTears() : BaseItem("°­µ¿¿í Æ©ÅÍ´ÔÀÇ ´«¹°", SlotItems::Accessory, StatDelta(5,4), 1103, (int)Gears::TutorTears) {}
 };
 
 class Wing : public BaseItem
 {
 public:
-	Wing() : BaseItem("ÀÌ¼±Á¤ ¸Å´ÏÀú´ÔÀÇ ³¯°³", SlotItems::Accessory, {}, 100, (int)Gears::Wing) {}
+	Wing() : BaseItem("ÀÌ¼±Á¤ ¸Å´ÏÀú´ÔÀÇ ³¯°³", SlotItems::Accessory, StatDelta(4, 5), 1004, (int)Gears::Wing) {}
 };

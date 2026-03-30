@@ -118,10 +118,7 @@ void RefurbishManager::Run()
 		renderer.Clear();
 		Character* character = GameManager::GetInstance().GetCharacter();
 
-		std::cout << "[0] 메뉴로 돌아가기" << std::endl;
-		std::cout << "[1] 강화(주사위를 강화합니다)" << std::endl;
-		std::cout << "[2] 체력 회복(주사위로 체력을 회복합니다)" << std::endl << std::endl;
-		std::cout << "옵션을 선택 : ";
+		renderer.RenderRestMenu();
 		int select;
 
 		std::cin >> select;
