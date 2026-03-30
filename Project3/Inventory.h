@@ -65,13 +65,13 @@ public:
 	EquipResult EquipByIndex(int index);
 	EquipStatus EquipByBaseItem(BaseItem * gear);
 
-	void AddDice(Dice* dice);
-	void UseDice(int id);
-	int GetDiceCount(int id);
+	void AddDice(DiceID dice);
+	void UseDice(DiceID id);
+	int GetDiceCount(DiceID id);
 	bool AddGear(BaseItem* gear);
 
 	int GetInventoryGearIndex(int id);
-	int GetInventoryDiceIndex(int id);
+	int GetInventoryDiceIndex(DiceID id);
 
 	void Run();
 	

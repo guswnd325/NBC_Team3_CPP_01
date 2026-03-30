@@ -154,7 +154,7 @@ int Inventory::GetInventoryGearIndex(int id)
 	return NOT_FOUND;
 }
 
-int Inventory::GetInventoryDiceIndex(int id)
+int Inventory::GetInventoryDiceIndex(DiceID id)
 {
 	for (int i = 0; i < diceStorege.size(); i++)
 	{
@@ -192,13 +192,13 @@ bool Inventory::AddGear(BaseItem* gear)
 	return false; // 자동 장착된 경우 False 반환
 }
 
-void Inventory::AddDice(Dice* dice)
+void Inventory::AddDice(DiceID id)
 {
-	int index = GetInventoryDiceIndex(dice->GetId());
+	int index = GetInventoryDiceIndex(id);
 	if (index == NOT_FOUND)
 	{
 		// 없는경우 새로 추가
-		diceStorege.push_back(DiceSlot(dice, 1));
+		diceStorege.push_back(DiceSlot(new Dice(id), 1));
 	}
 	else
 	{
@@ -207,7 +207,7 @@ void Inventory::AddDice(Dice* dice)
 	}
 }
 
-void Inventory::UseDice(int id)
+void Inventory::UseDice(DiceID id)
 {
 	int index = GetInventoryDiceIndex(id);
 
@@ -220,9 +220,8 @@ void Inventory::UseDice(int id)
 	}
 }
 
-int Inventory::GetDiceCount(int id)
+int Inventory::GetDiceCount(DiceID id)
 {
 	int index = GetInventoryDiceIndex(id);
 	return diceStorege[index].count;
 }
-
