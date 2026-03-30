@@ -118,7 +118,7 @@ public:
     DiceID MakeDiceId(int min, int max);
 
 
-    void DiceAnimationRoll();
+    void DiceAnimationRoll(const std::vector<int>& results);
 
 };
 

@@ -11,9 +11,7 @@ std::mt19937 DiceManager::gen(DiceManager::rd());
 
 DiceManager::DiceManager() {}
 DiceManager::~DiceManager() {}
-
-
-void DiceManager::DiceAnimationRoll()
+void DiceManager::DiceAnimationRoll(const std::vector<int>& results)
 {
     HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
     DWORD dwMode = 0;
@@ -21,50 +19,16 @@ void DiceManager::DiceAnimationRoll()
     SetConsoleMode(hOut, dwMode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
 
     std::vector<std::vector<std::string>> frames = {
-        
-        { "+-------+",
-          "|       |",
-          "|   .   |",
-          "|       |",
-          "+-------+" },
-
-          
-          { "+-------+",
-            "|     . |",
-            "|       |",
-            "| .     |",
-            "+-------+" },
-
-           
-            { "+-------+",
-              "|     . |",
-              "|   .   |",
-              "| .     |",
-              "+-------+" },
-
-           
-              { "+-------+",
-                "| .   . |",
-                "|       |",
-                "| .   . |",
-                "+-------+" },
-
-                
-                { "+-------+",
-                  "| .   . |",
-                  "|   .   |",
-                  "| .   . |",
-                  "+-------+" },
-
-                  
-                  { "+-------+",
-                    "| .   . |",
-                    "| .   . |",
-                    "| .   . |",
-                    "+-------+" }
+        { "+-------+", "|       |", "|   .   |", "|       |", "+-------+" },
+        { "+-------+", "|     . |", "|       |", "| .     |", "+-------+" },
+        { "+-------+", "|     . |", "|   .   |", "| .     |", "+-------+" },
+        { "+-------+", "| .   . |", "|       |", "| .   . |", "+-------+" },
+        { "+-------+", "| .   . |", "|   .   |", "| .   . |", "+-------+" },
+        { "+-------+", "| .   . |", "| .   . |", "| .   . |", "+-------+" }
     };
 
     const int FRAME_LINES = 5;
+    int diceCount = (int)results.size();
 
     CONSOLE_CURSOR_INFO cursorInfo;
     GetConsoleCursorInfo(hOut, &cursorInfo);
@@ -72,65 +36,94 @@ void DiceManager::DiceAnimationRoll()
     SetConsoleCursorInfo(hOut, &cursorInfo);
 
     srand(static_cast<unsigned int>(time(nullptr)));
-
     AudioManager::GetInstance().PlaySFX(SFXList::dice_roll);
 
-    for (const std::string& line : frames[0]) {
-        std::cout << "\t" << line << "\n";
+    // 첫 프레임 출력 (공간 확보)
+    for (int line = 0; line < FRAME_LINES; ++line) {
+        std::cout << "\t";
+        for (int d = 0; d < diceCount; ++d) {
+            std::cout << frames[0][line] << "  ";
+        }
+        std::cout << "\n";
     }
 
+    // 애니메이션 루프
     for (int i = 1; i < 16; ++i) {
         std::cout << "\033[" << FRAME_LINES << "A";
-        int frameIdx = rand() % frames.size();
-        for (const std::string& line : frames[frameIdx]) {
-            std::cout << "\r\t" << line << "          \n";
+
+        std::vector<int> frameIdxs(diceCount);
+        for (int d = 0; d < diceCount; ++d) {
+            frameIdxs[d] = rand() % frames.size();
+        }
+
+        for (int line = 0; line < FRAME_LINES; ++line) {
+            std::cout << "\r\t";
+            for (int d = 0; d < diceCount; ++d) {
+                std::cout << frames[frameIdxs[d]][line] << "  ";
+            }
+            std::cout << "\n"; // ← 공백 제거
         }
         std::cout.flush();
 
-        int delay = 10+ (i * i);
+        int delay = 10 + (i * i);
         std::this_thread::sleep_for(std::chrono::milliseconds(delay));
     }
+
+    // 마지막 프레임 - 실제 결과값 표시
+    std::cout << "\033[" << FRAME_LINES << "A";
+    for (int line = 0; line < FRAME_LINES; ++line) {
+        std::cout << "\r\t";
+        for (int d = 0; d < diceCount; ++d) {
+            int resultFrame = results[d] - 1;
+            if (resultFrame < 0) resultFrame = 0;
+            if (resultFrame >= (int)frames.size()) resultFrame = (int)frames.size() - 1;
+            std::cout << frames[resultFrame][line] << "  ";
+        }
+        std::cout << "\n";
+    }
+    std::cout.flush();
 
     cursorInfo.bVisible = TRUE;
     SetConsoleCursorInfo(hOut, &cursorInfo);
 
-    std::cout << "\n\t[ 결과 확인 중... ]" << std::endl;
-}
+    // ★ 각 주사위 결과값 출력
+    std::cout << "\n\t";
+    for (int d = 0; d < diceCount; ++d) {
+        std::cout << "[  " << results[d] << "  ]" << "  ";
+    }
 
+
+    int total = 0;
+    for (int r : results) total += r;
+    std::cout << "\n\t총합: " << total << std::endl;
+    std::cout << std::endl;
+}
 
 int DiceManager::Roll(Character* character)
 {
     int totalSum = 0;
-
-    // 캐릭터의 인벤토리에서 주사위 목록을 가져옵니다.
     auto& diceList = character->GetInventory()->GetDiceStorege();
 
-    DiceAnimationRoll();
-
+    std::vector<int> results;
     for (const auto& slot : diceList)
     {
         Dice* dice = slot.dice;
-        int count = slot.count;
-
-        if (dice == nullptr) continue; 
-
-        //주사위 객체가 가진 min~max 범위를 사용
+        if (dice == nullptr) continue;
         std::uniform_int_distribution<int> dis(dice->minSide, dice->maxSide);
-
-        for (int i = 0; i < count; i++)
+        for (int i = 0; i < slot.count; i++)
         {
             int roll = dis(gen);
+            results.push_back(roll);
             totalSum += roll;
-
-            
-            std::cout << "[" << dice->minSide << "~" << dice->maxSide << " 범위: " << roll << "] ";
         }
     }
 
-    std::cout << "\n총합: " << totalSum << std::endl;
+    DiceAnimationRoll(results);
 
     return totalSum;
 }
+
+
 void DiceManager::SetDiceID(Dice& dice)
 {
     int min = dice.minSide;
