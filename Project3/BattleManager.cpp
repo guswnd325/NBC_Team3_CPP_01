@@ -173,6 +173,10 @@ void BattleManager::GiveNormalReward(Character* player, Monster* monster)
     int current = player->GetRestTicket();
     player->SetRestTicket(current + 1);
 
+    player->SetExp(player->GetExp() + monster->GetExp());
+    if (player->GetExp() >= player->GetLevelUpExp())
+        player->LevelUp();
+    
     // TODO: Renderer::GetInstance().RenderNormalReward(gold, player->GetGold())
     // TODO: ÈÞ½Ä±Ç 1È¸ Ãß°¡ ¡æ RestManager ±¸Çö ÈÄ ¿¬µ¿
     std::cout << "°ñµå +" << gold << " È¹µæ!" << std::endl;
