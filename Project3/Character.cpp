@@ -91,6 +91,7 @@ int Character::GetRestTicket() const
 void Character::LevelUp()
 {
 	level++;
+	SetExp(0);
 	levelUpExp *= 1.5;
 }
 
