@@ -106,9 +106,6 @@ void RefurbishManager::Run()
 		renderer.Clear();
 		Character* character = GameManager::GetInstance().GetCharacter();
 
-		std::string message = "";
-
-		// renderer.RenderRestSelect() ?
 		std::cout << "[0] 메뉴로 돌아가기" << std::endl;
 		std::cout << "[1] 강화(주사위를 강화합니다)" << std::endl;
 		std::cout << "[2] 체력 회복(주사위로 체력을 회복합니다)" << std::endl << std::endl;
@@ -117,20 +114,14 @@ void RefurbishManager::Run()
 
 		std::cin >> select;
 
-		// 숫자 이외의 입력 및 0은 종료처리
 		if (!select)
 		{
-			// 메뉴로 돌아감
 			break;
 		}
 		else if (std::cin.fail())
 		{
 			std::cin.clear();
 			std::cin.ignore((std::numeric_limits<std::streamsize>::max)(), '\n');
-
-			message = "잘못된 입력입니다.";
-			// renderer.RenderMessage(message);
-			// renderer.Delay(4);
 			continue;
 		}
 
@@ -140,37 +131,9 @@ void RefurbishManager::Run()
 		{
 			RestResult info = Rest(character);
 
-			std::string message = "";
-
-			switch (info.result)
-			{
-			case HealStatus::Success:
-			{
-				message = "체력이 " + to_string(info.healValue) + "만큼 회복 되었습니다. (" + to_string(character->GetHP() - info.healValue) + " -> " + to_string(character->GetHP()) + ")";
-				break;
-
-			}
-			case HealStatus::TicketInsufficient:
-			{
-				message = "회복 티켓이 부족합니다.";
-				break;
-
-
-			}
-			case HealStatus::MaxHP:
-			{
-				message = "이미 최대 체력입니다.";
-				break;
-
-			}
-			}
-
-			{
-				renderer.Clear();
-
-				std::cout << message << std::endl;
-				Sleep(2000);
-			}
+			int hp = character->GetHP();
+			renderer.RenderHealResult(info.healValue,  hp - info.healValue, hp);
+			
 			continue;
 		}
 		if (select == (int)RestOption::Upgrade)
