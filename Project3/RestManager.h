@@ -10,24 +10,43 @@ class GameManager;
 
 constexpr int upgradeUnit = 1;
 
+enum class RestOption
+{
+    Upgrade,
+    Heal
+};
+
 enum class UpgradeType
 {
     Min,
     Max,
 };
 
-enum class UpgradeResult
+enum class UpgradeStatus
 {
     Success,
     TicketInsufficient,
     MaxUpgrade,
 };
 
-enum class HealResult
+enum class HealStatus
 {
     Success,
+    TicketInsufficient,
     MaxHP,
 };
+
+struct UpgradeResult
+{
+    UpgradeStatus status;
+    int upgradeLevel;
+};
+struct RestResult
+{
+    HealStatus result;
+    int healValue;
+};
+
 
 // Base Class
 class RestManager
@@ -40,6 +59,6 @@ public:
     
     UpgradeResult UpgradeDice(int index, UpgradeType type, Character* character);
 
-    void Rest(Character* character);
+    RestResult Rest(Character* character);
     void Run();
 };

@@ -10,27 +10,39 @@ void ShopManager::Run(Character* character)
 {
 	while (true)
 	{
-		//Renderer::GetInstance().ShowShop();
+		Renderer& renderer = Renderer::GetInstance();
+		//renderer.ShowShopItems();
+		// [0] 메뉴로 돌아가기
+		 
+		// == 상점 아이템 리스트 ==
+		// [1] 강동욱 튜터님의 눈물
+		// [2] 
+
 		
 		int buyItemIndex;
 
 		std::cin >> buyItemIndex;
-
-		bool fail = std::cin.fail();
+		std::string message = "";
 
 		// 숫자 이외의 입력 및 0은 종료처리
-		if (!buyItemIndex || fail)
+		if (!buyItemIndex)
+		{
+			// 메뉴로 돌아가기
+			break;
+		}
+		else if (std::cin.fail())
 		{
 			std::cin.clear();
 			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-			break;
+			message = "잘못된 입력입니다.";
+			// renderer.RenderMessage(message);
+			// renderer.Delay(4);
+			continue;
 		}
 
 		// 상점 -> 판매 아이템 리스트 출력해줌 -> 인덱스 입력하라고 함
 
 		std::pair<BuyStatus, BaseItem *> status = BuyItem(buyItemIndex, character);
-
-		std::string message = "";
 
 		switch (status.first)
 		{
@@ -48,7 +60,10 @@ void ShopManager::Run(Character* character)
 			break;
 		}
 		// 처리 결과 출력
-		// Renderer::GetInstance().RenderMessage(message);
+		// renderer.RenderMessage(message);
+		// renderer.Delay(4);
+
+
 	}
 }
 

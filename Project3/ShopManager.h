@@ -4,6 +4,7 @@
 #include "ItemSpawnManager.h"
 #include "BaseItem.h"
 #include "Character.h"
+#include "Renderer.h"
 
 enum class BuyStatus
 {
