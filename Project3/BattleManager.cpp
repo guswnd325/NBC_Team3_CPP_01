@@ -155,9 +155,9 @@ void BattleManager::GiveReward(Character* player, Monster* monster)
     std::cout << std::endl;
 
     if (1 == input)
-        GiveRiskyReward(player, monster);
-    else if (2 == input)
         GiveNormalReward(player, monster);
+    else if (2 == input)
+        GiveRiskyReward(player, monster);
     else
     {
         // TODO: Renderer::GetInstance().RenderInvalidInput()
