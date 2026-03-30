@@ -17,6 +17,7 @@ enum class UpgradeStatus
     Success,
     TicketInsufficient,
     MaxUpgrade,
+    Error,
 };
 
 enum class HealStatus
