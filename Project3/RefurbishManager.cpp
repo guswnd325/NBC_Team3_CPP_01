@@ -14,7 +14,7 @@ RefurbishManager::~RefurbishManager()
 UpgradeResult RefurbishManager::UpgradeDice(int index, UpgradeType type, Character* character)
 {
 	// 해당 인덱스의 다이스 정보를 불러옴
-	std::vector<DiceSlot> storege = character->GetInventory()->GetDiceStorege();
+	std::vector<DiceSlot>& storege = character->GetInventory()->GetDiceStorege();
 	DiceSlot info = storege[index]; 
 	Dice* curDice = info.dice;
 
@@ -54,19 +54,12 @@ UpgradeResult RefurbishManager::UpgradeDice(int index, UpgradeType type, Charact
 		// 업그레이드 레벨 설정
 		storege[storege.size()-1].dice->SetUpgradeCount(upgradeLevel + 1);
 
-		if (info.count == 1)
-		{
-			// 1개면 강화 후 해당 주사위는 없는 주사위고, 새로 태어남... ㅎㅎ
-			storege.erase(storege.begin() + index);
-		}
-		else if (info.count >= 2)
-		{
-			info.count--;
-		}
+		// 강화 대상 주사위 count-- 
+		storege[index].count--;
 
-		else if (info.count <= 0)
+		if (storege[index].count == 0)
 		{
-			// Noting
+			storege.erase(storege.begin() + index);
 		}
 
 		return { UpgradeStatus::Success, upgradeLevel + 1};

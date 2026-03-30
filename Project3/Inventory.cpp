@@ -122,12 +122,12 @@ void Inventory::Run()
 	}
 }
 
-const std::vector<ItemSlot> &Inventory::GetGearStorege()
+std::vector<ItemSlot> &Inventory::GetGearStorege()
 {
 	return gearStorege;
 }
 
-const std::vector<DiceSlot>& Inventory::GetDiceStorege()
+std::vector<DiceSlot>& Inventory::GetDiceStorege()
 {
 	return diceStorege;
 }

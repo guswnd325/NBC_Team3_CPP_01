@@ -63,8 +63,8 @@ public:
 	// 메모리 해제
 	void Release();
 
-	const std::vector<ItemSlot> &GetGearStorege();
-	const std::vector<DiceSlot> &GetDiceStorege();
+	std::vector<ItemSlot> &GetGearStorege();
+	std::vector<DiceSlot> &GetDiceStorege();
 	
 	// 장비 착용
 	EquipResult EquipByIndex(int index);
