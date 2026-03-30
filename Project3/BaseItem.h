@@ -31,42 +31,68 @@ public:
 	virtual void UnEquip(Character * character);
 };
 
-class SilverSword : public BaseItem
+class Sword : public BaseItem
 {
 public:
-	SilverSword() : BaseItem("SilverSword", SlotItems::Weapon, {}, 100, (int)Gears::SilverSword) {}
+	Sword() : BaseItem("½Â¸®ÀÇ °Ë", SlotItems::Weapon, {}, 100, (int)Gears::Sword) {}
 };
 
-class GoldSword : public BaseItem
+class Bow : public BaseItem
 {
 public:
-	GoldSword() : BaseItem("GoldSword", SlotItems::Weapon, {}, 100, (int)Gears::GoldSword) {}
+	Bow() : BaseItem("½Â¸®ÀÇ È°", SlotItems::Weapon, {}, 100, (int)Gears::Bow) {}
 };
 
-
-class GoldHelmet : public BaseItem
+class Mace : public BaseItem
 {
 public:
-	GoldHelmet() : BaseItem("GoldHelmet", SlotItems::Helmet, StatDelta(), 100, (int)Gears::GoldHelmet) {}
+	Mace() : BaseItem("¹Ú°æÈ£ Æ©ÅÍ´ÔÀÇ Ã¶Åð", SlotItems::Weapon, {}, 100, (int)Gears::Mace) {}
 };
 
-
-class GoldBodyArmor : public BaseItem
+class Helmet : public BaseItem
 {
 public:
-	GoldBodyArmor() : BaseItem("GoldBodyArmor", SlotItems::BodyArmor, StatDelta(), 100, (int)Gears::GoldBodyArmor) {}
+	Helmet() : BaseItem("ÀüÁø¿ì ¸Å´ÏÀú´ÔÀÇ Çï¸ä", SlotItems::Helmet, StatDelta(), 100, (int)Gears::Helmet) {}
 };
 
-
-class GoldBoots : public BaseItem
+class Halo : public BaseItem
 {
 public:
-	GoldBoots() : BaseItem("GoldBoots", SlotItems::Helmet, StatDelta(), 100, (int)Gears::GoldBoots) {}
-
+	Halo() : BaseItem("Çö¹¬´ÔÀÇ ÇìÀÏ·Î", SlotItems::Helmet, StatDelta(), 100, (int)Gears::Helmet) {}
 };
 
-class SilverRing : public BaseItem
+class PaperArmor : public BaseItem
 {
 public:
-	SilverRing() : BaseItem("SilverRing", SlotItems::Accessory, StatDelta(), 100, (int)Gears::SilverRing) {}
+	PaperArmor() : BaseItem("Á¾ÀÌ °©¿Ê", SlotItems::BodyArmor, StatDelta(), 100, (int)Gears::PaperArmor) {}
+};
+
+class BallisticPlate : public BaseItem
+{
+public:
+	BallisticPlate() : BaseItem("¹æÅºÇÃ·¹ÀÌÆ®", SlotItems::BodyArmor, StatDelta(), 100, (int)Gears::BallisticPlate) {}
+};
+
+class MilitaryBoots : public BaseItem
+{
+public:
+	MilitaryBoots() : BaseItem("±ºÈ­", SlotItems::Boots, StatDelta(), 100, (int)Gears::MilitaryBoots) {}
+};
+
+class DragonscalePlateSabatons : public BaseItem
+{
+public:
+	DragonscalePlateSabatons() : BaseItem("¿ëºñ´Ã ÆÇ±Ý ÀåÈ­", SlotItems::Boots, StatDelta(), 100, (int)Gears::DragonscalePlateSabatons) {}
+};
+
+class TutorTears : public BaseItem
+{
+public:
+	TutorTears() : BaseItem("°­µ¿¿í Æ©ÅÍ´ÔÀÇ ´«¹°", SlotItems::Accessory, {}, 100, (int)Gears::TutorTears) {}
+};
+
+class Wing : public BaseItem
+{
+public:
+	Wing() : BaseItem("ÀÌ¼±Á¤ ¸Å´ÏÀú´ÔÀÇ ³¯°³", SlotItems::Accessory, {}, 100, (int)Gears::Wing) {}
 };

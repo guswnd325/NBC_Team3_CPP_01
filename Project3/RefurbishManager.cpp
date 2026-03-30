@@ -47,6 +47,7 @@ UpgradeResult RefurbishManager::UpgradeDice(int index, UpgradeType type, Charact
 		
 		if (min > max)
 		{
+			character->SetRestTicket(curTicket + 1);
 			return { UpgradeStatus::Error, 0 };
 
 		}
@@ -70,6 +71,7 @@ UpgradeResult RefurbishManager::UpgradeDice(int index, UpgradeType type, Charact
 	}
 	else
 	{
+		character->SetRestTicket(curTicket + 1);
 		return { UpgradeStatus::TicketInsufficient, 0 };
 	}
 }
@@ -83,6 +85,8 @@ RestResult RefurbishManager::Rest(Character *character)
 		// 티켓 부족
 		result.result = HealStatus::TicketInsufficient;
 	}
+
+
 	else if (character->GetHP() >= 100)
 	{
 		// 최대 체력임
@@ -135,12 +139,18 @@ void RefurbishManager::Run()
 
 
 		// [2] 체력 회복 선택의 경우
+		if (character->GetRestTicket() <= 0)
+		{
+			renderer.RenderTicketInsufficient();
+			continue;
+		}
+
 		if (select == (int)RestOption::Heal)
 		{
 			RestResult info = Rest(character);
 
 			int hp = character->GetHP();
-			renderer.RenderHealResult(info.healValue,  hp - info.healValue, hp);
+			renderer.RenderHealResult(info.healValue,  hp - info.healValue, hp, MAX_HP);
 			
 			continue;
 		}
