@@ -97,9 +97,9 @@ void Renderer::RenderCreatePlayer() {
     PrintTop(UI_WIDTH);
     PrintCenterLine("[ 캐릭터 집행자 선택 ]", UI_WIDTH, WHITE);
     PrintDivider(UI_WIDTH);
-    PrintLeftLine("[1] 전  사  (안정형: 주사위 2 ~ 4)", UI_WIDTH);
-    PrintLeftLine("[2] 마법사  (표준형: 주사위 3 ~ 5)", UI_WIDTH);
-    PrintLeftLine("[3] 모험가  (도박형: 주사위 1 ~ 8)", UI_WIDTH);
+    PrintLeftLine("[1] 전  사  (안정형: 주사위 1 ~ 6  (3개) )", UI_WIDTH);
+    PrintLeftLine("[2] 마법사  (표준형: 주사위 2 ~ 6  (2개) )", UI_WIDTH);
+    PrintLeftLine("[3] 모험가  (도박형: 주사위 1 ~ 24 (1개) )", UI_WIDTH);
     PrintBottom(UI_WIDTH);
     std::cout << BRIGHT_GREEN << " > 집행자를 선택해라 : " << RESET;
 }
@@ -111,7 +111,7 @@ void Renderer::RenderMainMenu() {
     PrintLeftLine("[1] 탐  사 (새로운 지역을 조사합니다)", UI_WIDTH);
     PrintLeftLine("[2] 상  점 (아이템을 구매하거나 팝니다)", UI_WIDTH);
     PrintLeftLine("[3] 장비창 (인벤토리)", UI_WIDTH);
-    PrintLeftLine("[4] 휴  식 (체력을 회복하고 재정비합니다)", UI_WIDTH);
+    PrintLeftLine("[4] 휴  식 (체력 회복 시도 및 주사위강화)", UI_WIDTH);
     PrintBottom(UI_WIDTH);
     std::cout << BRIGHT_GREEN << " > 행동을 선택해라 : " << RESET;
 }

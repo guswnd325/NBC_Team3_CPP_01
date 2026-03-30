@@ -14,8 +14,12 @@ enum class MonsterType {
 	Orc,
 	Golem,
 	MaxRabbit,
+	Mermaid,
+	Kraken,
+	Ghost,
 	Troll,
-	Dragon
+	Dragon,
+	Zombie
 };
 class Monster : public Actor{
 private:

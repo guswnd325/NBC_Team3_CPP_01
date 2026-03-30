@@ -10,6 +10,20 @@ Monster* MonsterManager::SpawnMonster(std::string areaName) {
     else if (areaName == "Desert") {
         selectedType = MonsterType::Golem; 
     }
+    else if (areaName == "Mine") {
+        selectedType = (rand() % 10 < 7) ? MonsterType::Zombie : MonsterType::Ghost;
+    }
+    else if (areaName == "Ocean")
+    {
+        selectedType = (rand() % 10 < 9) ? MonsterType::Mermaid : MonsterType::Kraken;
+    }
+    else if (areaName == "Mountain") {
+        selectedType = (rand() % 10 < 6) ? MonsterType::Orc : MonsterType::Troll;
+    }
+    else if (areaName == "Nest")
+    {
+        selectedType = MonsterType::Dragon;
+    }
 
     MonsterGrade selectedGrade = MonsterGrade::Normal;
     int roll = rand() % 100;
