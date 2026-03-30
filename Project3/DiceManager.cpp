@@ -142,7 +142,7 @@ void DiceManager::SetDiceID(Dice& dice)
     else if (min == 1 && max == 4) dice.id = DiceID::D1_4;
     else if (min == 1 && max == 6) dice.id = DiceID::D1_6;
     else if (min == 1 && max == 8) dice.id = DiceID::D1_8;
-    else if (min == 1 && max == 24) dice.id == DiceID::D1_24;
+    else if (min == 1 && max == 24) dice.id = DiceID::D1_24;
     else if (min == 2 && max == 3) dice.id = DiceID::D2_3;
     else if (min == 2 && max == 5) dice.id = DiceID::D2_5;
     else if (min == 3 && max == 6) dice.id = DiceID::D3_6;
