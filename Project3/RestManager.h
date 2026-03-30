@@ -18,8 +18,8 @@ enum class RestOption
 
 enum class UpgradeType
 {
-    Min,
     Max,
+    Min,
 };
 
 enum class UpgradeStatus

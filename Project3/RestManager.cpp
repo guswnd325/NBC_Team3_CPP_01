@@ -39,9 +39,11 @@ UpgradeResult RestManager::UpgradeDice(int index, UpgradeType type, Character* c
 		if (type == UpgradeType::Min) 
 		{
 			min = curDice->GetMin() + upgradeUnit;
+			max = curDice->GetMax();
 		}
 		else // type == UpgradeType::Max
 		{
+			min = curDice->GetMin();
 			max = curDice->GetMax() + upgradeUnit;
 		}
 		
@@ -50,7 +52,7 @@ UpgradeResult RestManager::UpgradeDice(int index, UpgradeType type, Character* c
 		character->GetInventory()->AddDice(newDiceID);
 
 		// 업그레이드 레벨 설정
-		storege[storege.size()].dice->SetUpgradeCount(upgradeLevel + 1);
+		storege[storege.size()-1].dice->SetUpgradeCount(upgradeLevel + 1);
 
 		if (info.count == 1)
 		{
@@ -208,13 +210,15 @@ void RestManager::Run()
 			// renderer.RenderDiceStorege();
 
 			std::cout << "== 주사위 인벤토리 ==" << std::endl;
-			// DiceIDToString()
+			
 			std::vector<DiceSlot> storege = character->GetInventory()->GetDiceStorege();
 			for (int i = 0; i < storege.size(); i++)
 			{
 				std::cout << "[" + std::to_string(i + 1) + "] " + storege[i].dice->DiceIdToString() + " " + std::to_string(storege[i].count) + "EA" << std::endl;
 				//std::cout << "[" + std::to_string(i + 1) + "] " + std::to_string((int)diceStorege[i].dice->GetId()) + " " + std::to_string(diceStorege[i].count) + "EA" << std::endl;
 			}
+
+			std::cout << "강화할 주사위 선택 : " << std::endl;
 
 			int index;
 			std::cin >> index;
@@ -239,10 +243,14 @@ void RestManager::Run()
 			}
 
 			// 인덱스 오버 체크
-			//if (indexOver)
+			if (index > storege.size()) // 1 > 1 false
+			{
+				continue;
+			}
 
 			// 강화 종류 선택
-			message = "강화 옵션을 선택해주세요(1=최소값 증가, 2=최대값 증가)";
+			message = "강화 옵션을 선택해주세요(1=최소값 증가, 2=최대값 증가) : ";
+			std::cout << message;
 			// renderer.RenderMessage(message);
 
 			std::cin >> select;
@@ -266,7 +274,7 @@ void RestManager::Run()
 				break;
 			}
 
-			UpgradeResult info = UpgradeDice(index, (UpgradeType)select, character);
+			UpgradeResult info = UpgradeDice(index-1, (UpgradeType)select, character);
 
 			switch (info.status)
 			{
@@ -278,7 +286,7 @@ void RestManager::Run()
 				}
 				case UpgradeStatus::Success:
 				{
-					message = "강화 성공!" + to_string(info.upgradeLevel - 1) + " -> " + to_string(info.upgradeLevel);
+					message = "강화 성공! (" + to_string(info.upgradeLevel - 1) + " -> " + to_string(info.upgradeLevel) + ")";
 					// or message = "강화 성공!" + to_string(info.upgradeLevel) + " -> " + to_string(info.upgradeLevel+1);
 					break;
 
