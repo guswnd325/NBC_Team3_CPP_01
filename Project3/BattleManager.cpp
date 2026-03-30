@@ -195,10 +195,12 @@ void BattleManager::GiveRiskyReward(Character* player, Monster* monster)
     {
         std::cout << "성공!" << std::endl;
         player->GetInventory()->AddDice(monster->GetRewardDiceID());
+        Sleep(3000);
     }
     else
     {
         std::cout << "실패!" << std::endl;
+        Sleep(3000);
     }
 
 }
