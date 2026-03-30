@@ -345,9 +345,11 @@ void Renderer::RenderDiceUpgradeOption() {
     std::cout << BRIGHT_GREEN << " > 강화 옵션 선택 : " << RESET;
 }
 
-void Renderer::RenderShopItemList(const std::vector<BaseItem*>& itemLists) {
+void Renderer::RenderShopItemList(const std::vector<BaseItem*>& itemLists, int playerGold) {
     PrintTop(UI_WIDTH);
     PrintCenterLine("[ 만물상 상점 ]", UI_WIDTH, WHITE);
+    std::string goldInfo = "현재 보유 골드: " + std::to_string(playerGold) + " G";
+    PrintCenterLine(goldInfo, UI_WIDTH, YELLOW);
     PrintDivider(UI_WIDTH);
     PrintLeftLine("[0] 마을로 돌아가기", UI_WIDTH, RED);
     PrintDivider(UI_WIDTH);

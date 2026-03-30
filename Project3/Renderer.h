@@ -38,7 +38,7 @@ public:
     ~Renderer();
 
     void RenderInventory(BaseItem* slots[], const std::vector<ItemSlot>& gearStorage, const std::vector<DiceSlot>& diceStorage);
-    void RenderShopItemList(const std::vector<BaseItem*>& itemLists);
+    void RenderShopItemList(const std::vector<BaseItem*>& itemLists, int playerGold);
     void RenderBuyResult(BuyStatus status, BaseItem* item, int currentGold);
     void RenderAreaChoices(const std::vector<std::string>& choices, const std::unordered_map<std::string, std::string>& displayMap);
     void RenderDiceUpgradeList(const std::vector<DiceSlot>& storage); // 강화 가능 주사위 목록
