@@ -22,6 +22,8 @@ UpgradeResult RefurbishManager::UpgradeDice(int index, UpgradeType type, Charact
 
 	int curTicket = character->GetRestTicket();
 
+
+
 	if (curTicket >= 1)
 	{
 		character->SetRestTicket(curTicket - 1);
@@ -43,6 +45,12 @@ UpgradeResult RefurbishManager::UpgradeDice(int index, UpgradeType type, Charact
 			max = curDice->GetMax() + upgradeUnit;
 		}
 		
+		if (min > max)
+		{
+			return { UpgradeStatus::Error, 0 };
+
+		}
+
 		DiceID newDiceID = diceManager.MakeDiceId(min, max);
 
 		character->GetInventory()->AddDice(newDiceID);
