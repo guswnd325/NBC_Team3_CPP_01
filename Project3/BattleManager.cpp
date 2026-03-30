@@ -7,25 +7,11 @@
 // ---------------------------------------------------------------
 BattleResult BattleManager::Run(Character* player, Monster* monster)
 {
-    // TODO: Renderer::GetInstance().RenderBattleStart(monster)
-    std::cout << "\n==============================" << std::endl;
-    std::cout << monster->GetName() << "이(가) 나타났다!" << std::endl;
-    std::cout << "HP: " << monster->GetHP()
-        << " | ATK: " << monster->GetAtk()
-        << " | DEF: " << monster->GetDef() << std::endl;
-    std::cout << "==============================\n" << std::endl;
+    Renderer::GetInstance().RenderBattleStart(monster);
 
     while (true)
     {
-        // TODO: Renderer::GetInstance().RenderBattleAction()
-        std::cout << "┌───────────────────────────┐" << std::endl;
-        std::cout << "│       ◈ 행동 선택 ◈        │" << std::endl;
-        std::cout << "├───────────────────────────┤" << std::endl;
-        std::cout << "│  [1] 전투                  │" << std::endl;
-        std::cout << "│  [2] 도망                  │" << std::endl;
-        std::cout << "└───────────────────────────┘" << std::endl;
-        std::cout << " > 행동을 선택해라 : ";
-
+        Renderer::GetInstance().RenderBattleAction();
         int input;
         std::cin >> input;
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -161,17 +147,7 @@ bool BattleManager::IsOver(Character* player, Monster* monster)
 // ---------------------------------------------------------------
 void BattleManager::GiveReward(Character* player, Monster* monster)
 {
-    // TODO: Renderer::GetInstance().RenderRewardSelect()
-    std::cout << "┌───────────────────────────────┐" << std::endl;
-    std::cout << "│         ◈ 보상 선택 ◈          │" << std::endl;
-    std::cout << "├───────────────────────────────┤" << std::endl;
-    std::cout << "│  [1] 일반 보상                 │" << std::endl;
-    std::cout << "│      (휴식권 1회 + 골드)        │" << std::endl;
-    std::cout << "│  [2] 리스크 보상               │" << std::endl;
-    std::cout << "│      (주사위로 고보상 도전)     │" << std::endl;
-    std::cout << "└───────────────────────────────┘" << std::endl;
-    std::cout << " > 보상을 선택해라 : ";
-
+    Renderer::GetInstance().RenderRewardSelect();
     int input;
     std::cin >> input;
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');

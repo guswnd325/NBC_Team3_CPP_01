@@ -79,10 +79,39 @@ void Renderer::RenderBattleAction() {
     std::cout << GOLD << "│  " << WHITE << "[1] 전투                  " << GOLD << "│" << RESET << std::endl;
     std::cout << GOLD << "│  " << WHITE << "[2] 도망                  " << GOLD << "│" << RESET << std::endl;
     std::cout << GOLD << "└───────────────────────────┘" << RESET << std::endl;
-	std::cout << BRIGHT_GREEN << " > 행동을 선택해라 : " << RESET;
+    std::cout << BRIGHT_GREEN << " > 행동을 선택해라 : " << RESET;
 
 }
+
+void Renderer::RenderBattleStart(Monster* monster)
+{
+    if (monster == nullptr) return;
+
+    std::cout << GOLD << "┌───────────────────────────────────────────┐" << RESET << std::endl;
+    std::cout << GOLD << "│  " << RED << "      ◈ 야생의 몬스터가 나타났다! ◈     " << GOLD << " │" << RESET << std::endl;
+    std::cout << GOLD << "├───────────────────────────────────────────┤" << RESET << std::endl;
+
+    std::cout << GOLD << "│  " << WHITE << " 이름 : " << monster->GetName() << RESET;
+    std::cout << GOLD << "                           │" << RESET << std::endl;
+
+    std::cout << GOLD << "│  " << WHITE << " HP: " << RED << monster->GetHP() << WHITE
+        << " | ATK: " << YELLOW << monster->GetAtk() << WHITE
+        << " | DEF: " << BRIGHT_GREEN << monster->GetDef() << GOLD << "                │" << RESET << std::endl;
+    std::cout << GOLD << "└───────────────────────────────────────────┘" << RESET << std::endl;
+
+    std::cout << std::endl;
+
+    const auto& visual = monster->GetVisual();
+    for (const std::string& line : visual) {
+        std::cout << "      " << line << std::endl;
+    }
+
+    std::cout << std::endl;
+}
+
+
 void Renderer::Clear()
 {
     system("cls");
 }
+
