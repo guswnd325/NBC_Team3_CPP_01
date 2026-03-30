@@ -25,7 +25,7 @@ public:
 	
 	int GetPrice() const;
 	void SetPrice(int value) noexcept;
-
+	std::string GetTypeToString(SlotItems value);
 	// 기본적으로 스탯 조정을 하지만, 아이템 별로 장착 효과를 달리 구현할 수 있도록 virtual 선언
 	virtual void Equip(Character * character);
 	virtual void UnEquip(Character * character);
@@ -35,6 +35,12 @@ class SilverSword : public BaseItem
 {
 public:
 	SilverSword() : BaseItem("SilverSword", SlotItems::Weapon, {}, 100, (int)Gears::SilverSword) {}
+};
+
+class GoldSword : public BaseItem
+{
+public:
+	GoldSword() : BaseItem("GoldSword", SlotItems::Weapon, {}, 100, (int)Gears::GoldSword) {}
 };
 
 

@@ -47,14 +47,14 @@ std::string CombatManager::SelectArea() {
         // 1. 입력 성공 여부와 범위 확인
         if (std::cin >> input && input >= 1 && input <= 3) {
             // 입력 성공 시: 버퍼를 비우고 즉시 결과 반환 (함수 종료)
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cin.ignore((std::numeric_limits<std::streamsize>::max)(), '\n');
             return currentChoices[input - 1];
         }
 
         std::cout << "잘못된 입력입니다. 1, 2, 3 중 하나를 입력해주세요." << std::endl;
 
         std::cin.clear(); // 에러 플래그 초기화
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // 잘못된 입력 제거
+        std::cin.ignore((std::numeric_limits<std::streamsize>::max)(), '\n'); // 잘못된 입력 제거
 
     }
 

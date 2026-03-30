@@ -2,23 +2,24 @@
 #include "Gears.h"
 #include "BaseItem.h"
 
-BaseItem * ItemSpawnManager::MakeItem(int type)
+BaseItem * ItemSpawnManager::MakeItem(Gears type)
 {
 	switch (type)
 	{
-	case (int)Gears::SilverSword:
+	case Gears::SilverSword:
 		return new SilverSword();
-
-	case (int)Gears::GoldHelmet:
+	case Gears::GoldSword:
+		return new GoldSword();
+	case Gears::GoldHelmet:
 		return new GoldHelmet();
 
-	case (int)Gears::GoldBodyArmor:
+	case Gears::GoldBodyArmor:
 		return new GoldBodyArmor();
 
-	case (int)Gears::GoldBoots:
+	case Gears::GoldBoots:
 		return new GoldBoots();
 
-	case (int)Gears::SilverRing:
+	case Gears::SilverRing:
 		return new SilverRing();
 	}
 

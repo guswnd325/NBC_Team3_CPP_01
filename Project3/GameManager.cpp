@@ -25,7 +25,7 @@ void GameManager::Run()
 
 		int input;
 		std::cin >> input;
-		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+		std::cin.ignore((std::numeric_limits<std::streamsize>::max)(), '\n');
 
 		switch (input)
 		{
@@ -56,7 +56,8 @@ void GameManager::CreateCharacter()
 
 	int input;
 	std::cin >> input;
-	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	std::cin.ignore((std::numeric_limits<std::streamsize>::max)(), '\n');
+
 
 	std::string job;
 
@@ -67,19 +68,19 @@ void GameManager::CreateCharacter()
 		job = "전사";
 		for (int i = 0; i < 3; i++)
 		{
-		//	player->GetInventory()->AddDice(DiceID::D1_6);
+			player->GetInventory()->AddDice(DiceID::D1_6);
 		}
 		break;
 	case 2:
 		job = "마법사";
 		for (int i = 0; i < 2; i++)
 		{
-			//player->GetInventory()->AddDice(DiceID::D2_5);
+			player->GetInventory()->AddDice(DiceID::D2_5);
 		}
 		break;
 	case 3:
 		job = "고점맨";
-		//player->GetInventory()->AddDice(DiceID::D1_8);
+			player->GetInventory()->AddDice(DiceID::D1_8);
 		break;
 	default:
 		break;
@@ -104,7 +105,8 @@ void GameManager::StartGame()
 
 		int input;
 		std::cin >> input;
-		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+		std::cin.ignore((std::numeric_limits<std::streamsize>::max)(), '\n');
+
 
 		switch (input)
 		{
@@ -125,9 +127,14 @@ void GameManager::StartGame()
 		}
 		case 3:
 		{
-			// restManager 함수 호출 (미구현)
+			player->GetInventory()->Run();
 			break;
 		}
+		
+		case 4:
+			//restManager->Run(player);
+
+			break;
 		default:
 			break;
 		}

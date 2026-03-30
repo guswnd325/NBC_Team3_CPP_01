@@ -134,7 +134,8 @@ void RestManager::Run()
 		else if(std::cin.fail())
 		{
 			std::cin.clear();
-			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+			std::cin.ignore((std::numeric_limits<std::streamsize>::max)(), '\n');
+
 			message = "잘못된 입력입니다.";
 			// renderer.RenderMessage(message);
 			// renderer.Delay(4);
@@ -196,7 +197,8 @@ void RestManager::Run()
 			if(std::cin.fail())
 			{
 				std::cin.clear();
-				std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+				std::cin.ignore((std::numeric_limits<std::streamsize>::max)(), '\n');
+
 				message = "잘못된 입력입니다.";
 				// Renderer::GetInstance().RenderMessage(message);
 				// Renderer::Delay(4);
@@ -223,7 +225,8 @@ void RestManager::Run()
 			if (std::cin.fail())
 			{
 				std::cin.clear();
-				std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+				std::cin.ignore((std::numeric_limits<std::streamsize>::max)(), '\n');
+
 				message = "잘못된 입력입니다.";
 				// Renderer::GetInstance().RenderMessage(message);
 				// Renderer::Delay(4);

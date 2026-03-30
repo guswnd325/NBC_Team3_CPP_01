@@ -1,7 +1,7 @@
 #include "Character.h"
 #include "Renderer.h"
 
-constexpr int defaultGold = 0;
+constexpr int defaultGold = 200;
 constexpr int defaultRestTicket = 0;
 
 Character::Character()

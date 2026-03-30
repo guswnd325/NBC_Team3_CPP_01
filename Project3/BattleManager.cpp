@@ -14,7 +14,7 @@ BattleResult BattleManager::Run(Character* player, Monster* monster)
         Renderer::GetInstance().RenderBattleAction();
         int input;
         std::cin >> input;
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cin.ignore((std::numeric_limits<std::streamsize>::max)(), '\n');
 
         std::cout << std::endl;
 
@@ -150,7 +150,7 @@ void BattleManager::GiveReward(Character* player, Monster* monster)
     Renderer::GetInstance().RenderRewardSelect();
     int input;
     std::cin >> input;
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::cin.ignore((std::numeric_limits<std::streamsize>::max)(), '\n');
 
     std::cout << std::endl;
 

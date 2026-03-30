@@ -10,6 +10,23 @@ SlotItems BaseItem::GetType() const
 	return type;
 }
 
+std::string BaseItem::GetTypeToString(SlotItems value)
+{
+	switch (value)
+	{
+		case SlotItems::Weapon:
+			return "Weapon";
+		case SlotItems::Helmet:
+			return "Helmet";
+		case SlotItems::BodyArmor:
+			return "BodyArmor";
+		case SlotItems::Boots:
+			return "Boots";
+		case SlotItems::Accessory:
+			return "Accessory";
+	}
+}
+
 int BaseItem::GetPrice() const
 {
 	return price;

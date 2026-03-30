@@ -1,6 +1,11 @@
 #pragma once
 #include <memory>
 #include <map>
+
+#define NOMINMAX            // max/min 매크로 방지
+#include <windows.h>
+
+#include <iomanip>
 #include <unordered_map>
 #include <vector>
 #include "SlotItems.h"
@@ -22,7 +27,7 @@ struct EquipResult
 {
 	EquipStatus status;
 	BaseItem* item;
-	BaseItem* prevItem;
+	std::string prevItem;
 };
 
 struct ItemSlot 

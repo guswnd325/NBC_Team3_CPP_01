@@ -5,5 +5,5 @@
 class ItemSpawnManager
 {
 public:
-	static BaseItem* MakeItem(int type);
+	static BaseItem* MakeItem(Gears type);
 };
