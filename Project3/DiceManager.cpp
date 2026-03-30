@@ -30,7 +30,7 @@ int DiceManager::Roll(Character* character)
         Dice* dice = slot.dice;
         int count = slot.count;
 
-        if (dice == nullptr) continue; // 방어 코드: 주사위가 없는 경우 제외
+        if (dice == nullptr) continue; 
 
         // 핵심 수정: 1~side가 아니라 주사위 객체가 가진 min~max 범위를 사용합니다.
         std::uniform_int_distribution<int> dis(dice->minSide, dice->maxSide);
