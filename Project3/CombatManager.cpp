@@ -1,5 +1,6 @@
 #include "CombatManager.h"
 #include "BattleManager.h"
+#include "Renderer.h"
 
 void CombatManager::GenerateAreaChoices()
 {
@@ -18,23 +19,7 @@ void CombatManager::GenerateAreaChoices()
 
 void CombatManager::DisplayChoices()
 {
-    std::cout << "┌───────────────────────────────────────────┐" << std::endl;
-    std::cout << "│          ◈ 탐험 지역 선택 ◈           │" << std::endl;
-    std::cout << "├───────────────────────────────────────────┤" << std::endl;
-    std::cout << "│  어디로 이동하시겠습니까?                 │" << std::endl;
-
-    for (int i = 0; i < currentChoices.size(); ++i) {
-        std::string englishName = currentChoices[i];
-        std::string koreanName = areaDisplayname[englishName];
-
-        // 만약 맵에 등록되지 않은 지역명이 들어올 경우를 대비한 예외 처리
-        if (koreanName.empty()) {
-            koreanName = englishName; // 한국어가 없으면 영어라도 출력
-        }
-
-        std::cout << "│ " << " [" << i + 1 << "] " << koreanName << "│ " << std::endl;
-    }
-    std::cout << "└───────────────────────────────────────────┘" << std::endl;
+    Renderer::GetInstance().RenderAreaChoices(currentChoices, areaDisplayname);
 }
 
 //이거 반환 값 그대로 MonsterManager의 SpawnManager에 넣으면 됩니다

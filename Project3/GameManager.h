@@ -6,6 +6,8 @@
 #include "ShopManager.h"
 #include "RestManager.h"
 
+class Renderer;
+
 class GameManager
 {
 private:
