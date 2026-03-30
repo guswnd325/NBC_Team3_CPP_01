@@ -23,8 +23,8 @@ private:
     //int RollMonsterDice(Monster* monster);
 
     void StartBattle(Character* player, Monster* monster);
-    bool TryEscape(Character* player, Monster* monster);
-    void CalculateDamage(Actor* attacker, Actor* defender);
+    bool TryEscape(Character* player, Monster* monster, int& outMonsterRoll);
+    void CalculateDamage(Actor* attacker, Actor* defender, int Roll);
     bool IsOver(Character* player, Monster* monster);
 
     void GiveReward(Character* player, Monster* monster);

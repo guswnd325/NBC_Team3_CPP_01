@@ -17,7 +17,15 @@ BattleResult BattleManager::Run(Character* player, Monster* monster)
 
     while (true)
     {
-        Renderer::GetInstance().RenderBattleAction();
+        // TODO: Renderer::GetInstance().RenderBattleAction()
+        std::cout << "┌───────────────────────────┐" << std::endl;
+        std::cout << "│       ◈ 행동 선택 ◈        │" << std::endl;
+        std::cout << "├───────────────────────────┤" << std::endl;
+        std::cout << "│  [1] 전투                  │" << std::endl;
+        std::cout << "│  [2] 도망                  │" << std::endl;
+        std::cout << "└───────────────────────────┘" << std::endl;
+        std::cout << " > 행동을 선택해라 : ";
+
         int input;
         std::cin >> input;
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -30,7 +38,9 @@ BattleResult BattleManager::Run(Character* player, Monster* monster)
         }
         else if (input == 2)
         {
-            if (TryEscape(player, monster))
+            int monsterRoll = 0;
+
+            if (TryEscape(player, monster, monsterRoll))
             {
                 // TODO: Renderer::GetInstance().RenderEscapeResult(true)
                 std::cout << "도망에 성공했습니다!\n" << std::endl;
@@ -41,7 +51,7 @@ BattleResult BattleManager::Run(Character* player, Monster* monster)
                 // TODO: Renderer::GetInstance().RenderEscapeResult(false)
                 std::cout << "도망에 실패! " << monster->GetName()
                     << "이(가) 공격합니다!\n" << std::endl;
-                CalculateDamage(monster, player);
+                CalculateDamage(monster, player, monsterRoll);
             }
         }
         else
@@ -77,19 +87,10 @@ BattleResult BattleManager::Run(Character* player, Monster* monster)
 }
 
 // ---------------------------------------------------------------
-// 주사위 굴리기
-// ---------------------------------------------------------------
-
-
-
-// ---------------------------------------------------------------
 // 전투 - 주사위 비교 후 높은 쪽이 공격 (같으면 플레이어 우선)
 // ---------------------------------------------------------------
 void BattleManager::StartBattle(Character* player, Monster* monster)
 {
-    //int playerRoll = RollPlayerDice(player);
-    //int monsterRoll = RollMonsterDice(monster);
-
     int playerRoll = diceManager.Roll(player);
     int monsterRoll = monster->RollAttackDice();
 
@@ -99,12 +100,12 @@ void BattleManager::StartBattle(Character* player, Monster* monster)
     if (playerRoll >= monsterRoll)
     {
         std::cout << "플레이어가 공격합니다!" << std::endl;
-        CalculateDamage(player, monster);
+        CalculateDamage(player, monster, playerRoll);
     }
     else
     {
         std::cout << monster->GetName() << "이(가) 공격합니다!" << std::endl;
-        CalculateDamage(monster, player);
+        CalculateDamage(monster, player, monsterRoll);
     }
 
     std::cout << std::endl;
@@ -113,16 +114,16 @@ void BattleManager::StartBattle(Character* player, Monster* monster)
 // ---------------------------------------------------------------
 // 도망 - 플레이어 주사위 > 몬스터 주사위일 때만 성공
 // ---------------------------------------------------------------
-bool BattleManager::TryEscape(Character* player, Monster* monster)
+bool BattleManager::TryEscape(Character* player, Monster* monster, int& outMonsterRoll)
 {
     // TODO: Renderer::GetInstance().RenderEscapeTry()
     std::cout << "[ 도망 시도 ]" << std::endl;
 
-    //int playerRoll = RollPlayerDice(player);
-    //int monsterRoll = RollMonsterDice(monster);
-
     int playerRoll = diceManager.Roll(player);
     int monsterRoll = monster->RollAttackDice();
+
+    // 아웃파라미터로 몬스터 roll값 저장
+    outMonsterRoll = monsterRoll;
 
     // TODO: Renderer::GetInstance().RenderBattleResult(playerRoll, monsterRoll)
     std::cout << "플레이어 [" << playerRoll << "] vs "
@@ -134,9 +135,9 @@ bool BattleManager::TryEscape(Character* player, Monster* monster)
 // ---------------------------------------------------------------
 // 데미지 계산 - 최소 1 보장
 // ---------------------------------------------------------------
-void BattleManager::CalculateDamage(Actor* attacker, Actor* defender)
+void BattleManager::CalculateDamage(Actor* attacker, Actor* defender, int Roll)
 {
-    int damage = std::max(1, attacker->GetAtk() - defender->GetDef());
+    int damage = std::max(1, attacker->GetAtk() - defender->GetDef()) + Roll;
     int newHp = std::max(0, defender->GetHP() - damage);
 
     defender->SetHP(newHp);
@@ -160,7 +161,16 @@ bool BattleManager::IsOver(Character* player, Monster* monster)
 // ---------------------------------------------------------------
 void BattleManager::GiveReward(Character* player, Monster* monster)
 {
-    Renderer::GetInstance().RenderRewardSelect();
+    // TODO: Renderer::GetInstance().RenderRewardSelect()
+    std::cout << "┌───────────────────────────────┐" << std::endl;
+    std::cout << "│         ◈ 보상 선택 ◈          │" << std::endl;
+    std::cout << "├───────────────────────────────┤" << std::endl;
+    std::cout << "│  [1] 일반 보상                 │" << std::endl;
+    std::cout << "│      (휴식권 1회 + 골드)        │" << std::endl;
+    std::cout << "│  [2] 리스크 보상               │" << std::endl;
+    std::cout << "│      (주사위로 고보상 도전)     │" << std::endl;
+    std::cout << "└───────────────────────────────┘" << std::endl;
+    std::cout << " > 보상을 선택해라 : ";
 
     int input;
     std::cin >> input;
@@ -196,18 +206,7 @@ void BattleManager::GiveRiskyReward(Character* player, Monster* monster)
     // TODO: Renderer::GetInstance().RenderRiskyReward()
     // TODO: 리스크 보상 시나리오 확정 후 구현
     std::cout << "[ 리스크 보상 도전! ]" << std::endl;
-	std::cout << "주사위를 굴려서 몬스터의 챌린지 값 (" << monster->GetDiceChallengeValue() << ") 이상 나오면 고보상 획득!" << std::endl;
-   
-    //std::cout << "도전 결과 : " << roll << std::endl;
-    int playerRoll = diceManager.Roll(player);
-    if (playerRoll >= monster->GetDiceChallengeValue())
-    {
-        player->GetInventory()->AddDice(monster->GetRewardDiceID());
-        std::cout << "도전 성공! 보상 주사위 획득!" << std::endl;
-    }
-    else
-    {
-        std::cout << "도전 실패... 아무것도 얻지 못했습니다." << std::endl;
-    }
 
+    //std::cout << "도전 결과 : " << roll << std::endl;
+    std::cout << "(리스크 보상 상세 내용 미구현)" << std::endl;
 }
