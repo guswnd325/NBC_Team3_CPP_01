@@ -18,25 +18,31 @@ void DiceManager::PlayRollSound()
 }
 */
 
-int DiceManager::Roll(const Dice& diceInfo)
+int DiceManager::Roll(Character* character)
 {
-	//PlayRollSound();
+    int totalSum = 0;
 
-	int totalSum = 0;
-	std::uniform_int_distribution<int> dis(1, diceInfo.side);
+    auto& diceList = character->GetInventory()->GetDiceStorege();
 
-	for (int i = 0; i < 2; i++)
-	{
-		int roll = dis(gen);
-		totalSum += roll;
+    for (const auto& slot : diceList)
+    {
+        Dice* dice = slot.dice;
+        int count = slot.count;
 
-		std::cout << "[ " << roll << " ]";
-	}
+        std::uniform_int_distribution<int> dis(1, dice->side);
 
-	//최종 주사위 합 결과
+        for (int i = 0; i < count; i++)
+        {
+            int roll = dis(gen);
+            totalSum += roll;
 
-	std::cout << "[총합 : " << totalSum << "] " << std::endl;
-	return totalSum;
+            std::cout << "[" << dice->side << "면체: " << roll << "] ";
+        }
+    }
+
+    std::cout << "총합: " << totalSum << std::endl;
+
+    return totalSum;
 }
 
 void DiceManager::UpgradeDice(Dice& targetDice, int amount)

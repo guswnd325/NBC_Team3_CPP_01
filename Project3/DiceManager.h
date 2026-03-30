@@ -4,6 +4,7 @@
 #include <random>
 #include "Actor.h"
 
+class Character;
 
 struct Dice
 {
@@ -38,7 +39,7 @@ public:
 	~DiceManager();
 
 	// 이제 Roll 함수가 Dice 구조체를 매개변수로 받습니다.
-	int Roll(const Dice& diceInfo);
+	int Roll(Character* character);
 
 	// 보상으로 주사위 면수를 늘려주는 기능 (구조체 값을 수정해서 반환)
 	void UpgradeDice(Dice& targetDice, int amount);

@@ -98,7 +98,7 @@ void BattleManager::StartBattle(Character* player, Monster* monster)
     //int playerRoll = RollPlayerDice(player);
     //int monsterRoll = RollMonsterDice(monster);
 
-    int playerRoll = 1;
+    int playerRoll = diceManager.Roll(player);
     int monsterRoll = monster->RollAttackDice();
 
     std::cout << "플레이어 [" << playerRoll << "] vs "
@@ -129,7 +129,7 @@ bool BattleManager::TryEscape(Character* player, Monster* monster)
     //int playerRoll = RollPlayerDice(player);
     //int monsterRoll = RollMonsterDice(monster);
 
-    int playerRoll = 10;
+    int playerRoll = diceManager.Roll(player);
     int monsterRoll = monster->RollAttackDice();
 
     // TODO: Renderer::GetInstance().RenderBattleResult(playerRoll, monsterRoll)
