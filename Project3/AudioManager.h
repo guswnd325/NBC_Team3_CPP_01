@@ -24,11 +24,13 @@ enum class BGMList
 const std::string sfxPaths[] =
 {
     "SFX Test.wav",
+    "dice_roll.wav",
 };
 
 enum class SFXList
 {
     Test,
+    dice_roll,
 };
 
 class AudioManager

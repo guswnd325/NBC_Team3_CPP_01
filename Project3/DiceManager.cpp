@@ -2,6 +2,7 @@
 #include "Character.h"
 #include <windows.h>
 #include <mmsystem.h>
+#include "AudioManager.h"
 
 #pragma comment(lib, "winmm.lib")
 
@@ -11,12 +12,91 @@ std::mt19937 DiceManager::gen(DiceManager::rd());
 DiceManager::DiceManager() {}
 DiceManager::~DiceManager() {}
 
-/*
-void DiceManager::PlayRollSound()
+
+void DiceManager::DiceAnimationRoll()
 {
-	PlaySound(TEXT("dice_roll.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_NODEFAULT);
+    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    DWORD dwMode = 0;
+    GetConsoleMode(hOut, &dwMode);
+    SetConsoleMode(hOut, dwMode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+
+    std::vector<std::vector<std::string>> frames = {
+        
+        { "+-------+",
+          "|       |",
+          "|   .   |",
+          "|       |",
+          "+-------+" },
+
+          
+          { "+-------+",
+            "|     . |",
+            "|       |",
+            "| .     |",
+            "+-------+" },
+
+           
+            { "+-------+",
+              "|     . |",
+              "|   .   |",
+              "| .     |",
+              "+-------+" },
+
+           
+              { "+-------+",
+                "| .   . |",
+                "|       |",
+                "| .   . |",
+                "+-------+" },
+
+                
+                { "+-------+",
+                  "| .   . |",
+                  "|   .   |",
+                  "| .   . |",
+                  "+-------+" },
+
+                  
+                  { "+-------+",
+                    "| .   . |",
+                    "| .   . |",
+                    "| .   . |",
+                    "+-------+" }
+    };
+
+    const int FRAME_LINES = 5;
+
+    CONSOLE_CURSOR_INFO cursorInfo;
+    GetConsoleCursorInfo(hOut, &cursorInfo);
+    cursorInfo.bVisible = FALSE;
+    SetConsoleCursorInfo(hOut, &cursorInfo);
+
+    srand(static_cast<unsigned int>(time(nullptr)));
+
+    AudioManager::GetInstance().PlaySFX(SFXList::dice_roll);
+
+    for (const std::string& line : frames[0]) {
+        std::cout << "\t" << line << "\n";
+    }
+
+    for (int i = 1; i < 16; ++i) {
+        std::cout << "\033[" << FRAME_LINES << "A";
+        int frameIdx = rand() % frames.size();
+        for (const std::string& line : frames[frameIdx]) {
+            std::cout << "\r\t" << line << "          \n";
+        }
+        std::cout.flush();
+
+        int delay = 10+ (i * i);
+        std::this_thread::sleep_for(std::chrono::milliseconds(delay));
+    }
+
+    cursorInfo.bVisible = TRUE;
+    SetConsoleCursorInfo(hOut, &cursorInfo);
+
+    std::cout << "\n\t[ 결과 확인 중... ]" << std::endl;
 }
-*/
+
 
 int DiceManager::Roll(Character* character)
 {
@@ -25,6 +105,8 @@ int DiceManager::Roll(Character* character)
     // 캐릭터의 인벤토리에서 주사위 목록을 가져옵니다.
     auto& diceList = character->GetInventory()->GetDiceStorege();
 
+    DiceAnimationRoll();
+
     for (const auto& slot : diceList)
     {
         Dice* dice = slot.dice;
@@ -32,7 +114,7 @@ int DiceManager::Roll(Character* character)
 
         if (dice == nullptr) continue; 
 
-        // 핵심 수정: 1~side가 아니라 주사위 객체가 가진 min~max 범위를 사용합니다.
+        //주사위 객체가 가진 min~max 범위를 사용
         std::uniform_int_distribution<int> dis(dice->minSide, dice->maxSide);
 
         for (int i = 0; i < count; i++)
@@ -40,7 +122,7 @@ int DiceManager::Roll(Character* character)
             int roll = dis(gen);
             totalSum += roll;
 
-            // 출력 메시지도 범위에 맞게 수정
+            
             std::cout << "[" << dice->minSide << "~" << dice->maxSide << " 범위: " << roll << "] ";
         }
     }
@@ -60,6 +142,7 @@ void DiceManager::SetDiceID(Dice& dice)
     else if (min == 1 && max == 4) dice.id = DiceID::D1_4;
     else if (min == 1 && max == 6) dice.id = DiceID::D1_6;
     else if (min == 1 && max == 8) dice.id = DiceID::D1_8;
+    else if (min == 1 && max == 24) dice.id == DiceID::D1_24;
     else if (min == 2 && max == 3) dice.id = DiceID::D2_3;
     else if (min == 2 && max == 5) dice.id = DiceID::D2_5;
     else if (min == 3 && max == 6) dice.id = DiceID::D3_6;
@@ -154,7 +237,7 @@ void DiceManager::UpdateMax(Character* character, int value) {
     }
 }
 
-// 1. 최소/최대값에 맞는 ID를 찾아서 반환 (핵심 로직)
+//
 DiceID DiceManager::MakeDiceId(int min, int max)
 {
     if (min == 1) {
@@ -163,6 +246,7 @@ DiceID DiceManager::MakeDiceId(int min, int max)
         if (max == 4) return DiceID::D1_4;
         if (max == 6) return DiceID::D1_6;
         if (max == 8) return DiceID::D1_8;
+        if (max == 24) return DiceID::D1_24;
     }
     else if (min == 2) {
         if (max == 3) return DiceID::D2_3;
@@ -175,3 +259,5 @@ DiceID DiceManager::MakeDiceId(int min, int max)
     
     return DiceID::D1_6;
 }
+
+
