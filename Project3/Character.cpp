@@ -7,6 +7,7 @@ constexpr int defaultRestTicket = 0;
 
 Character::Character()
 {
+	level = 1;
 	levelUpExp = 60;
 	inventory = new Inventory();
 	gold = defaultGold;
