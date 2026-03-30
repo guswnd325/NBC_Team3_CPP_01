@@ -29,6 +29,21 @@ Renderer& Renderer::GetInstance()
     return instance;
 }
 
+int GetPrintWidth(const std::string& str) {
+    int width = 0;
+    for (int i = 0; i < str.length(); i++) {
+        // 한글(UTF-8 또는 EUC-KR의 멀티바이트 처리)
+        if (str[i] & 0x80) {
+            width += 2;
+            i++; // 2바이트 문자이므로 한 칸 더 건너뜀 (EUC-KR 기준)
+            // UTF-8 환경이라면 i += 2; 처리가 필요할 수 있습니다.
+        }
+        else {
+            width += 1;
+        }
+    }
+    return width;
+}
 int Renderer::GetVisualLength(const std::string& str) {
     int length = 0;
     for (int i = 0; i < str.length(); i++) {
@@ -81,7 +96,7 @@ void Renderer::PrintLeftLine(const std::string& text, int width, std::string col
     for (int i = 0; i < padding; i++) std::cout << " ";
     std::cout << GOLD << "│" << RESET << std::endl;
 }
-const int UI_WIDTH = 60;
+const int UI_WIDTH = 100;
 
 void Renderer::RenderMenu() {
     Clear();
@@ -346,21 +361,43 @@ void Renderer::RenderDiceUpgradeOption() {
 }
 
 void Renderer::RenderShopItemList(const std::vector<BaseItem*>& itemLists, int playerGold) {
+    Clear();
     PrintTop(UI_WIDTH);
     PrintCenterLine("[ 만물상 상점 ]", UI_WIDTH, WHITE);
-    std::string goldInfo = "현재 보유 골드: " + std::to_string(playerGold) + " G";
-    PrintCenterLine(goldInfo, UI_WIDTH, YELLOW);
+    PrintCenterLine("보유 골드: " + std::to_string(playerGold) + " G", UI_WIDTH, YELLOW);
     PrintDivider(UI_WIDTH);
     PrintLeftLine("[0] 마을로 돌아가기", UI_WIDTH, RED);
     PrintDivider(UI_WIDTH);
 
     for (int i = 0; i < itemLists.size(); i++) {
-        std::string info = "[" + std::to_string(i + 1) + "] " +
-            itemLists[i]->GetName() + " | " +
-            itemLists[i]->GetTypeToString(itemLists[i]->GetType()) + " | " +
-            std::to_string(itemLists[i]->GetPrice()) + "G";
+        std::string name = itemLists[i]->GetName();
+        std::string type = itemLists[i]->GetTypeToString(itemLists[i]->GetType());
+        std::string price = std::to_string(itemLists[i]->GetPrice()) + "G";
 
-        PrintLeftLine(info, UI_WIDTH, YELLOW);
+        StatDelta delta = itemLists[i]->GetStatDelta();
+        std::string statStr = "";
+        if (delta.atk != 0 || delta.def != 0) {
+            statStr += "(";
+            if (delta.atk != 0) statStr += "공격력 +" + std::to_string(delta.atk);
+            if (delta.atk != 0 && delta.def != 0) statStr += " "; 
+            if (delta.def != 0) statStr += "방어력 +" + std::to_string(delta.def);
+            statStr += ")";
+        }
+        // 1. 이름 칸 정렬 (예: 24칸 고정)
+        int nameW = GetPrintWidth(name);
+        std::string namePart = name + std::string(std::max(0, 24 - nameW), ' ');
+
+        // 2. 타입 칸 정렬 (예: 12칸 고정)
+        std::string typeAndStat = type + " " + statStr;
+        int tsW = GetPrintWidth(typeAndStat);
+        std::string tsPart = typeAndStat + std::string(std::max(0, 40 - tsW), ' ');
+
+        // 인덱스 번호 [1] ~ [11] 정렬 (2칸 확보)
+        std::string idxStr = (i + 1 < 10) ? " " + std::to_string(i + 1) : std::to_string(i + 1);
+
+        // 전체 라인 조립
+        std::string info = "[" + idxStr + "] " + namePart + "| " + tsPart + "| " + price;
+        PrintLeftLine(info, UI_WIDTH, WHITE);
     }
 
     PrintBottom(UI_WIDTH);
@@ -403,7 +440,7 @@ void Renderer::RenderBuyResult(BuyStatus status, BaseItem* item, int playerGold)
     Delay(2000);
 }
 
-void Renderer::RenderInventory(BaseItem* slots[], const std::vector<ItemSlot>& gearStorage, const std::vector<DiceSlot>& diceStorage) {
+void Renderer::RenderInventory(BaseItem* slots[], const std::vector<ItemSlot>& gearStorage, const std::vector<DiceSlot>& diceStorage ) {
     Clear();
     PrintTop(UI_WIDTH);
     PrintCenterLine("[ 장비 슬롯 ]", UI_WIDTH, WHITE);
