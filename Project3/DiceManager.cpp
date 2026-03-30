@@ -154,4 +154,24 @@ void DiceManager::UpdateMax(Character* character, int value) {
     }
 }
 
+// 1. 최소/최대값에 맞는 ID를 찾아서 반환 (핵심 로직)
+DiceID DiceManager::MakeDiceId(int min, int max)
+{
+    if (min == 1) {
+        if (max == 2) return DiceID::D1_2;
+        if (max == 3) return DiceID::D1_3;
+        if (max == 4) return DiceID::D1_4;
+        if (max == 6) return DiceID::D1_6;
+        if (max == 8) return DiceID::D1_8;
+    }
+    else if (min == 2) {
+        if (max == 3) return DiceID::D2_3;
+        if (max == 5) return DiceID::D2_5;
+    }
+    else if (min == 3) {
+        if (max == 6) return DiceID::D3_6;
+    }
 
+    
+    return DiceID::D1_6;
+}

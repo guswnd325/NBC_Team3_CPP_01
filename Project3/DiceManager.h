@@ -37,6 +37,9 @@ struct Dice
     void SetUpgradeCount(int count) {
         upgradeCount = (count < 0) ? 0 : count;
     }
+
+
+
     
 
     // ID 기반 초기 설정
@@ -76,6 +79,10 @@ public:
     void UpdateMin(Character* character, int value);
 
     void UpdateMax(Character* character, int value);
+
+    DiceID MakeDiceId(int min, int max);
+
+ 
 
 	//주사위 소리 재생
 	//void PlayRollSound();
