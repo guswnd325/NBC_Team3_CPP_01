@@ -1,5 +1,6 @@
 #pragma once
 #include "Actor.h"
+#include "DiceManager.h"
 #include <vector>
 
 enum class MonsterGrade {
@@ -26,7 +27,7 @@ private:
 	int diceCount;
 	int diceSides;
 
-	int advancedDiceID;
+	DiceID rewardDiceID;
 	int diceChallengeValue;
 
 public:
@@ -44,10 +45,10 @@ public:
 	MonsterGrade GetGrade() { return grade; }
 	void SetGrade(MonsterGrade value) { grade = value; }
 
-	void SetRewards(int gold, int recover, int diceID, int challenge);
+	void SetRewards(int gold, int recover, DiceID diceID, int challenge);
 	int GetRewardGold() { return rewardGold; }
 	int GetRecoverAmount() { return recoverAmount; }
-	int GetAdvancedDiceID() { return advancedDiceID; }
+	DiceID GetRewardDiceID() { return rewardDiceID; }
 	int GetDiceChallengeValue() { return diceChallengeValue; }
 
 	int RollAttackDice();

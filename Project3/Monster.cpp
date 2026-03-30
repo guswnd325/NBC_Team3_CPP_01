@@ -22,7 +22,7 @@ void Monster::InitializeMonster() {
 			"   '~~\033[91m_~_\033[0m~~' "
 		};
 		SetHP(20); SetAtk(5); SetDef(0); SetExp(10); 
-		SetRewards(20, 1, 101, 4);
+		SetRewards(20, 1, DiceID::D1_2, 4);
 		SetDiceCount(1); SetDiceSides(6);
 		break;
 	case MonsterType::Goblin:
@@ -35,24 +35,24 @@ void Monster::InitializeMonster() {
 			"   '------'     "
 		};
 		SetHP(40); SetAtk(10); SetDef(5); SetExp(20);
-		SetRewards(50, 1, 102, 7);
+		SetRewards(50, 1, DiceID::D1_3, 7);
 		SetDiceCount(2); SetDiceSides(4);
 		break;
 	case MonsterType::Golem:
 		SetName("∞Ò∑Ω");
 		SetHP(150); SetAtk(25); SetDef(20); SetExp(100);
-		SetRewards(150, 1, 105, 10);
+		SetRewards(150, 1, DiceID::D1_4, 10);
 		SetDiceCount(1); SetDiceSides(12);
 		break;
 	case MonsterType::Troll:
 		SetHP(80); SetAtk(20); SetDef(15); SetExp(40);
-		SetRewards(200, 1, 105, 10);
+		SetRewards(200, 1, DiceID::D1_6, 10);
 		SetDiceCount(2); SetDiceSides(6);
 		break;
 	case MonsterType::MaxRabbit:
 		SetName("∏∏∑æ≈‰≥¢");
 		SetHP(500); SetAtk(60); SetDef(40); SetExp(500);
-		SetRewards(1000, 1, 999, 15);
+		SetRewards(1000, 1, DiceID::D3_6, 15);
 		SetDiceCount(20); SetDiceSides(2);
 		break;
 	default:
@@ -79,9 +79,9 @@ int Monster::RollAttackDice() {
 	return total;
 }
 
-void Monster::SetRewards(int gold, int recover, int diceID, int challenge) {
+void Monster::SetRewards(int gold, int recover, DiceID diceID, int challenge) {
 	rewardGold = gold;
 	recoverAmount = recover;
-	advancedDiceID = diceID;
+	rewardDiceID = diceID;
 	diceChallengeValue = challenge;
 }

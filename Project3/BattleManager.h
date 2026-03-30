@@ -1,6 +1,7 @@
 #pragma once
 #include "Character.h"
 #include "Monster.h"
+#include "Renderer.h"
 #include "DiceManager.h"
 
 enum class BattleResult

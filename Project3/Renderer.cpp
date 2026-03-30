@@ -33,21 +33,20 @@ void Renderer::RenderMenu()
     std::cout << GOLD << "│  " << YELLOW << "[1]" << WHITE << " START GAME           " << GOLD << "│" << RESET << std::endl;
     std::cout << GOLD << "│  " << YELLOW << "[2]" << RED << " EXIT                 " << GOLD << "│" << RESET << std::endl;
     std::cout << GOLD << "└───────────────────────────┘" << RESET << std::endl;
-    std::cout << BRIGHT_GREEN << " > INPUT : " << RESET << std::endl;
-
+    std::cout << BRIGHT_GREEN << " > INPUT : " << RESET;
 
 }
 
 void Renderer::RenderCreatePlayer()
 {
     std::cout << GOLD << "┌───────────────────────────────────────────┐" << RESET << std::endl;
-    std::cout << GOLD << "│         " << WHITE << "◈ 캐릭터 집행자 선택 ◈" << GOLD << "             │" << std::endl;
+    std::cout << GOLD << "│         " << WHITE << "◈ 캐릭터 집행자 선택 ◈" << GOLD << "            │" << std::endl;
     std::cout << GOLD << "│───────────────────────────────────────────│" << std::endl;
     std::cout << GOLD << "│  " << WHITE << "[1] 전  사  (안정형: 주사위 2 ~ 4)       " << GOLD << "│" << RESET << std::endl;
     std::cout << GOLD << "│  " << WHITE << "[2] 마법사  (표준형: 주사위 3 ~ 5)       " << GOLD << "│" << RESET << std::endl;
     std::cout << GOLD << "│  " << WHITE << "[3] 모험가  (도박형: 주사위 1 ~ 8)       " << GOLD << "│" << RESET << std::endl;
     std::cout << GOLD << "└───────────────────────────────────────────┘" << RESET << std::endl;
-    std::cout << BRIGHT_GREEN << " > 집행자를 선택해라 : ";
+    std::cout << BRIGHT_GREEN << " > 집행자를 선택해라 : " << RESET;
 }
 
 void Renderer::RenderMainMenu()
@@ -59,22 +58,30 @@ void Renderer::RenderMainMenu()
     std::cout << GOLD << "│  " << WHITE << "[2] 상  점 (아이템을 구매하거나 팝니다)  " << GOLD << "│" << RESET << std::endl;
     std::cout << GOLD << "│  " << WHITE << "[3] 휴  식 (체력을 회복하고 재정비합니다)" << GOLD << "│" << RESET << std::endl;
     std::cout << GOLD << "└───────────────────────────────────────────┘" << RESET << std::endl;
-    std::cout << BRIGHT_GREEN << " > 행동을 선택해라 : ";
+    std::cout << BRIGHT_GREEN << " > 행동을 선택해라 : " << RESET;
 }
 
-void Renderer::RenderStatus(Character* player)
-{
+void Renderer::RenderRewardSelect() {
+    std::cout << GOLD << "┌───────────────────────────────┐" << RESET << std::endl;
+    std::cout << GOLD << "│         " << WHITE << "◈ 보상 선택 ◈          " << GOLD << "│" << RESET << std::endl;
+    std::cout << GOLD << "├───────────────────────────────┤" << RESET << std::endl;
+    std::cout << GOLD << "│  " << WHITE << "[1] 일반 보상                 " << GOLD << "│" << RESET << std::endl;
+    std::cout << GOLD << "│      " << WHITE << "(휴식권 1회 + 골드)        " << GOLD << "│" << RESET << std::endl;
+    std::cout << GOLD << "│  " << WHITE << "[2] 리스크 보상               " << GOLD << "│" << RESET << std::endl;
+    std::cout << GOLD << "│      " << WHITE << "(주사위로 고보상 도전)     " << GOLD << "│" << RESET << std::endl;
+    std::cout << GOLD << "└───────────────────────────────┘" << RESET << std::endl;
+    std::cout << BRIGHT_GREEN << " > 보상을 선택해라 : " << RESET;
+}
+void Renderer::RenderBattleAction() {
     std::cout << GOLD << "┌───────────────────────────┐" << RESET << std::endl;
-    std::cout << GOLD << "│         " << WHITE << "캐릭터 상태" << GOLD << "          │" << RESET << std::endl;
+    std::cout << GOLD << "│       " << WHITE << "◈ 행동 선택 ◈        " << GOLD << "│" << RESET << std::endl;
     std::cout << GOLD << "├───────────────────────────┤" << RESET << std::endl;
-    std::cout << GOLD << "│  이름: " << WHITE << player->GetName() << GOLD << "                 │" << RESET << std::endl;
-    std::cout << GOLD << "│  HP: " << WHITE << player->GetHP() << GOLD << " / " << MAX_HP << "             │" << RESET << std::endl;
-    std::cout << GOLD << "│  ATK: " << WHITE << player->GetAtk() << "                     │" << RESET << std::endl;
-    std::cout << GOLD << "│  DEF: " << WHITE << player->GetDef() << "                     │" << RESET << std::endl;
-    std::cout << GOLD << "│  EXP: " << WHITE << player->GetExp() << "                     │" << RESET << std::endl;
+    std::cout << GOLD << "│  " << WHITE << "[1] 전투                  " << GOLD << "│" << RESET << std::endl;
+    std::cout << GOLD << "│  " << WHITE << "[2] 도망                  " << GOLD << "│" << RESET << std::endl;
     std::cout << GOLD << "└───────────────────────────┘" << RESET << std::endl;
-}
+	std::cout << BRIGHT_GREEN << " > 행동을 선택해라 : " << RESET;
 
+}
 void Renderer::Clear()
 {
     system("cls");
