@@ -6,8 +6,9 @@
 #include <string>
 #include <Windows.h>
 #include <unordered_map>
+#include "buyStatus.h"
 
-#include "ShopManager.h"
+class BaseItem;
 
 class Renderer
 {
@@ -43,6 +44,8 @@ public:
     void RenderBattleStart(Monster* monster);  // 전투 시작 화면 출력
     void RenderUpgradeResult(UpgradeStatus status, int prevLevel, int curLevel); // 강화 결과 출력
     void RenderStatus(Character* player);   // 플레이어 상태 출력
+    void RenderDiceUpgradeOption();
+    void RenderTicketInsufficient();
     //void RenderBattleLog(const string& message);  // 전투 로그 출력
 
 public:

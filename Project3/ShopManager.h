@@ -6,14 +6,7 @@
 #include "BaseItem.h"
 #include "Character.h"
 #include "Renderer.h"
-
-enum class BuyStatus
-{
-    Success,
-    Possessed,
-    InsufficientGold,
-    Default,
-};
+#include "buyStatus.h"
 
 class ShopManager
 {

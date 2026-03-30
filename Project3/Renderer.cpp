@@ -1,4 +1,5 @@
 ﻿#include "Renderer.h"
+#include "BaseItem.h"
 #include <iostream>
 #include <iomanip>
 
@@ -295,6 +296,26 @@ void Renderer::RenderUpgradeResult(UpgradeStatus status, int prevLevel, int curL
     }
     PrintBottom(UI_WIDTH);
     Delay(2000);
+}
+
+void Renderer::RenderTicketInsufficient()
+{
+    Clear();
+    PrintCenterLine("티켓이 부족합니다.", UI_WIDTH, WHITE);
+    Delay(2000);
+}
+
+void Renderer::RenderDiceUpgradeOption() {
+    PrintTop(UI_WIDTH);
+    PrintCenterLine("[ 강화 옵션 선택 ]", UI_WIDTH, WHITE);
+    PrintDivider(UI_WIDTH);
+
+    std::string message = "[1] 최소값 +1 증가 [2] 최대값 +1 증가";
+    PrintLeftLine(message, UI_WIDTH, CYAN);
+    PrintDivider(UI_WIDTH);
+    PrintLeftLine("[0] 취소하고 돌아가기", UI_WIDTH, WHITE);
+    PrintBottom(UI_WIDTH);
+    std::cout << BRIGHT_GREEN << " > 강화 옵션 선택 : " << RESET;
 }
 
 void Renderer::RenderShopItemList(const std::vector<BaseItem*>& itemLists) {

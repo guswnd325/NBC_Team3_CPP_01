@@ -128,6 +128,7 @@
     <ClInclude Include="AudioManager.h" />
     <ClInclude Include="BaseItem.h" />
     <ClInclude Include="BattleManager.h" />
+    <ClInclude Include="buyStatus.h" />
     <ClInclude Include="Character.h" />
     <ClInclude Include="CombatManager.h" />
     <ClInclude Include="DiceManager.h" />

@@ -116,7 +116,7 @@ void RefurbishManager::Run()
 		Renderer& renderer = Renderer::GetInstance();
 		renderer.Clear();
 		Character* character = GameManager::GetInstance().GetCharacter();
-		
+
 		std::string message = "";
 
 		// renderer.RenderRestSelect() ?
@@ -145,7 +145,7 @@ void RefurbishManager::Run()
 			continue;
 		}
 
-		
+
 		// [2] 체력 회복 선택의 경우
 		if (select == (int)RestOption::Heal)
 		{
@@ -155,25 +155,25 @@ void RefurbishManager::Run()
 
 			switch (info.result)
 			{
-				case HealStatus::Success:
-				{
-					message = "체력이 " + to_string(info.healValue) + "만큼 회복 되었습니다. (" + to_string(character->GetHP()-info.healValue) + " -> " + to_string(character->GetHP()) + ")";
-					break;
+			case HealStatus::Success:
+			{
+				message = "체력이 " + to_string(info.healValue) + "만큼 회복 되었습니다. (" + to_string(character->GetHP() - info.healValue) + " -> " + to_string(character->GetHP()) + ")";
+				break;
 
-				}
-				case HealStatus::TicketInsufficient:
-				{
-					message = "회복 티켓이 부족합니다.";
-					break;
+			}
+			case HealStatus::TicketInsufficient:
+			{
+				message = "회복 티켓이 부족합니다.";
+				break;
 
 
-				}
-				case HealStatus::MaxHP:
-				{
-					message = "이미 최대 체력입니다.";
-					break;
+			}
+			case HealStatus::MaxHP:
+			{
+				message = "이미 최대 체력입니다.";
+				break;
 
-				}
+			}
 			}
 
 			{
@@ -182,10 +182,6 @@ void RefurbishManager::Run()
 				std::cout << message << std::endl;
 				Sleep(2000);
 			}
-
-			// renderer.RenderMessage(message);
-			// renderer.Delay(5);
-
 			continue;
 		}
 		if (select == (int)RestOption::Upgrade)
@@ -193,114 +189,49 @@ void RefurbishManager::Run()
 
 			if (character->GetRestTicket() <= 0)
 			{
-				message = "티켓이 부족합니다.";
-				{
-					renderer.Clear();
-					std::cout << message << std::endl;
-					Sleep(2000);
-				}
-				// renderer.RenderMessage(message);
-				// renderer.Delay(5);
+				renderer.RenderTicketInsufficient();
 				continue;
-
 			}
-
-			// 주사위 인덱스
-			message = "강화할 주사위를 선택\n";
-			// renderer.RenderDiceStorege();
-
-			std::cout << "== 주사위 인벤토리 ==" << std::endl;
-			
 			std::vector<DiceSlot> storege = character->GetInventory()->GetDiceStorege();
-			for (int i = 0; i < storege.size(); i++)
-			{
-				std::cout << "[" + std::to_string(i + 1) + "] " + storege[i].dice->DiceIdToString() + " " + std::to_string(storege[i].count) + "EA" << std::endl;
-				//std::cout << "[" + std::to_string(i + 1) + "] " + std::to_string((int)diceStorege[i].dice->GetId()) + " " + std::to_string(diceStorege[i].count) + "EA" << std::endl;
-			}
-
-			std::cout << "강화할 주사위 선택 : " << std::endl;
+			renderer.RenderDiceUpgradeList(storege);
 
 			int index;
 			std::cin >> index;
 
-			// 숫자 이외의 입력 및 0은 종료처리
-			
-			if(std::cin.fail())
-			{
-				std::cin.clear();
-				std::cin.ignore((std::numeric_limits<std::streamsize>::max)(), '\n');
-
-				message = "잘못된 입력입니다.";
-				// Renderer::GetInstance().RenderMessage(message);
-				// Renderer::Delay(4);
-
-				continue;
-			}
-			else if (!index)
-			{
-				// 메뉴로 쫒아내기
-				break;
-			}
-
-			// 인덱스 오버 체크
-			if (index > storege.size()) // 1 > 1 false
-			{
-				continue;
-			}
-
-			// 강화 종류 선택
-			message = "강화 옵션을 선택해주세요(1=최소값 증가, 2=최대값 증가) : ";
-			std::cout << message;
-			// renderer.RenderMessage(message);
-
-			std::cin >> select;
-
-			// 숫자 이외의 입력 및 0은 종료처리
-			 
 			if (std::cin.fail())
 			{
 				std::cin.clear();
 				std::cin.ignore((std::numeric_limits<std::streamsize>::max)(), '\n');
+				continue;
+			}
+			else if (!index)
+			{
+				break;
+			}
+			if (index > storege.size())
+			{
+				continue;
+			}
 
-				message = "잘못된 입력입니다.";
-				// Renderer::GetInstance().RenderMessage(message);
-				// Renderer::Delay(4);
+			// 강화 종류 선택, min or max
+			renderer.RenderDiceUpgradeOption();
 
+			std::cin >> select;
+
+			if (std::cin.fail())
+			{
+				std::cin.clear();
+				std::cin.ignore((std::numeric_limits<std::streamsize>::max)(), '\n');
 				continue;
 			}
 			else if (!select)
 			{
-				// 메뉴로 나가!!
 				break;
 			}
 
-			UpgradeResult info = UpgradeDice(index-1, (UpgradeType)select, character);
+			UpgradeResult info = UpgradeDice(index - 1, (UpgradeType)select, character);
+			renderer.RenderUpgradeResult(info.status, info.upgradeLevel, info.upgradeLevel + 1);
 
-			switch (info.status)
-			{
-				case UpgradeStatus::MaxUpgrade:
-				{
-					message = "이미 최대 업그레이드 되었습니다.";
-					break;
-
-				}
-				case UpgradeStatus::Success:
-				{
-					message = "강화 성공! (" + to_string(info.upgradeLevel - 1) + " -> " + to_string(info.upgradeLevel) + ")";
-					// or message = "강화 성공!" + to_string(info.upgradeLevel) + " -> " + to_string(info.upgradeLevel+1);
-					break;
-
-				}
-			}
-
-			{
-				std::cout << message << std::endl;
-				Sleep(2000);
-			}
-			
-			// 처리 결과 출력
-			// renderer.RenderMessage(message);
-			// renderer.Delay(4);
 
 		}
 

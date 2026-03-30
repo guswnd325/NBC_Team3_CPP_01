@@ -120,6 +120,9 @@
     <ClInclude Include="RefurbishStatus.h">
       <Filter>소스 파일\Refurbish</Filter>
     </ClInclude>
+    <ClInclude Include="buyStatus.h">
+      <Filter>소스 파일\Shop</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Character.cpp">
