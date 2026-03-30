@@ -75,12 +75,12 @@ void GameManager::CreateCharacter()
 		job = "마법사";
 		for (int i = 0; i < 2; i++)
 		{
-			player->GetInventory()->AddDice(DiceID::D2_5);
+			player->GetInventory()->AddDice(DiceID::D1_10);
 		}
 		break;
 	case 3:
 		job = "고점맨";
-			player->GetInventory()->AddDice(DiceID::D1_8);
+			player->GetInventory()->AddDice(DiceID::D1_24);
 		break;
 	default:
 		break;
