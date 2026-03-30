@@ -117,6 +117,9 @@
     <ClInclude Include="AudioManager.h">
       <Filter>소스 파일\Audio</Filter>
     </ClInclude>
+    <ClInclude Include="RefurbishStatus.h">
+      <Filter>소스 파일\Refurbish</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Character.cpp">

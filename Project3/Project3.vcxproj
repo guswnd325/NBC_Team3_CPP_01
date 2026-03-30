@@ -137,6 +137,7 @@
     <ClInclude Include="ItemSpawnManager.h" />
     <ClInclude Include="Monster.h" />
     <ClInclude Include="MonsterManager.h" />
+    <ClInclude Include="RefurbishStatus.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="RefurbishManager.h" />
     <ClInclude Include="ShopManager.h" />

@@ -1,7 +1,7 @@
 #pragma once
 #include "Character.h"
 #include "Monster.h"
-#include "RefurbishManager.h"
+#include "RefurbishStatus.h"
 #include <Windows.h>
 #include <unordered_map>
 
