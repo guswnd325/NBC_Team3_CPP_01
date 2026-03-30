@@ -1,6 +1,4 @@
-
 #include "ShopManager.h"
-
 
 ShopManager::ShopManager()
 {
@@ -32,7 +30,7 @@ void ShopManager::Run(Character* character)
 		Renderer& renderer = Renderer::GetInstance();
 		renderer.Clear();
 		
-		renderer.RenderShopItemList(itemLists);
+		renderer.RenderShopItemList(itemLists, character->GetGold());
 
 		int buyItemIndex;
 
