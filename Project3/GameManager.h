@@ -25,7 +25,8 @@ public:
 
     GameManager(const GameManager&) = delete;
     GameManager& operator=(const GameManager&) = delete;
-
+    
+    Character* GetCharacter() const;
 public:
     void Run();
 

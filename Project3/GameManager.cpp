@@ -88,6 +88,11 @@ void GameManager::CreateCharacter()
 	player->InitializeCharacter(job);
 }
 
+Character * GameManager::GetCharacter() const
+{
+	return player;
+}
+
 void GameManager::StartGame()
 {
 	Renderer& renderer = Renderer::GetInstance();
