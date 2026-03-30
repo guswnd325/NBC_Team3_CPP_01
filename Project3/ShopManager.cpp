@@ -48,7 +48,7 @@ void ShopManager::Run(Character* character)
 		{
 			break;
 		}
-		if (buyItemIndex >= itemLists.size())
+		if (buyItemIndex > itemLists.size())
 		{
 			continue;
 		}
