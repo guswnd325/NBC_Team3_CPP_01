@@ -2,8 +2,12 @@
 #include "Character.h"
 #include "Monster.h"
 #include "RefurbishStatus.h"
+#include <vector>
+#include <string>
 #include <Windows.h>
 #include <unordered_map>
+
+#include "ShopManager.h"
 
 class Renderer
 {
@@ -31,6 +35,8 @@ public:
     Renderer();
     ~Renderer();
 
+    void RenderShopItemList(const std::vector<BaseItem*>& itemLists);
+    void RenderBuyResult(BuyStatus status, BaseItem* item, int currentGold);
     void RenderAreaChoices(const std::vector<std::string>& choices, const std::unordered_map<std::string, std::string>& displayMap);
     void RenderDiceUpgradeList(const std::vector<DiceSlot>& storage); // 강화 가능 주사위 목록
     void RenderHealResult(int healValue, int prevHP, int curHP); // 회복 결과 출력

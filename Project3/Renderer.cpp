@@ -297,6 +297,60 @@ void Renderer::RenderUpgradeResult(UpgradeStatus status, int prevLevel, int curL
     Delay(2000);
 }
 
+void Renderer::RenderShopItemList(const std::vector<BaseItem*>& itemLists) {
+    PrintTop(UI_WIDTH);
+    PrintCenterLine("[ 만물상 상점 ]", UI_WIDTH, WHITE);
+    PrintDivider(UI_WIDTH);
+    PrintLeftLine("[0] 마을로 돌아가기", UI_WIDTH, RED);
+    PrintDivider(UI_WIDTH);
+
+    for (int i = 0; i < itemLists.size(); i++) {
+        std::string info = "[" + std::to_string(i + 1) + "] " +
+            itemLists[i]->GetName() + " | " +
+            itemLists[i]->GetTypeToString(itemLists[i]->GetType()) + " | " +
+            std::to_string(itemLists[i]->GetPrice()) + "G";
+
+        PrintLeftLine(info, UI_WIDTH, YELLOW);
+    }
+
+    PrintBottom(UI_WIDTH);
+    std::cout << BRIGHT_GREEN << " > 구매할 아이템 번호 입력 : " << RESET;
+}
+
+void Renderer::RenderBuyResult(BuyStatus status, BaseItem* item, int playerGold) {
+    Clear();
+    PrintTop(UI_WIDTH);
+
+    std::string message = "";
+    std::string color = WHITE;
+
+    switch (status) {
+    case BuyStatus::Success:
+        message = "[" + item->GetName() + "] 구매 성공!";
+        color = BRIGHT_GREEN;
+        break;
+    case BuyStatus::InsufficientGold:
+    {
+        int shortGold = item->GetPrice() - playerGold;
+        message = "골드가 [" + std::to_string(shortGold) + "G] 부족합니다.";
+        color = RED;
+    }
+    break;
+    case BuyStatus::Possessed:
+        message = "이미 보유 중인 아이템입니다.";
+        color = YELLOW;
+        break;
+    default:
+        message = "구매할 수 없습니다.";
+        color = RED;
+        break;
+    }
+
+    PrintCenterLine(message, UI_WIDTH, color);
+    PrintBottom(UI_WIDTH);
+    Delay(2000);
+}
+
 void Renderer::Clear()
 {
     system("cls");
