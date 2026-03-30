@@ -137,6 +137,8 @@ void Renderer::RenderBattleAction() {
 }
 
 void Renderer::RenderBattleStart(Monster* monster) {
+    Clear();
+
     if (!monster) return;
 
     PrintTop(UI_WIDTH);
@@ -158,6 +160,8 @@ void Renderer::RenderBattleStart(Monster* monster) {
 }
 
 void Renderer::RenderStatus(Character* player) {
+    Clear();
+
     if (!player) return;
 
     PrintTop(UI_WIDTH);
@@ -211,7 +215,7 @@ void Renderer::RenderStatus(Character* player) {
 }
 
 void Renderer::RenderAreaChoices(const std::vector<std::string>& choices, const std::unordered_map<std::string, std::string>& displayMap) {
-
+    Clear();
     PrintTop(UI_WIDTH);
     PrintCenterLine("[ 탐험 지역 선택 ]", UI_WIDTH, WHITE);
     PrintDivider(UI_WIDTH);
@@ -375,6 +379,7 @@ void Renderer::RenderBuyResult(BuyStatus status, BaseItem* item, int playerGold)
 }
 
 void Renderer::RenderInventory(BaseItem* slots[], const std::vector<ItemSlot>& gearStorage, const std::vector<DiceSlot>& diceStorage) {
+    Clear();
     PrintTop(UI_WIDTH);
     PrintCenterLine("[ 장비 슬롯 ]", UI_WIDTH, WHITE);
     PrintDivider(UI_WIDTH);

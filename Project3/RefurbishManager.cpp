@@ -21,10 +21,6 @@ UpgradeResult RefurbishManager::UpgradeDice(int index, UpgradeType type, Charact
 	int upgradeLevel = curDice->GetUpgradeCount();
 
 	int curTicket = character->GetRestTicket();
-	if (upgradeLevel >= 3)
-	{
-		return { UpgradeStatus::MaxUpgrade, 0 };
-	}
 
 	if (curTicket >= 1)
 	{

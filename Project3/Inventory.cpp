@@ -17,52 +17,9 @@ void Inventory::Run()
 	{
 		Renderer& renderer = Renderer::GetInstance();
 
-		renderer.Clear();
-		{
-		std::cout << "== 장비 슬롯 ==" << std::endl;
-		
-		std::string itemNames[(int)SlotItems::SlotMax];
-		for (int i = 0; i < (int)SlotItems::SlotMax; i++)
-		{
-			if (nullptr != slots[i])
-			{
-				itemNames[i] = slots[i]->GetName();
-			}
-		}
-
-		std::cout << "무기 슬롯 : " << itemNames[(int)SlotItems::Weapon] << std::endl;
-		std::cout << "헬멧 슬롯 : " << itemNames[(int)SlotItems::Helmet] << std::endl;
-		std::cout << "갑옷 슬롯 : " << itemNames[(int)SlotItems::BodyArmor] << std::endl;
-		std::cout << "신발 슬롯 : " << itemNames[(int)SlotItems::Boots] << std::endl;
-		std::cout << "악세사리 슬롯 : " << itemNames[(int)SlotItems::Accessory] << std::endl;
-		std::cout << std::endl << "=============================" << std::endl << std::endl;
-		std::cout << "[0] 메뉴로 돌아가기" << std::endl;
-
-		// renderer.ShowInventory()
-		
-			std::cout << "== 장비 인벤토리 ==" << std::endl;
-			for (int i = 0; i < gearStorege.size(); i++)
-			{
-				BaseItem* item = gearStorege[i].item;
-				int count = gearStorege[i].count;
-				std::cout << "[" + std::to_string(i + 1) + "] " + item->GetName() + " " + item->GetTypeToString(item->GetType()) + " " + std::to_string(count) + "EA" << std::endl << std::endl;
-			}
-
-
-			std::cout << "== 주사위 인벤토리 ==" << std::endl;
-			// DiceIDToString()
-			for (int i = 0; i < diceStorege.size(); i++)
-			{
-				std::cout << "[" + std::to_string(i + 1) + "] " + diceStorege[i].dice->DiceIdToString() + " " + std::to_string(diceStorege[i].count) + "EA" << std::endl;
-				//std::cout << "[" + std::to_string(i + 1) + "] " + std::to_string((int)diceStorege[i].dice->GetId()) + " " + std::to_string(diceStorege[i].count) + "EA" << std::endl;
-			}
-
-
-			std::cout << "장착(교체)할 장비를 선택 : ";
-		}
+		renderer.RenderInventory(slots, gearStorege, diceStorege);
 
 		int select;
-
 
 		std::cin >> select;
 
@@ -79,46 +36,12 @@ void Inventory::Run()
 
 		else if ( select > gearStorege.size())
 		{
-			std::cout << "Index Error" << std::endl;
-			Sleep(2000);
 			continue;
 		}
 
 		// 장착 또는 교체
-		EquipResult info = EquipByIndex(select-1);
-		
-		std::string changedItem = info.item->GetName();
-
-		std::string message = "";
-
-		switch (info.status)
-		{
-			case EquipStatus::Equip:
-			{
-				message = "[" + changedItem + "]" + "아이템을 장착하였습니다.";
-			}
-			break;
-			case EquipStatus::Changed:
-			{
-				message = "[" + info.prevItem + "]" + "아이템을 " + "[" + changedItem + "]으로 교체하였습니다.";
-			}
-			break;
-			case EquipStatus::Overlap:
-			{
-				message = "[" + changedItem + "]" + "아이템은 이미 장착되어 있습니다.";
-			}
-			break;
-
-		}
-
-		{
-			renderer.Clear();
-			std::cout << message << std::endl;
-			Sleep(2000);
-		}
-		// 처리 결과 출력
-		// renderer.RenderMessage(message);
-		// renderer.Delay(4);
+		EquipResult result = EquipByIndex(select-1);
+		renderer.RenderEquipResult(result);
 	}
 }
 
