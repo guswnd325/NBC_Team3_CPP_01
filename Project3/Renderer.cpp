@@ -354,11 +354,13 @@ void Renderer::RenderBuyResult(BuyStatus status, BaseItem* item, int playerGold)
     {
         int shortGold = item->GetPrice() - playerGold;
         message = "골드가 [" + std::to_string(shortGold) + "G] 부족합니다.";
+        delete item;
         color = RED;
     }
     break;
     case BuyStatus::Possessed:
         message = "이미 보유 중인 아이템입니다.";
+        delete item;
         color = YELLOW;
         break;
     default:

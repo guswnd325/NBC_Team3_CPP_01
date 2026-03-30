@@ -31,91 +31,31 @@ void ShopManager::Run(Character* character)
 
 		Renderer& renderer = Renderer::GetInstance();
 		renderer.Clear();
-		//renderer.ShowShopItems();
 		
-		// void Renderer::ShowShopItems()
-		{
-			std::cout << "[0] 메뉴로 돌아가기" << std::endl << std::endl;
-
-			std::cout << "== 상점 판매 아이템 리스트 ==" << std::endl;
-			for (int i = 0; i < itemLists.size(); i++)
-			{
-				std::cout << "[" + std::to_string(i + 1) + "] " + itemLists[i]->GetName() + " | " + itemLists[i]->GetTypeToString(itemLists[i]->GetType()) + " | " + std::to_string(itemLists[i]->GetPrice()) + "G" << std::endl;
-			}
-
-			std::cout << "구매할 아이템 번호를 입력 : ";
-		}
+		renderer.RenderShopItemList(itemLists);
 
 		int buyItemIndex;
 
 		std::cin >> buyItemIndex;
-		std::string message = "";
-
-		// 숫자 이외의 입력 및 0은 종료처리
 		
 		if (std::cin.fail())
 		{
 			std::cin.clear();
 			std::cin.ignore((std::numeric_limits<std::streamsize>::max)(), '\n');
-			message = "잘못된 입력입니다.";
-			// renderer.RenderMessage(message);
-			// renderer.Delay(4);
 			continue;
 		}
 		else if (!buyItemIndex)
 		{
-			// 메뉴로 돌아가기
 			break;
 		}
 		if (buyItemIndex >= itemLists.size())
 		{
-			std::cout << "Index Error" << std::endl;
-			Sleep(2000);
 			continue;
 		}
 		
 		std::pair<BuyStatus, BaseItem *> status = BuyItem(buyItemIndex, character);
 		
-		renderer.Clear();
-
-		switch (status.first)
-		{
-			case BuyStatus::Success:
-			{
-				std::string itemName = status.second->GetName();
-				
-				character->GetInventory()->EquipByBaseItem(status.second);
-				message = "[" + itemName + "]" + "을/를 구매하였습니다.";
-			}
-			break;
-			case BuyStatus::InsufficientGold:
-			{
-				std::string dist = std::to_string(abs(character->GetGold() - status.second->GetPrice()));
-				message = "골드가 [" + dist + "]" + "만큼 부족합니다.";
-				
-				delete status.second;
-			}
-			break;
-			case BuyStatus::Possessed:
-			{
-				std::string itemName = status.second->GetName();
-				message = "[" + itemName + "] " + "아이템은 이미 보유중입니다.";
-				
-				delete status.second;
-				break;
-			}
-		}
-		// 처리 결과 출력
-		
-
-		{
-			std::cout << message << std::endl;
-			Sleep(2000);
-		}
-		// renderer.RenderMessage(message);
-		// renderer.Delay(4);
-
-
+		renderer.RenderBuyResult(status.first, status.second, character->GetGold());
 	}
 }
 
