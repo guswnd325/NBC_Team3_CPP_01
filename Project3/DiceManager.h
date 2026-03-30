@@ -20,58 +20,29 @@ enum class DiceID
 
 struct Dice
 {
-    int minSide;    // 최저 값
-    int maxSide;    // 최대 값
-    DiceID id;      // 주사위 id
+    int minSide;
+    int maxSide;
+    DiceID id;
 
-    Dice(DiceID diceId) : id(diceId)
-    {
-        SetID(diceId);
-    }
+    Dice(DiceID diceId) { SetByID(diceId); }
 
-    void UpdateIDByRange()
-    {
-        if (minSide == 1 && maxSide == 2) id = DiceID::D1_2;
-        else if (minSide == 1 && maxSide == 3) id = DiceID::D1_3;
-        else if (minSide == 1 && maxSide == 4) id = DiceID::D1_4;
-        else if (minSide == 1 && maxSide == 6) id = DiceID::D1_6;
-        else if (minSide == 1 && maxSide == 8) id = DiceID::D1_8;
-        else if (minSide == 2 && maxSide == 3) id = DiceID::D2_3;
-        else if (minSide == 2 && maxSide == 5) id = DiceID::D2_5;
-        else if (minSide == 3 && maxSide == 6) id = DiceID::D3_6;
-
-    }
-
-    void UpdateMin(int value) {
-        minSide += value;
-        UpdateIDByRange(); 
-    }
-
-    void UpdateMax(int value) {
-        maxSide += value;
-        UpdateIDByRange(); 
-    }
-
+    // 단순히 현재 ID를 알려주는 기능은 구조체에 적합합니다.
+    DiceID GetId() const { return id; }
     int GetMin() const { return minSide; }
     int GetMax() const { return maxSide; }
-    DiceID GetId() const { return id; }
 
-    void SetMin(int min) { minSide = min; UpdateIDByRange(); }
-    void SetMax(int max) { maxSide = max; UpdateIDByRange(); }
-
-
-    void SetID(DiceID nextId) {
-        id = nextId;
-        switch (id)
-        {
-        case DiceID::D1_2:  minSide = 1; maxSide = 2;  break;
-        case DiceID::D1_3:  minSide = 1; maxSide = 3;  break;
-        case DiceID::D1_4:  minSide = 1; maxSide = 4;  break;
-        case DiceID::D1_6:  minSide = 1; maxSide = 6;  break;
-        case DiceID::D1_8:  minSide = 1; maxSide = 8;  break;
-        case DiceID::D2_3:  minSide = 2; maxSide = 3;  break;
-        case DiceID::D2_5:  minSide = 2; maxSide = 5;  break;
-        case DiceID::D3_6:  minSide = 3; maxSide = 6;  break;
+    // ID 기반 초기 설정
+    void SetByID(DiceID diceId) {
+        id = diceId;
+        switch (id) {
+        case DiceID::D1_2: minSide = 1; maxSide = 2; break;
+        case DiceID::D1_3: minSide = 1; maxSide = 3; break;
+        case DiceID::D1_4: minSide = 1; maxSide = 4; break;
+        case DiceID::D1_6: minSide = 1; maxSide = 6; break;
+        case DiceID::D1_8: minSide = 1; maxSide = 8; break;
+        case DiceID::D2_3: minSide = 2; maxSide = 3; break;
+        case DiceID::D2_5: minSide = 2; maxSide = 5; break;
+        case DiceID::D3_6: minSide = 3; maxSide = 6; break;
         }
     }
 };
@@ -89,9 +60,15 @@ public:
 	DiceManager();
 	~DiceManager();
 
-	// 이제 Roll 함수가 Dice 구조체를 매개변수로 받습니다.
 	int Roll(Character* character);
-	
+
+    //최대값, 최소값 변경 시 주사위 id업데이트
+    void SetDiceID(Dice& dice);
+
+    void UpdateMin(Character* character, int value);
+
+    void UpdateMax(Character* character, int value);
+
 	//주사위 소리 재생
 	//void PlayRollSound();
 };
