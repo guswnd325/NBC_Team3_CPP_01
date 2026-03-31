@@ -47,8 +47,7 @@ public:
     void RenderRestMenu();
     void RenderCreatePlayer();
     void RenderMainMenu();
-    void RenderBattleStart(Monster* monster);
-    void RenderBattleAction(Monster* monster);
+    void RenderBattleAction(Monster* monster, Character* player);
     void RenderStatus(Character* player);
     void RenderShopItemList(const std::vector<BaseItem*>& itemLists, int playerGold);
     void RenderInventory(BaseItem* slots[], const std::vector<ItemSlot>& gearStorage, const std::vector<DiceSlot>& diceStorage);

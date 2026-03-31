@@ -8,9 +8,11 @@
 // ---------------------------------------------------------------
 BattleResult BattleManager::Run(Character* player, Monster* monster)
 {
+    Renderer::GetInstance().ClearBattleLogs();
+    Renderer::GetInstance().AddBattleLog(monster->GetName() + "(이)가 나타났다!");
     while (true)
     {
-        Renderer::GetInstance().RenderBattleAction(monster);
+        Renderer::GetInstance().RenderBattleAction(monster,player);
 
         InputResult input = Tools<int>::Input(1, 2);
 
