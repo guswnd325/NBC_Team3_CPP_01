@@ -62,7 +62,7 @@ void GameManager::CreateCharacter()
 			job = "마법사";
 			break;
 		case 3:
-			job = "고점맨";
+			job = "도박꾼";
 			break;
 		case 4:
 			job = "테스트용";

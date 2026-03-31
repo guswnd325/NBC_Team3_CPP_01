@@ -55,7 +55,7 @@ void Character::InitializeCharacter(std::string name)
 			GetInventory()->AddDice(DiceID::D1_10);
 		}
 	}
-	else if (name == "고점맨")
+	else if (name == "도박꾼")
 	{
 		SetAtk(1);
 		SetDef(0);
