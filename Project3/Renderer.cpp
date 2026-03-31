@@ -12,7 +12,6 @@
 #define CYAN        "\033[36m"
 #define GRAY        "\033[90m"
 
-
 Renderer::Renderer() {
     HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
     CONSOLE_CURSOR_INFO cursorInfo;
@@ -217,7 +216,7 @@ void Renderer::RenderSplitScreenSub(const std::vector<std::string>& leftContent,
     PrintDivider(Renderer::UI_WIDTH);
 
     // 2. 중앙 내용 구역 (고정 높이 CONTENT_HEIGHT 사용)
-    for (int i = 0; i < Renderer::CONTENT_HEIGHT; i++) {
+    for (int i = 0; i < Renderer::CONTENT_HEIGHT+1; i++) {
        
         std::cout << GOLD << "│" << RESET;
 
@@ -236,7 +235,6 @@ void Renderer::RenderSplitScreenSub(const std::vector<std::string>& leftContent,
         std::cout << GOLD << "│" << RESET << std::endl;
     }
 
-   
     // 5. 최하단 테두리
     PrintBottom(Renderer::UI_WIDTH);
 }
@@ -312,6 +310,7 @@ void Renderer::RenderMenu(const std::vector<std::string>& diceFrame) {
 void Renderer::RenderCreatePlayer(const std::vector<std::string>& diceFrame) {
     // 1. 왼쪽 영역에 들어갈 캐릭터 선택 정보 준비
     std::vector<std::string> charSelectionInfo;
+    charSelectionInfo.push_back("");
 
     charSelectionInfo.push_back(" 세상을 구할 마지막 희망이여,");
     charSelectionInfo.push_back(" 당신의 운명을 결정할 집행자를 선택하십시오.");
@@ -936,7 +935,7 @@ void Renderer::RenderShopItemList(const std::vector<BaseItem*>& itemLists, int p
 
     // --- [3. 아이템 리스트 생성] ---
     for (int i = 0; i < (int)itemLists.size(); i++) {
-        if (i >= 10) break;
+        //if (i >= 10) break;
         BaseItem* item = itemLists[i];
         StatDelta statDelta = item->GetStatDelta();
 
@@ -980,12 +979,13 @@ void Renderer::RenderShopItemList(const std::vector<BaseItem*>& itemLists, int p
 
     shopContent.push_back(std::string(GRAY) + horizontalBar + RESET);
     shopContent.push_back("  [0] " + std::string(WHITE) + "마을로 돌아가기" + RESET);
-    shopContent.push_back("");
+
+    //shopContent.push_back("");
 
     std::vector<std::string> infoContent;
     RenderSplitScreenSub(shopContent, infoContent, "만물상 상점", false);
 
-    MoveCursor(0, 23);
+    MoveCursor(0, 24);
     std::cout << BRIGHT_GREEN << " > 구매 아이템 번호 입력 : " << RESET;
 }
 
