@@ -30,8 +30,8 @@ void ShopManager::Run(Character* character)
 		InputResult input = Tools<int>::Input(0, (int)itemLists.size());
 
 		if (input.status == InputStatus::Fail) continue;
-		else if (input.status == InputStatus::Exit) break;
-		else if (input.status == InputStatus::IndexOver) continue;
+		if (input.status == InputStatus::Exit) break;
+		if (input.status == InputStatus::IndexOver) continue;
 
 		std::pair<BuyStatus, BaseItem *> status = BuyItem(input.value, character);
 		
@@ -62,12 +62,10 @@ bool ShopManager::CheckPossessd(int itemID, Character * character)
 
 std::pair<BuyStatus, BaseItem *> ShopManager::BuyItem(int index, Character * character)
 {
-	// 구매하고자 하는 아이템
 	BaseItem* item = itemSpawnner->MakeItem(Gears(index));
 
 	int itemPrice = item->GetPrice();
 
-	// 구매 성공
 	int playerGold = character->GetGold();
 
 	if (CheckPossessd(item->GetID(), character))
@@ -80,7 +78,6 @@ std::pair<BuyStatus, BaseItem *> ShopManager::BuyItem(int index, Character * cha
 		character->SetGold(character->GetGold() - itemPrice);
 		return {BuyStatus::Success, item };
 	}
-	// 구매 실패(골드 부족)
 	else if (itemPrice > playerGold)
 	{
 		return { BuyStatus::InsufficientGold,  item };

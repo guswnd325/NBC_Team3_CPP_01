@@ -69,7 +69,6 @@ EquipResult Inventory::EquipByIndex(int index)
 
 	EquipResult result;
 
-	// 문제없이 장비 착용
 	if (nullptr == slots[(int)type])
 	{
 		slots[(int)type] = gear;
@@ -77,14 +76,12 @@ EquipResult Inventory::EquipByIndex(int index)
 		result.status = EquipStatus::Equip;
 	}
 
-	// 같은 장비로 교체하는 경우
 	if (slots[(int)type]->GetName() == gear->GetName())
 	{
 		result.prevItem = slots[(int)type]->GetName();
 		result.item = gear;
 		result.status = EquipStatus::Overlap;
 	}
-	// 장비 장착 중이지만, 다른 장비로 교체하는 경우
 	else 
 	{
 		result.prevItem = slots[(int)type]->GetName();
@@ -98,7 +95,6 @@ EquipResult Inventory::EquipByIndex(int index)
 
 EquipStatus Inventory::EquipByBaseItem(BaseItem* gear)
 {
-	// 장비 착용 여부 확인
 
 	int type = (int)gear->GetType();
 	if (nullptr == slots[(int)type])
@@ -149,18 +145,15 @@ bool Inventory::AddGear(BaseItem* gear)
 	int index = GetInventoryGearIndex(gear->GetID());
 	if (index == NOT_FOUND)
 	{
-		// 없는경우 새로 추가
 		gearStorege.push_back(ItemSlot(gear, 1));
 	}
 	else
 	{
-		// 이미 있는 장비면 갯수만 추가
 		gearStorege[index].count++;
 	}
 
 	int type = (int)gear->GetType();
 	
-	// 장착중인 아이템 없으면 자동 장착
 	if (slots[(int)type] == nullptr)
 	{
 		EquipByBaseItem(gear);
@@ -175,12 +168,10 @@ void Inventory::AddDice(DiceID id)
 	int index = GetInventoryDiceIndex(id);
 	if (index == NOT_FOUND)
 	{
-		// 없는경우 새로 추가
 		diceStorege.push_back(DiceSlot(new Dice(id), 1));
 	}
 	else
 	{
-		// 이미 있는 장비면 갯수만 추가
 		diceStorege[index].count++;
 	}
 }
@@ -193,7 +184,6 @@ void Inventory::UseDice(DiceID id)
 
 	if (count >= 1)
 	{
-		// 주사위 사용
 		diceStorege[index].count--;
 	}
 }

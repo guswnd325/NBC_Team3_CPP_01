@@ -12,8 +12,6 @@ class GameManager;
 
 constexpr int upgradeUnit = 1;
 
-
-// Base Class
 class RefurbishManager
 {
 private:
