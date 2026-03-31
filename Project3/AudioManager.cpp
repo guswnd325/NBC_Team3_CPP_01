@@ -6,6 +6,40 @@ AudioManager& AudioManager::GetInstance()
 	return instance;
 }
 
+void AudioManager::PlayAreaBGM(std::string areaName)
+{
+	if (areaName == "Forest")
+		AudioManager::PlayBGM(BGMList::Forest);
+
+	else if (areaName == "Mine")
+		AudioManager::PlayBGM(BGMList::Mine);
+
+	else if (areaName == "Mountain")
+		AudioManager::PlayBGM(BGMList::Mountain);
+
+	else if (areaName == "Desert")
+		AudioManager::PlayBGM(BGMList::Desert);
+
+	else if (areaName == "Cave")
+		AudioManager::PlayBGM(BGMList::Cave);
+
+	else if (areaName == "Alley")
+		AudioManager::PlayBGM(BGMList::Alley);
+
+	else if (areaName == "Jungle")
+		AudioManager::PlayBGM(BGMList::Jungle);
+
+	else if (areaName == "Temple")
+		AudioManager::PlayBGM(BGMList::Temple);
+
+	else if (areaName == "Ocean")
+		AudioManager::PlayBGM(BGMList::Ocean);
+
+	else if (areaName == "Nest")
+		AudioManager::PlayBGM(BGMList::Nest);
+
+}
+
 void AudioManager::PlaySFX(SFXList index)
 {
 	

@@ -63,6 +63,6 @@ public:
 
 
 	int GetMaxHp() { return maxHp; }
-	int SetMaxHp(int value) { maxHp = value; }
+	void SetMaxHp(int value) { maxHp = value; }
 };
 

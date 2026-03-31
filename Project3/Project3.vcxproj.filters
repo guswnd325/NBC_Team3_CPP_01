@@ -229,6 +229,36 @@
     <Media Include="Victory.wav">
       <Filter>리소스 파일</Filter>
     </Media>
+    <Media Include="Mountain.wav">
+      <Filter>리소스 파일</Filter>
+    </Media>
+    <Media Include="Nest.wav">
+      <Filter>리소스 파일</Filter>
+    </Media>
+    <Media Include="Ocean.wav">
+      <Filter>리소스 파일</Filter>
+    </Media>
+    <Media Include="Temple.wav">
+      <Filter>리소스 파일</Filter>
+    </Media>
+    <Media Include="Alley.wav">
+      <Filter>리소스 파일</Filter>
+    </Media>
+    <Media Include="Cave.wav">
+      <Filter>리소스 파일</Filter>
+    </Media>
+    <Media Include="Desert.wav">
+      <Filter>리소스 파일</Filter>
+    </Media>
+    <Media Include="Forest.wav">
+      <Filter>리소스 파일</Filter>
+    </Media>
+    <Media Include="Jungle.wav">
+      <Filter>리소스 파일</Filter>
+    </Media>
+    <Media Include="Mine.wav">
+      <Filter>리소스 파일</Filter>
+    </Media>
   </ItemGroup>
   <ItemGroup>
     <None Include="CD.cd">

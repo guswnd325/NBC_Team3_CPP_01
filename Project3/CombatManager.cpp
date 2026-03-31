@@ -99,6 +99,7 @@ BattleResult CombatManager::Run(Character* player)
     if (selectedArea.empty()) // 0 입력 시 마을로
         return BattleResult::Escaped; // 혹은 별도의 ReturnToTown 값
 
+    AudioManager::PlayAreaBGM(selectedArea);
     Monster* monster = monsterManager->SpawnMonster(selectedArea);
     return battleManager->Run(player, monster, this);
 }

@@ -17,13 +17,35 @@ static const std::string bgmPaths[] =
     "Main_Theme.wav",
     "Shop.wav",
     "jane.wav"
+
+    "Forest.wav",
+    "Desert.wav",
+    "Cave.wav",
+    "Temple.wav",
+    "Jungle.wav",
+    "Mine.wav",
+    "Ocean.wav",
+    "Alley.wav",
+    "Mountain.wav",
+    "Nest.wav",
 };
 
 enum class BGMList
 {
     Main_Theme,
     Shop,
-    Jane
+    Jane,
+
+    Forest,
+    Desert,
+    Cave,
+    Temple,
+    Jungle,
+    Mine,
+    Ocean,
+    Alley,
+    Mountain,
+    Nest
 };
 
 static const std::string sfxPaths[] =
@@ -70,7 +92,8 @@ private:
     int bgmVolume;
 public:
     static void PlaySFX(SFXList index);
-    static void PlayBGM(BGMList index, bool repeat = false);
+    static void PlayBGM(BGMList index, bool repeat = true);
+    static void PlayAreaBGM(std::string areaName);
 
 public:
     AudioManager() { bgmVolume = 100; }
