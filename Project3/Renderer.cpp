@@ -251,7 +251,7 @@ void Renderer::RenderMenu(const std::vector<std::string>& diceFrame) {
     guideContent.push_back("");
 
     // 가이드 항목들 (해시태그 강조)
-    guideContent.push_back(" " + std::string(BRIGHT_CYAN) + "#탐사" + RESET + " 골드/EXP/주사위 획득");
+    guideContent.push_back(" " + std::string(BRIGHT_CYAN) + "#탐사" + RESET + " 골드/경험치/주사위 획득");
     guideContent.push_back(" " + std::string(BRIGHT_GREEN) + "#해금" + RESET + " 레벨업 시 새 지역 오픈");
     guideContent.push_back(" " + std::string(BRIGHT_YELLOW) + "#강화" + RESET + " 주사위 눈 상향");
     guideContent.push_back(" " + std::string(BRIGHT_MAGENTA) + "#회복" + RESET + " 주사위로 HP 회복");
@@ -371,7 +371,7 @@ void Renderer::RenderMainMenu(const std::vector<std::string>& diceFrame) {
     guideContent.push_back("");
 
     // 가이드 항목 (색상별 포인트)
-    guideContent.push_back(" " + std::string(BRIGHT_CYAN) + "#탐사" + RESET + " 골드/EXP/주사위 획득");
+    guideContent.push_back(" " + std::string(BRIGHT_CYAN) + "#탐사" + RESET + " 골드/경험치/주사위 획득");
     guideContent.push_back(" " + std::string(BRIGHT_GREEN) + "#해금" + RESET + " 레벨업 시 새 지역 오픈");
     guideContent.push_back(" " + std::string(BRIGHT_YELLOW) + "#강화" + RESET + " 주사위 눈 상향");
     guideContent.push_back(" " + std::string(BRIGHT_MAGENTA) + "#회복" + RESET + " 주사위로 HP 회복");
@@ -416,7 +416,7 @@ void Renderer::RenderBattleAction(Monster* monster, Character* player, const std
     int filledWidth = 0;
 
     if (maxHp > 0) {
-        filledWidth = (currentHp * barWidth) / maxHp;
+        filledWidth = std::max(1,(currentHp * barWidth) / maxHp);
     }
     // 안전장치
     if (filledWidth < 0) filledWidth = 0;

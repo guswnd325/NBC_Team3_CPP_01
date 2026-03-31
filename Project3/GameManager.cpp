@@ -134,6 +134,7 @@ void GameManager::StartGame()
 		}
 		case 2:
 		{
+			AudioManager::PlayBGM(BGMList::Shop);
 			Renderer::GetInstance().ClearSystemLogs();
 			shopManager->Run(player);
 			break;
