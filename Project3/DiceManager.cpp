@@ -13,15 +13,13 @@ DiceManager::DiceManager() {}
 DiceManager::~DiceManager() {}
 
 
-void DiceManager::DiceAnimationRollNumber(const std::vector<int>& results)
+void DiceManager::DiceAnimationRollNumber(int result)
 {
     HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
     DWORD dwMode = 0;
     GetConsoleMode(hOut, &dwMode);
     SetConsoleMode(hOut, dwMode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
-
     const int FRAME_LINES = 5;
-    int diceCount = (int)results.size();
 
     CONSOLE_CURSOR_INFO cursorInfo;
     GetConsoleCursorInfo(hOut, &cursorInfo);
@@ -31,15 +29,12 @@ void DiceManager::DiceAnimationRollNumber(const std::vector<int>& results)
     srand(static_cast<unsigned int>(time(nullptr)));
     AudioManager::GetInstance().PlaySFX(SFXList::Dice_Roll);
 
-    
     auto makeFrame = [](int num) -> std::vector<std::string> {
         std::string numStr = std::to_string(num);
-        
         std::string center;
         if (numStr.size() == 1)       center = "  " + numStr + "  ";
         else if (numStr.size() == 2)  center = "  " + numStr + " ";
         else                          center = " " + numStr + " ";
-
         return {
             "+-------+",
             "|       |",
@@ -49,71 +44,40 @@ void DiceManager::DiceAnimationRollNumber(const std::vector<int>& results)
         };
         };
 
-    
     auto firstFrame = makeFrame(rand() % 9 + 1);
     for (int line = 0; line < FRAME_LINES; ++line) {
-        std::cout << "\t";
-        for (int d = 0; d < diceCount; ++d) {
-            std::cout << firstFrame[line] << "  ";
-        }
-        std::cout << "\n";
+        std::cout << "\t" << firstFrame[line] << "\n";
     }
 
-    
     for (int i = 1; i < 16; ++i) {
         std::cout << "\033[" << FRAME_LINES << "A";
-
-        std::vector<std::vector<std::string>> frameIdxs(diceCount);
-        for (int d = 0; d < diceCount; ++d) {
-            frameIdxs[d] = makeFrame(rand() % 9 + 1);
-        }
-
+        auto frame = makeFrame(rand() % 9 + 1);
         for (int line = 0; line < FRAME_LINES; ++line) {
-            std::cout << "\r\t";
-            for (int d = 0; d < diceCount; ++d) {
-                std::cout << frameIdxs[d][line] << "  ";
-            }
-            std::cout << "\n";
+            std::cout << "\r\t" << frame[line] << "\n";
         }
         std::cout.flush();
-
         int delay = 10 + (i * i);
         std::this_thread::sleep_for(std::chrono::milliseconds(delay));
     }
 
-    
     std::cout << "\033[" << FRAME_LINES << "A";
+    auto resultFrame = makeFrame(result);
     for (int line = 0; line < FRAME_LINES; ++line) {
-        std::cout << "\r\t";
-        for (int d = 0; d < diceCount; ++d) {
-            auto resultFrame = makeFrame(results[d]);
-            std::cout << resultFrame[line] << "  ";
-        }
-        std::cout << "\n";
+        std::cout << "\r\t" << resultFrame[line] << "\n";
     }
     std::cout.flush();
 
     cursorInfo.bVisible = TRUE;
     SetConsoleCursorInfo(hOut, &cursorInfo);
 
-    
-    std::cout << "\n\t";
-    for (int d = 0; d < diceCount; ++d) {
-        std::cout << "[  " << results[d] << "  ]" << "  ";
-    }
-
-    int total = 0;
-    for (int r : results) total += r;
-    std::cout << std::endl;
+    std::cout << "\n\t[  " << result << "  ]\n";
 }
-
 
 int DiceManager::Roll(Character* character)
 {
     int totalSum = 0;
     auto& diceList = character->GetInventory()->GetDiceStorege();
 
-    std::vector<int> results;
     for (const auto& slot : diceList)
     {
         Dice* dice = slot.dice;
@@ -121,14 +85,11 @@ int DiceManager::Roll(Character* character)
         std::uniform_int_distribution<int> dis(dice->minSide, dice->maxSide);
         for (int i = 0; i < slot.count; i++)
         {
-            int roll = dis(gen);
-            results.push_back(roll);
-            totalSum += roll;
+            totalSum += dis(gen);
         }
     }
 
-    DiceAnimationRollNumber({totalSum});
-
+    DiceAnimationRollNumber(totalSum);
     return totalSum;
 }
 
