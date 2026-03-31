@@ -661,37 +661,44 @@ void Renderer::RenderUpgradeResult(UpgradeStatus status, int prevLevel, int curL
 void Renderer::RenderTicketInsufficient() {
     // 1. 왼쪽 영역: 경고 메시지 구성
     std::vector<std::string> alertContent;
+    std::string divider = std::string(GRAY) + " ------------------------------------------" + RESET;
 
     alertContent.push_back("");
-    alertContent.push_back(" [ 출 입 제 한 ]");
-    alertContent.push_back(" ------------------------------------------");
+    // [출입 제한] 제목을 밝은 빨간색으로 강조
+    alertContent.push_back(std::string(BRIGHT_RED) + "  [ 출 입 제 한 ]" + RESET);
+    alertContent.push_back(divider);
     alertContent.push_back("");
-    alertContent.push_back(" 필요한 [ 휴식권 ]이 부족합니다.");
-    alertContent.push_back("");
-    alertContent.push_back(" 현재 보유하신 티켓으로는");
-    alertContent.push_back(" 이 작업을 수행할 수 없습니다.");
-    alertContent.push_back("");
-    alertContent.push_back(" 마을에서 준비를 더 마친 뒤에 다시 오십시오.");
-    alertContent.push_back("");
-    alertContent.push_back(" ------------------------------------------");
-    alertContent.push_back(" 잠시 후 이전 화면으로 돌아갑니다...");
 
-    // 2. 오른쪽 영역: 부족함을 알리는 자물쇠/X 아트
+    // 핵심 아이템인 [휴식권]은 노란색으로 강조
+    alertContent.push_back("  필요한 [" + std::string(BRIGHT_YELLOW) + " 휴식권 " + RESET + "]이 부족합니다.");
+    alertContent.push_back("");
+    alertContent.push_back("  현재 보유하신 티켓으로는");
+    alertContent.push_back("  이 작업을 수행할 수 없습니다.");
+    alertContent.push_back("");
+    alertContent.push_back("  마을에서 준비를 더 마친 뒤에 다시 오십시오.");
+    alertContent.push_back("");
+    alertContent.push_back(divider);
+
+    // 안내 문구는 흐릿하게 처리
+    alertContent.push_back(std::string(DARK_GRAY) + "  잠시 후 이전 화면으로 돌아갑니다..." + RESET);
+
+    // 2. 오른쪽 영역: 자물쇠/X 아트 (색상 추가)
     std::vector<std::string> alertArt = {
         "",
-        "       .--------.       ",
-        "      /          \\      ",
-        "     |   ______   |     ",
-        "     |  |      |  |     ",
-        "     |  |  [X] |  |     ",
-        "     |__|______|__|     ",
-        "     | [LOCKED]   |     ",
-        "     '------------'     ",
+        std::string(GRAY) + "        .--------.       " + RESET,
+        std::string(GRAY) + "       /          \\      " + RESET,
+        std::string(GRAY) + "      |   ______   |     " + RESET,
+        std::string(GRAY) + "      |  |      |  |     " + RESET,
+        "      |  |  " + std::string(BRIGHT_RED) + "[X]" + RESET + " |  |     ",
+        std::string(GRAY) + "      |__|______|__|     " + RESET,
+        "      |  " + std::string(RED) + "[LOCKED]" + RESET + "  |     ",
+        std::string(GRAY) + "      '------------'     " + RESET,
         "",
-        "    INSUFFICIENT TICKET  "
+        std::string(BRIGHT_RED) + "    INSUFFICIENT TICKET  " + RESET
     };
 
-    // 3. 공용 엔진 호출 (제목: 자원 부족)
+    // 3. 공용 엔진 호출 (제목: ! ACCESS DENIED !)
+    // 제목 자체에도 빨간색을 입히면 더 경고 효과가 큽니다.
     RenderSplitScreen(alertContent, alertArt, "! ACCESS DENIED !", false);
 
     // 4. 경고를 인지할 수 있도록 딜레이
@@ -883,7 +890,7 @@ void Renderer::RenderBuyResult(BuyStatus status, BaseItem* item, int playerGold)
     Delay(1500);
 }
 
-void Renderer::RenderInventory(int level, BaseItem* slots[], const std::vector<ItemSlot>& gearStorage,
+void Renderer::RenderInventory(int level,int CurExp, int MaxLevelExp, BaseItem* slots[], const std::vector<ItemSlot>& gearStorage,
     const std::vector<DiceSlot>& diceStorage, const std::vector<std::string>& diceFrame)
 {
     std::vector<std::string> invContent;
@@ -894,6 +901,9 @@ void Renderer::RenderInventory(int level, BaseItem* slots[], const std::vector<I
     // 모든 섹션 제목의 들여쓰기를 공백 2칸으로 통일
     invContent.push_back(std::string(BRIGHT_YELLOW) + "  [ CHARACTER STATUS ]" + RESET);
     invContent.push_back("  - 현재 레벨 : " + std::string(BRIGHT_WHITE) + "LV. " + std::to_string(level) + RESET);
+    std::string expInfo = "  - 경 험 치   : " + std::string(BRIGHT_CYAN) + std::to_string(CurExp) + RESET +
+        " / " + std::to_string(MaxLevelExp);
+    invContent.push_back(expInfo);
     invContent.push_back(divider);
 
     // [섹션 1] 현재 장착 장비

@@ -32,7 +32,7 @@ class Renderer
 {
 public:
     std::vector<std::string> battleLogs;
-    const int MAX_LOGS = 5;
+    const int MAX_LOGS = 6;
 
     std::vector<std::string> systemLogs;
     const int MAX_MENU_LOGS = 4;
