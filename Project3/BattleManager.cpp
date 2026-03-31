@@ -37,6 +37,7 @@ BattleResult BattleManager::Run(Character* player, Monster* monster, CombatManag
 
             if (TryEscape(player, monster, monsterRoll))
             {
+                AudioManager::PlaySFX(SFXList::Game_Complete);
                 Renderer::GetInstance().AddBattleLog("도망에 성공했습니다!", BRIGHT_GREEN);
                 Renderer::GetInstance().RenderBattleAction(monster, player, {});
                 Sleep(3000);
@@ -45,6 +46,7 @@ BattleResult BattleManager::Run(Character* player, Monster* monster, CombatManag
             }
             else
             {
+                AudioManager::PlaySFX(SFXList::Reward_Fail);
                 Renderer::GetInstance().AddBattleLog("도망에 실패! " + monster->GetName() + "이(가) 공격합니다!", BRIGHT_RED);
                 Renderer::GetInstance().RenderBattleAction(monster, player, {});
 
@@ -104,6 +106,7 @@ BattleResult BattleManager::Run(Character* player, Monster* monster, CombatManag
                 
             Sleep(3000);
             GiveReward(player, monster);
+            Renderer::GetInstance().ClearSystemLogs();
 
             return BattleResult::PlayerWin;
         }
