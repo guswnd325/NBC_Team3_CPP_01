@@ -1,5 +1,6 @@
 #include "BattleManager.h"
 #include "EffectManager.h" // 추가
+#include "CombatManager.h"
 #include <iostream>
 #include <limits>
 #include <string>
@@ -7,7 +8,7 @@
 // ---------------------------------------------------------------
 // Run - 전투 전체 흐름
 // ---------------------------------------------------------------
-BattleResult BattleManager::Run(Character* player, Monster* monster)
+BattleResult BattleManager::Run(Character* player, Monster* monster, CombatManager* combatManager)
 {
     Renderer::GetInstance().ClearBattleLogs();
     Renderer::GetInstance().AddBattleLog(monster->GetName() + "(이)가 나타났다!");
@@ -79,6 +80,7 @@ BattleResult BattleManager::Run(Character* player, Monster* monster)
             {
                 player->LevelUp();
                 Renderer::GetInstance().AddSystemLog("Level Up! (" + std::to_string(player->GetLevel()) + ")");
+                combatManager->UnlockAreas(player->GetLevel());
             }    
                 
             GiveReward(player, monster);
@@ -120,6 +122,7 @@ void BattleManager::StartBattle(Character* player, Monster* monster)
     
     Renderer::GetInstance().RenderBattleAction(monster, player, {});
 
+    AudioManager::GetInstance().PlaySFX(SFXList::Dice_Roll);
     // --- 플레이어 턴 ---
     int playerRoll = diceManager.Roll(player);
     for (int i = 0; i < 10; i++) {
@@ -137,7 +140,7 @@ void BattleManager::StartBattle(Character* player, Monster* monster)
     Renderer::GetInstance().AddBattleLog(monster->GetName() + "이(가) " + std::to_string(monster->GetDiceCount()) + "개의 주사위를 굴립니다!");
     Renderer::GetInstance().RenderBattleAction(monster, player, {}); 
 
-
+    AudioManager::GetInstance().PlaySFX(SFXList::Dice_Roll);
     int monsterRoll = monster->RollAttackDice(); 
     for (int i = 0; i < 10; i++) {
         DrawDiceDirectly(rand() % 12 + 1);

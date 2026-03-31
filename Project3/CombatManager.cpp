@@ -20,11 +20,33 @@ void CombatManager::GenerateAreaChoices()
 
 void CombatManager::UnlockAreas(int level)
 {
+    
+    std::vector<std::string> previousAreas = unlockedAreas;
+
+    
     unlockedAreas.clear();
     for (auto& pair : areaUnlockLevel)
     {
-        if (level >= pair.second)
-            unlockedAreas.push_back(pair.first);
+        const std::string& areaKey = pair.first;
+        int requiredLevel = pair.second;
+
+        if (level >= requiredLevel)
+        {
+            unlockedAreas.push_back(areaKey);
+
+            
+            auto it = std::find(previousAreas.begin(), previousAreas.end(), areaKey);
+            if (it == previousAreas.end())
+            {
+                
+                if (level > 1)
+                {
+                    
+                    std::string displayName = areaDisplayname[areaKey];
+                    Renderer::GetInstance().AddSystemLog("새로운 지역 해금: [" + displayName + "]!");
+                }
+            }
+        }
     }
 }
 
@@ -78,7 +100,7 @@ BattleResult CombatManager::Run(Character* player)
         return BattleResult::Escaped; // 혹은 별도의 ReturnToTown 값
 
     Monster* monster = monsterManager->SpawnMonster(selectedArea);
-    return battleManager->Run(player, monster);
+    return battleManager->Run(player, monster, this);
 }
 
 

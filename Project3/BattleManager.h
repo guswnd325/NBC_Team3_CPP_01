@@ -4,6 +4,9 @@
 #include "Renderer.h"
 #include "DiceManager.h"
 
+
+class CombatManager;
+
 enum class BattleResult
 {
     PlayerWin,
@@ -15,7 +18,7 @@ enum class BattleResult
 class BattleManager
 {
 public:
-    BattleResult Run(Character* player, Monster* monster);
+    BattleResult Run(Character* player, Monster* monster, CombatManager* combatManage);
 
 private:
     DiceManager diceManager;
