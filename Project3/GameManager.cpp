@@ -26,7 +26,9 @@ void GameManager::Run()
 		switch (input.value)
 		{
 		case 1:
+			Renderer::GetInstance().Clear();
 			CreateCharacter();
+			Renderer::GetInstance().Clear();
 			StartGame();
 			break;
 		case 2:
@@ -99,9 +101,10 @@ void GameManager::SetGameState(GameState state)
 
 void GameManager::StartGame()
 {
+	Renderer::GetInstance().ClearSystemLogs();
+
 	while (state == GameState::Running)
 	{
-		Renderer::GetInstance().Clear();
 		Renderer::GetInstance().RenderMainMenu(std::vector<std::string>());
 
 		InputResult input = Tools<int>::Input(1, 4);
@@ -110,6 +113,7 @@ void GameManager::StartGame()
 		{
 		case 1:
 		{
+			Renderer::GetInstance().ClearSystemLogs();
 			BattleResult result = combatManager->Run(player);
 			if (BattleResult::PlayerDead == result)
 			{
@@ -125,16 +129,19 @@ void GameManager::StartGame()
 		}
 		case 2:
 		{
+			Renderer::GetInstance().ClearSystemLogs();
 			shopManager->Run(player);
 			break;
 		}
 		case 3:
 		{
+			Renderer::GetInstance().ClearSystemLogs();
 			player->GetInventory()->Run();
 			break;
 		}
 
 		case 4:
+			Renderer::GetInstance().ClearSystemLogs();
 			refurbishManager->Run();
 
 			break;
