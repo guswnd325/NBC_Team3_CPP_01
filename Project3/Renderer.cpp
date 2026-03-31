@@ -392,15 +392,14 @@ void Renderer::RenderMainMenu(const std::vector<std::string>& diceFrame) {
 }
 
 void Renderer::RenderBattleAction(Monster* monster, Character* player, const std::vector<std::string>& diceFrame) {
-    // 1. 왼쪽 영역 데이터 구성 (몬스터 정보 + 이미지 + 플레이어 정보)
     std::vector<std::string> battleContent;
-    std::string divider = std::string(GRAY) + " ------------------------------------------" + RESET;
+    std::string divider = std::string(GRAY) + " --------------------------------------------------------" + RESET;
 
-    // [상단] 몬스터 정보 (이름 및 HP) - 위협적인 RED 테마
+    // [상단] 몬스터 정보
     std::string mName = std::string(BRIGHT_RED) + " [ ENEMY ] " + monster->GetName() + RESET;
-    // HP가 낮아지면 색이 변하게 할 수도 있지만, 우선은 일관되게 RED로 강조
     std::string mStats = " HP: " + std::string(RED) + std::to_string(monster->GetHP()) + RESET +
-        "  |  DEF: " + std::string(BRIGHT_CYAN) + std::to_string(monster->GetDef()) + RESET;
+        " | ATK: " + std::string(RED) + std::to_string(monster->GetAtk()) + RESET +
+        " | DEF: " + std::string(BRIGHT_CYAN) + std::to_string(monster->GetDef()) + RESET;
 
     battleContent.push_back("");
     battleContent.push_back(mName);
@@ -424,21 +423,21 @@ void Renderer::RenderBattleAction(Monster* monster, Character* player, const std
     // [하단] 플레이어 정보 - 아군 느낌의 GREEN/CYAN 테마
     // 플레이어의 현재 체력 비율에 따라 색상을 조절하면 더 좋습니다 (여기선 기본 CYAN)
     std::string pName = std::string(BRIGHT_CYAN) + " [ PLAYER ] " + player->GetName() + RESET;
-    std::string pHealth = " HP: " + std::string(BRIGHT_GREEN) + std::to_string(player->GetHP()) + RESET + " / 100";
+    std::string pStats = " HP: " + std::string(BRIGHT_GREEN) + std::to_string(player->GetHP()) + RESET + " / 100" +
+        " | ATK: " + std::string(BRIGHT_RED) + std::to_string(player->GetAtk()) + RESET +
+        " | DEF: " + std::string(BRIGHT_CYAN) + std::to_string(player->GetDef()) + RESET;
 
     battleContent.push_back(pName);
-    battleContent.push_back(pHealth);
+    battleContent.push_back(pStats);
     battleContent.push_back("");
 
-    // 선택지 강조
-    std::string actions = "  " + std::string(BRIGHT_YELLOW) + "[1] 전 투" + RESET +
-        "               " + std::string(BRIGHT_MAGENTA) + "[2] 도 망" + RESET;
+    // 선택지
+    std::string actions = std::string("  ") + BRIGHT_YELLOW + "[1] 전 투" + RESET +
+        "                " + BRIGHT_MAGENTA + "[2] 도 망" + RESET;
     battleContent.push_back(actions);
 
-    // 2. 공용 엔진 호출  
     RenderSplitScreen(battleContent, diceFrame, "!!! BATTLE IN PROGRESS !!!", true);
 
-    // 3. 입력 위치 고정
     MoveCursor(0, Renderer::ZONE_PLAYER_Y + 6);
     std::cout << BRIGHT_GREEN << " > 행동 선택 : " << RESET;
 }
@@ -446,7 +445,7 @@ void Renderer::RenderBattleAction(Monster* monster, Character* player, const std
 void Renderer::RenderRewardSelect(const std::vector<std::string>& diceFrame) {
     // 1. 왼쪽 영역: 승리 메시지 및 선택지 구성
     std::vector<std::string> rewardContent;
-    std::string divider = std::string(GRAY) + " ------------------------------------------" + RESET;
+    std::string divider = std::string(GRAY) + " --------------------------------------------------------" + RESET;
 
     rewardContent.push_back("");
     // 승리 문구 - 화려한 노란색/금색 강조
@@ -752,16 +751,16 @@ void Renderer::RenderUpgradeResult(UpgradeStatus status, int prevLevel, int curL
     // 2. 오른쪽 영역: 대장장이의 망치/모루 ASCII 아트 (금속 느낌 색상 추가)
     std::vector<std::string> upgradeArt = {
         "",
-        std::string(GRAY) + "      _ .--.            " + RESET,
-        std::string(GRAY) + "     ( `    )   .-.     " + RESET,
-        std::string(GRAY) + "    .-'      `-'   )    " + RESET,
-        std::string(GRAY) + "   (      _      -'     " + RESET,
-        std::string(WHITE) + "    |    | |    |      " + RESET,
-        std::string(WHITE) + "   _|    | |    |_     " + RESET,
-        std::string(BRIGHT_WHITE) + "  [      |_|      ]    " + RESET,
-        std::string(GRAY) + "   '--------------'    " + RESET,
+        std::string(GRAY) + "            _ .--.            " + RESET,
+        std::string(GRAY) + "           ( `    )   .-.     " + RESET,
+        std::string(GRAY) + "         .-'      `-'   )    " + RESET,
+        std::string(GRAY) + "         (      _      -'     " + RESET,
+        std::string(WHITE) + "          |    | |    |      " + RESET,
+        std::string(WHITE) + "         _|    | |    |_     " + RESET,
+        std::string(BRIGHT_WHITE) + "        [      |_|      ]    " + RESET,
+        std::string(GRAY) + "         '--------------'    " + RESET,
         "",
-        std::string(BRIGHT_YELLOW) + "    [ SMITH'S ANVIL ]  " + RESET
+        std::string(BRIGHT_YELLOW) + "         [ SMITH'S ANVIL ]  " + RESET
     };
 
     // 3. 공용 엔진 호출
@@ -797,16 +796,16 @@ void Renderer::RenderTicketInsufficient() {
     // 2. 오른쪽 영역: 자물쇠/X 아트 (색상 추가)
     std::vector<std::string> alertArt = {
         "",
-        std::string(GRAY) + "        .--------.       " + RESET,
-        std::string(GRAY) + "       /          \\      " + RESET,
-        std::string(GRAY) + "      |   ______   |     " + RESET,
-        std::string(GRAY) + "      |  |      |  |     " + RESET,
-        "      |  |  " + std::string(BRIGHT_RED) + "[X]" + RESET + " |  |     ",
-        std::string(GRAY) + "      |__|______|__|     " + RESET,
-        "      |  " + std::string(RED) + "[LOCKED]" + RESET + "  |     ",
-        std::string(GRAY) + "      '------------'     " + RESET,
+        std::string(GRAY) + "            .--------.       " + RESET,
+        std::string(GRAY) + "           /          \\      " + RESET,
+        std::string(GRAY) + "          |   ______   |     " + RESET,
+        std::string(GRAY) + "          |  |      |  |     " + RESET,
+        "          |  |  " + std::string(BRIGHT_RED) + "[X]" + RESET + " |  |     ",
+        std::string(GRAY) + "          |__|______|__|     " + RESET,
+        "          |  " + std::string(RED) + "[LOCKED]" + RESET + "  |     ",
+        std::string(GRAY) + "          '------------'     " + RESET,
         "",
-        std::string(BRIGHT_RED) + "    INSUFFICIENT TICKET  " + RESET
+        std::string(BRIGHT_RED) + "        INSUFFICIENT TICKET  " + RESET
     };
 
     // 3. 공용 엔진 호출 (제목: ! ACCESS DENIED !)
@@ -932,12 +931,12 @@ void Renderer::RenderBuyResult(BuyStatus status, BaseItem* item, int playerGold)
 
         // 돈주머니 아트는 노란색으로 강조
         resultArt = { "",
-            std::string(BRIGHT_YELLOW) + "      .----. " + RESET,
-            std::string(BRIGHT_YELLOW) + "     |  $$  |" + RESET,
-            std::string(BRIGHT_YELLOW) + "    '--[  ]--'" + RESET,
-            std::string(BRIGHT_YELLOW) + "     (  $   )" + RESET,
-            std::string(BRIGHT_YELLOW) + "      '----' " + RESET,
-            "", "   THANK YOU! " };
+            std::string(BRIGHT_YELLOW) + "              .----. " + RESET,
+            std::string(BRIGHT_YELLOW) + "             |  $$  |" + RESET,
+            std::string(BRIGHT_YELLOW) + "            '--[  ]--'" + RESET,
+            std::string(BRIGHT_YELLOW) + "             (  $   )" + RESET,
+            std::string(BRIGHT_YELLOW) + "              '----' " + RESET,
+            "", "              고맙다! " };
         break;
 
     case BuyStatus::InsufficientGold:
@@ -952,12 +951,12 @@ void Renderer::RenderBuyResult(BuyStatus status, BaseItem* item, int playerGold)
         buyContent.push_back(" 현재 골드: " + std::string(BRIGHT_YELLOW) + std::to_string(playerGold) + " G" + RESET);
 
         resultArt = { "",
-            std::string(DARK_GRAY) + "      .----. " + RESET,
-            std::string(DARK_GRAY) + "     | EMPTY|" + RESET,
-            std::string(DARK_GRAY) + "    '--[  ]--'" + RESET,
-            std::string(DARK_GRAY) + "     (      )" + RESET,
-            std::string(DARK_GRAY) + "      '----' " + RESET,
-            "", std::string(RED) + "  너 돈 없어" + RESET };
+            std::string(DARK_GRAY) + "              .----. " + RESET,
+            std::string(DARK_GRAY) + "             | EMPTY|" + RESET,
+            std::string(DARK_GRAY) + "            '--[  ]--'" + RESET,
+            std::string(DARK_GRAY) + "             (      )" + RESET,
+            std::string(DARK_GRAY) + "              '----' " + RESET,
+            "", std::string(RED) + "          돈이 부족합니다. " + RESET };
         break;
 
     case BuyStatus::Possessed:
@@ -969,12 +968,12 @@ void Renderer::RenderBuyResult(BuyStatus status, BaseItem* item, int playerGold)
         buyContent.push_back(" 중복 구매는 허용되지 않습니다.");
 
         resultArt = { "",
-            std::string(BRIGHT_YELLOW) + "      .----. " + RESET,
-            std::string(BRIGHT_YELLOW) + "     |  !!  |" + RESET,
-            std::string(BRIGHT_YELLOW) + "    '--[  ]--'" + RESET,
-            std::string(BRIGHT_YELLOW) + "     (  ALREADY )" + RESET,
-            std::string(BRIGHT_YELLOW) + "      '----' " + RESET,
-            "", "    DUPLICATED" };
+            std::string(BRIGHT_YELLOW) + "             .----. " + RESET,
+            std::string(BRIGHT_YELLOW) + "            |  !!  |" + RESET,
+            std::string(BRIGHT_YELLOW) + "           '--[  ]--'" + RESET,
+            std::string(BRIGHT_YELLOW) + "          (  ALREADY )" + RESET,
+            std::string(BRIGHT_YELLOW) + "             '----' " + RESET,
+            "", "  이미 아이템를 보유한거 같은데?" };
         break;
 
     default:
