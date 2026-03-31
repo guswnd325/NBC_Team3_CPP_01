@@ -1137,13 +1137,36 @@ void Renderer::RenderInventory(int level, int CurExp, int MaxLevelExp, int restT
     }
     else {
         std::string dRow = "    ";
-        for (const auto& ds : diceStorage) {
-            dRow += std::string(BRIGHT_YELLOW) + ds.dice->DiceIdToString() + RESET + "(" + std::to_string(ds.count) + ")";
+        int diceInRow = 0; // 한 줄에 들어간 주사위 개수 카운트
+
+        for (int i = 0; i < (int)diceStorage.size(); i++) {
+            // 주사위 정보 조립
+            std::string dName = diceStorage[i].dice->DiceIdToString();
+            std::string dInfo = std::string(BRIGHT_YELLOW) + dName + RESET +
+                "(" + std::to_string(diceStorage[i].count) + ")";
+
+            dRow += dInfo + "  "; // 주사위 간 간격
+            diceInRow++;
+
+            // 한 줄에 3개씩 출력 (가로 폭에 맞춰 2~3개 조절 가능)
+            if (diceInRow >= 3) {
+                invContent.push_back(dRow);
+                dRow = "    "; // 다음 줄 시작 공백
+                diceInRow = 0;
+            }
+
+            // 너무 많은 주사위 종류가 있을 경우 UI가 깨지는 걸 방지 (최대 3줄까지만)
+            if (invContent.size() > 25) { // 전체 줄 수 제한
+                invContent.push_back("    " + std::string(GRAY) + "...외 기타 주사위" + RESET);
+                break;
+            }
         }
-        invContent.push_back(dRow);
+
+        // 줄바꿈 후 남은 주사위가 있다면 추가
+        if (diceInRow > 0 && invContent.size() <= 25) {
+            invContent.push_back(dRow);
+        }
     }
-    invContent.push_back(divider);
-    invContent.push_back("  " + std::string(WHITE) + "[0] 마을로 돌아가기" + RESET);
 
     // 2. 오른쪽 영역 (rightContent): 소지 장비 목록
     std::vector<std::string> rightContent;
