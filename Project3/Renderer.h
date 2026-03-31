@@ -17,6 +17,13 @@
 #define YELLOW        "\033[33m"
 #define CYAN          "\033[36m"
 #define GRAY          "\033[90m"
+#define BRIGHT_MAGENTA  "\033[95m"
+#define BRIGHT_YELLOW  "\033[93m" 
+#define BRIGHT_GREEN   "\033[92m"
+#define BRIGHT_CYAN    "\033[96m" 
+#define BRIGHT_RED  "\033[91m"
+#define DARK_GRAY   "\033[90m"
+#define REST "\033[0m"
 
 class BaseItem;
 
@@ -87,7 +94,7 @@ public:
     static const int UI_WIDTH = 100;
     static const int LEFT_WIDTH = 60;
     static const int RIGHT_WIDTH = 37;
-    static const int CONTENT_HEIGHT = 15;
+    static const int CONTENT_HEIGHT = 18;
 
     static const int ZONE_SCREEN_Y = 0;
     static const int ZONE_LOG_Y = 17;
