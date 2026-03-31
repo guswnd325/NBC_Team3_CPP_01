@@ -84,6 +84,7 @@ BattleResult BattleManager::Run(Character* player, Monster* monster, CombatManag
             }    
                 
             GiveReward(player, monster);
+            Renderer::GetInstance().ClearSystemLogs();
             return BattleResult::PlayerWin;
         }
     }
