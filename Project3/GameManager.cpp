@@ -149,6 +149,7 @@ void GameManager::StartGame()
 GameManager::GameManager()
 	: player(nullptr)
 {
+	state = GameState::Running;
 	monsterManager = new MonsterManager();
 	combatManager = new CombatManager(monsterManager);
 	shopManager = new ShopManager();
