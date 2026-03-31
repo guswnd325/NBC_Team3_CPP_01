@@ -2,10 +2,10 @@
 #include "Renderer.h"
 #include "GameManager.h"
 
-constexpr int defaultGold = 3000;
+constexpr int defaultGold = 0;
 constexpr int maxHP = 100;
 constexpr int defaultHP = 100;
-constexpr int defaultRestTicket = 20;
+constexpr int defaultRestTicket = 0;
 
 Character::Character()
 {
