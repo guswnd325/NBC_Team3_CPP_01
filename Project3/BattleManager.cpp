@@ -323,7 +323,7 @@ void BattleManager::GiveNormalReward(Character* player, Monster* monster)
     player->SetRestTicket(current + 1);
 
     AudioManager::PlaySFX(SFXList::Buy_Item);
-    Renderer::GetInstance().AddSystemLog("°ñµå " + std::to_string(gold) + " È¹µæ!" + "ÈÞ½Ä±Ç 1È¸ È¹µæ! (ÇöÀç °ñµå: " + std::to_string(player->GetGold()) + ")");
+    Renderer::GetInstance().AddSystemLog("°ñµå " + std::to_string(gold) + " È¹µæ!" + " (ÇöÀç °ñµå : " + std::to_string(player->GetGold()) + ")");
     Renderer::GetInstance().AddSystemLog("ÈÞ½Ä±Ç 1È¸ È¹µæ! (ÇöÀç ÈÞ½Ä±Ç : " + std::to_string(player->GetRestTicket()) + ")");
     Renderer::GetInstance().RenderRewardSelect(std::vector<std::string>());
 
