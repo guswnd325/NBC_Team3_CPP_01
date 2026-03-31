@@ -21,9 +21,9 @@ void Monster::InitializeMonster() {
 			R"(    \:::::::::/    )",
 			R"(     '~~_~_~~'     )"
 		};
-		SetHP(40); SetAtk(100); SetDef(0); SetExp(15);
+		SetHP(40); SetAtk(2); SetDef(0); SetExp(15);
 		SetRewards(30, 1, DiceID::D1_2, 8);
-		SetDiceCount(100); SetDiceSides(6);
+		SetDiceCount(1); SetDiceSides(6);
 		break;
 	case MonsterType::Goblin:
 		SetName("°íºí¸°");
