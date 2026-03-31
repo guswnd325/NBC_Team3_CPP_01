@@ -282,7 +282,7 @@ void BattleManager::CalculateDamage(Actor* attacker, Actor* defender, int Roll, 
         );
     }
 
-    Sleep(2000); // 데미지 로그 확인 시간
+    Sleep(1500); // 데미지 로그 확인 시간
 
 }
 
