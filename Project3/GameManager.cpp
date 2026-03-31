@@ -17,11 +17,9 @@ GameManager& GameManager::GetInstance()
 // ---------------------------------------------------------------
 void GameManager::Run()
 {
-	Renderer& renderer = Renderer::GetInstance();
-
 	while (true)
 	{
-		renderer.RenderMenu();
+		Renderer::GetInstance().RenderMenu();
 
 		InputResult input = Tools<int>::Input(1, 2);
 
@@ -41,54 +39,60 @@ void GameManager::Run()
 
 void GameManager::CreateCharacter()
 {
-	Renderer& renderer = Renderer::GetInstance();
+	Renderer::GetInstance().ClearSystemLogs();
+	Renderer::GetInstance().Clear();
+	Renderer::GetInstance().RenderCreatePlayer();
 
-	renderer.Clear();
-	renderer.RenderCreatePlayer();
-
-	if (player != nullptr)
+	while (true)
 	{
-		delete player;
-		player = nullptr;
+		if (player != nullptr)
+		{
+			delete player;
+			player = nullptr;
+		}
+
+		std::string job;
+
+		InputResult input = Tools<int>::Input(1, 3);
+
+		switch (input.value)
+		{
+		case 1:
+			job = "전사";
+			break;
+		case 2:
+			job = "마법사";
+			break;
+		case 3:
+			job = "고점맨";
+			break;
+		case 4:
+			job = "테스트용";
+		default:
+		{
+			Renderer::GetInstance().AddSystemLog("잘못된 입력입니다. 제공된 번호로 입력해주세요!");
+			Sleep(3000);
+			continue;
+		}
+		}
+
+		player = new Character();
+		player->InitializeCharacter(job);
 	}
-
-	std::string job;
-	InputResult input = Tools<int>::Input(1, 3);
-	player = new Character();
-
-	switch (input.value)
-	{
-	case 1:
-		job = "전사";
-		break;
-	case 2:
-		job = "마법사";
-		break;
-	case 3:
-		job = "고점맨";
-		break;
-	case 4:
-		job = "테스트용";
-	default:
-		break;
-	}
-
-	player->InitializeCharacter(job);
+	
 }
 
-Character * GameManager::GetCharacter() const
+Character* GameManager::GetCharacter() const
 {
 	return player;
 }
 
 void GameManager::StartGame()
 {
-	Renderer& renderer = Renderer::GetInstance();
-
 	while (!player->IsDead())
 	{
-		renderer.Clear();
-		renderer.RenderMainMenu();
+		Renderer::GetInstance().Clear();
+		Renderer::GetInstance().RenderMainMenu();
 
 		InputResult input = Tools<int>::Input(1, 4);
 
@@ -119,7 +123,7 @@ void GameManager::StartGame()
 			player->GetInventory()->Run();
 			break;
 		}
-		
+
 		case 4:
 			refurbishManager->Run();
 

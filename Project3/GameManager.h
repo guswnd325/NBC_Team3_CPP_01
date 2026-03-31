@@ -7,6 +7,11 @@
 #include "RefurbishManager.h"
 #include "AudioManager.h"
 
+enum class Player
+{
+
+};
+
 class Renderer;
 
 class GameManager
@@ -28,7 +33,7 @@ public:
 
     GameManager(const GameManager&) = delete;
     GameManager& operator=(const GameManager&) = delete;
-    
+
     Character* GetCharacter() const;
 public:
     void Run();
