@@ -23,6 +23,7 @@
 #define BRIGHT_CYAN    "\033[96m" 
 #define BRIGHT_RED  "\033[91m"
 #define DARK_GRAY   "\033[90m"
+#define BRIGHT_WHITE    "\033[97m"
 #define REST "\033[0m"
 
 class BaseItem;
@@ -67,7 +68,7 @@ public:
     void RenderBattleAction(Monster* monster, Character* player, const std::vector<std::string>& diceFrame);
     void RenderShopItemList(const std::vector<BaseItem*>& itemLists, int playerGold, const std::vector<std::string>& diceFrame);
     void RenderAreaChoices(const std::vector<std::string>& choices, const std::unordered_map<std::string, std::string>& displayMap, const std::vector<std::string>& diceFrame);
-    void RenderInventory(BaseItem* slots[], const std::vector<ItemSlot>& gearStorage, const std::vector<DiceSlot>& diceStorage, const std::vector<std::string>& diceFrame);
+    void RenderInventory(int level, BaseItem* slots[], const std::vector<ItemSlot>& gearStorage, const std::vector<DiceSlot>& diceStorage, const std::vector<std::string>& diceFrame);
 
     // [수정] 보상, 휴식, 생성 화면도 diceFrame을 받도록 변경
     void RenderRewardSelect(const std::vector<std::string>& diceFrame);

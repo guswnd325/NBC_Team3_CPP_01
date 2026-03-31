@@ -866,7 +866,7 @@ void Renderer::RenderInventory(BaseItem* slots[], const std::vector<ItemSlot>& g
 
     // [섹션 1] 현재 장착 장비 - CYAN 테마 (정보/상태)
     invContent.push_back(std::string(BRIGHT_CYAN) + " [ 현재 장착 장비 ]" + RESET);
-    const char* slotNames[] = { "무기", "헬멧", "갑옷", "신발", "장신구" };
+    const char* slotNames[] = { "무  기", "헬  멧", "갑  옷", "신  발", "장신구" };
 
     for (int i = 0; i < 5; i++) {
         if (slots[i] != nullptr) {
