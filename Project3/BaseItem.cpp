@@ -15,15 +15,15 @@ std::string BaseItem::GetTypeToString(SlotItems value)
 	switch (value)
 	{
 		case SlotItems::Weapon:
-			return "Weapon";
+			return "¹«±â";
 		case SlotItems::Helmet:
-			return "Helmet";
+			return "Çï¸ä";
 		case SlotItems::BodyArmor:
-			return "BodyArmor";
+			return "°©¿Ê";
 		case SlotItems::Boots:
-			return "Boots";
+			return "½Å¹ß";
 		case SlotItems::Accessory:
-			return "Accessory";
+			return "Àå½Å±¸";
 	}
 }
 

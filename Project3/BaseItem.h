@@ -58,7 +58,7 @@ public:
 class Halo : public BaseItem
 {
 public:
-	Halo() : BaseItem("«ˆπ¨¥‘¿« «Ï¿œ∑Œ", SlotItems::Helmet, StatDelta(0, 5), 300, (int)Gears::Helmet) {}
+	Halo() : BaseItem("«ˆπ¨¥‘¿« «Ï¿œ∑Œ", SlotItems::Helmet, StatDelta(0, 5), 300, (int)Gears::Halo) {}
 };
 
 class PaperArmor : public BaseItem
