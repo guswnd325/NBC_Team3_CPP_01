@@ -34,6 +34,8 @@ private:
 	DiceID rewardDiceID;
 	int diceChallengeValue;
 
+	int maxHp;
+
 public:
 
 	Monster(MonsterType type, MonsterGrade grade);
@@ -58,5 +60,9 @@ public:
 	int RollAttackDice();
 	void InitializeMonster();
 	const std::vector<std::string>& GetVisual() const { return visual; }
+
+
+	int GetMaxHp() { return maxHp; }
+	int SetMaxHp(int value) { maxHp = value; }
 };
 
