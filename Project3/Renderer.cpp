@@ -128,10 +128,9 @@ void Renderer::RenderMenu() {
     PrintCenterLine(R"(  | o     |/      /_  \|__] |___ | \|  |   )", Renderer::UI_WIDTH, WHITE);
     PrintCenterLine(R"(  '-------'                                 )", Renderer::UI_WIDTH, WHITE);
 
-    PrintDivider(Renderer::UI_WIDTH);
     PrintCenterLine("DICE ADVENTURE : THE ROGUELIKE", Renderer::UI_WIDTH, CYAN);
 
-    for (int i = 0; i < 11; i++) {
+    for (int i = 0; i < 3; i++) {
         PrintLeftLine("", Renderer::UI_WIDTH);
     }
 
@@ -139,6 +138,16 @@ void Renderer::RenderMenu() {
     PrintDivider(Renderer::UI_WIDTH);
     PrintCenterLine("[1] 게임 시작          [2] 게임 종료", Renderer::UI_WIDTH, YELLOW);
 
+    PrintDivider(Renderer::UI_WIDTH);
+    PrintLeftLine(" [ 시스템 메시지 ]", Renderer::UI_WIDTH, GRAY);
+
+    for (const auto& log : systemLogs) {
+        PrintLeftLine(" >> " + log, Renderer::UI_WIDTH, WHITE);
+    }
+    // 로그 빈 줄 채우기 (높이 유지)
+    for (int i = 0; i < (MAX_MENU_LOGS - (int)systemLogs.size()); i++) {
+        PrintLeftLine("", Renderer::UI_WIDTH);
+    }
     PrintBottom(Renderer::UI_WIDTH); // [박스 끝]
 
     // 입력 위치 고정
@@ -171,10 +180,19 @@ void Renderer::RenderCreatePlayer() {
     PrintLeftLine("", Renderer::UI_WIDTH);
     PrintLeftLine("  [3] 모험가  (도박형: 주사위 1 ~ 24 (1개))", Renderer::UI_WIDTH, RED);
 
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < 3; i++) {
         PrintLeftLine("", Renderer::UI_WIDTH);
     }
+    PrintDivider(Renderer::UI_WIDTH);
+    PrintLeftLine(" [ 시스템 메시지 ]", Renderer::UI_WIDTH, GRAY);
 
+    for (const auto& log : systemLogs) {
+        PrintLeftLine(" >> " + log, Renderer::UI_WIDTH, WHITE);
+    }
+    // 로그 빈 줄 채우기 (높이 유지)
+    for (int i = 0; i < (MAX_MENU_LOGS - (int)systemLogs.size()); i++) {
+        PrintLeftLine("", Renderer::UI_WIDTH);
+    }
     PrintBottom(Renderer::UI_WIDTH); // [박스 끝]
 
     // 5. 입력 위치 고정
@@ -202,15 +220,26 @@ void Renderer::RenderMainMenu() {
     // --- [중간: 빈 공간/로그 구역 테두리 유지] ---
     // 로그가 찍히지 않아도 테두리(│)를 유지하며 하단까지 박스를 늘립니다.
     // 이 구간이 아까 어색해 보였던 그 빈 공간을 메워주는 역할입니다.
-    for (int i = 0; i < 12; i++) {
+    for (int i = 0; i < 8; i++) {
         PrintLeftLine("", Renderer::UI_WIDTH);
     }
+   
 
     // --- [하단: 행동 선택지 구역] ---
     PrintDivider(Renderer::UI_WIDTH);
     PrintLeftLine("[1] 탐  사 (지역 조사)    [2] 상  점 (아이템 매매)", Renderer::UI_WIDTH, YELLOW);
     PrintLeftLine("[3] 장비창 (인벤토리)     [4] 휴  식 (회복 및 강화)", Renderer::UI_WIDTH, YELLOW);
 
+    PrintDivider(Renderer::UI_WIDTH);
+    PrintLeftLine(" [ 시스템 메시지 ]", Renderer::UI_WIDTH, GRAY);
+
+    for (const auto& log : systemLogs) {
+        PrintLeftLine(" >> " + log, Renderer::UI_WIDTH, WHITE);
+    }
+    // 로그 빈 줄 채우기 (높이 유지)
+    for (int i = 0; i < (MAX_MENU_LOGS - (int)systemLogs.size()); i++) {
+        PrintLeftLine("", Renderer::UI_WIDTH);
+    }
     PrintBottom(Renderer::UI_WIDTH); // [박스 끝]
 
     // 입력 위치 고정 (박스 바깥 하단)
