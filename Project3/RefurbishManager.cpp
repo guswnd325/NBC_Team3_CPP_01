@@ -175,7 +175,7 @@ void RefurbishManager::Run()
 			if (option.status == InputStatus::Exit) continue;
 			if (option.status == InputStatus::Fail) continue;
 
-			UpgradeResult info = UpgradeDice(option.value - 1, (UpgradeType)option.value, character);
+			UpgradeResult info = UpgradeDice(input.value - 1, (UpgradeType)option.value, character);
 			
 			if (info.status == UpgradeStatus::Success)
 			{
