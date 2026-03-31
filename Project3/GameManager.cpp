@@ -21,14 +21,14 @@ void GameManager::Run()
 
 	while (true)
 	{
+		InputResult input = Tools<int>::Input(1, 2);
+
 		renderer.RenderMenu();
 
-		int input;
-		std::cin >> input;
 		//AudioManager::GetInstance().PlaySFX(SFXList::Button_Click);
 		std::cin.ignore((std::numeric_limits<std::streamsize>::max)(), '\n');
 
-		switch (input)
+		switch (input.value)
 		{
 		case 1:
 			CreateCharacter();
@@ -55,15 +55,11 @@ void GameManager::CreateCharacter()
 		player = nullptr;
 	}
 
-	int input;
-	std::cin >> input;
-	std::cin.ignore((std::numeric_limits<std::streamsize>::max)(), '\n');
-
-
 	std::string job;
-
+	InputResult input = Tools<int>::Input(1, 3);
 	player = new Character();
-	switch (input)
+
+	switch (input.value)
 	{
 	case 1:
 		job = "전사";
@@ -104,22 +100,19 @@ void GameManager::StartGame()
 		renderer.Clear();
 		renderer.RenderMainMenu();
 
-		int input;
-		std::cin >> input;
-		std::cin.ignore((std::numeric_limits<std::streamsize>::max)(), '\n');
+		InputResult input = Tools<int>::Input(1, 4);
 
-
-		switch (input)
+		switch (input.value)
 		{
 		case 1:
 		{
 			BattleResult result = combatManager->Run(player);
-			if (result == BattleResult::PlayerDead)
+			if (BattleResult::PlayerDead == result)
 			{
 				std::cout << "게임 오버..." << std::endl;
 				return; // StartGame() 종료 → 메인화면으로
 			}
-			if (result == BattleResult::PlayerClear)
+			if (BattleResult::PlayerClear == result)
 			{
 				std::cout << "게임 클리어..." << std::endl;
 				return;

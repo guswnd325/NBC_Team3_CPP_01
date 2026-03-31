@@ -12,17 +12,16 @@ BattleResult BattleManager::Run(Character* player, Monster* monster)
     while (true)
     {
         Renderer::GetInstance().RenderBattleAction();
-        int input;
-        std::cin >> input;
-        std::cin.ignore((std::numeric_limits<std::streamsize>::max)(), '\n');
+
+        InputResult input = Tools<int>::Input(1, 2);
 
         std::cout << std::endl;
 
-        if (input == 1)
+        if (1 == input.value)
         {
             StartBattle(player, monster);
         }
-        else if (input == 2)
+        else if (2 == input.value)
         {
             int monsterRoll = 0;
 
@@ -154,15 +153,14 @@ bool BattleManager::IsOver(Character* player, Monster* monster)
 void BattleManager::GiveReward(Character* player, Monster* monster)
 {
     Renderer::GetInstance().RenderRewardSelect();
-    int input;
-    std::cin >> input;
-    std::cin.ignore((std::numeric_limits<std::streamsize>::max)(), '\n');
+
+    InputResult input = Tools<int>::Input(1, 2);
 
     std::cout << std::endl;
 
-    if (1 == input)
+    if (1 == input.value)
         GiveNormalReward(player, monster);
-    else if (2 == input)
+    else if (2 == input.value)
         GiveRiskyReward(player, monster);
     else
     {
