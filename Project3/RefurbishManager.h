@@ -22,6 +22,8 @@ public:
     
     UpgradeResult UpgradeDice(int index, UpgradeType type, Character* character);
 
+    void DrawDiceDirectly(int num);
+
     RestResult Rest(Character* character);
     void Run();
 };

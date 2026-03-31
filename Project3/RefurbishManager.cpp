@@ -85,6 +85,7 @@ RestResult RefurbishManager::Rest(Character *character)
 		character->SetRestTicket(character->GetRestTicket() - 1);
 
 		int value = diceManager.Roll(character);
+		diceManager.GetDiceFrame(value);
 		int prevHp = character->GetHP();
 
 		int newHP = Tools<int>::Clamp(character->GetHP() + value, 0, 100);
@@ -95,6 +96,20 @@ RestResult RefurbishManager::Rest(Character *character)
 	}
 
 	return result;
+}
+
+void RefurbishManager::DrawDiceDirectly(int num) {
+	std::vector<std::string> frame = diceManager.GetDiceFrame(num);
+
+	int startX = 63;
+	int startY = Renderer::ZONE_SCREEN_Y + 4;
+
+	for (int i = 0; i < (int)frame.size(); i++) {
+		Renderer::GetInstance().MoveCursor(startX, startY + i);
+		int vLen = Renderer::GetInstance().GetVisualLength(frame[i]);
+		std::cout << frame[i] << std::string(std::max(0, 35 - vLen), ' ');
+	}
+	Renderer::GetInstance().MoveCursor(0, 35);
 }
 
 void RefurbishManager::Run()
@@ -123,7 +138,20 @@ void RefurbishManager::Run()
 		{
 			RestResult info = Rest(character);
 
-			if (info.result == HealStatus::Success) AudioManager::PlaySFX(SFXList::Heal);
+			if (info.result == HealStatus::Success)
+			{
+				AudioManager::GetInstance().PlaySFX(SFXList::Dice_Roll);
+
+				int playerRoll = diceManager.Roll(character);
+				for (int i = 0; i < 10; i++) {
+					DrawDiceDirectly(rand() % 20 + 1);
+					Sleep(40 + (i * 10));
+				}
+				
+				//DrawDiceDirectly(info.healValue);
+
+				AudioManager::PlaySFX(SFXList::Heal);
+			}
 			else 
 			{
 				AudioManager::PlaySFX(SFXList::Error);
@@ -131,7 +159,7 @@ void RefurbishManager::Run()
 			}
 			
 			int hp = character->GetHP();
-			renderer.RenderHealResult(info.healValue,  hp - info.healValue, hp, MAX_HP);
+			renderer.RenderHealResult(info.healValue,  hp - info.healValue, hp, MAX_HP, diceManager.GetDiceFrame(info.healValue));
 			continue;
 		}
 		if (input.value == (int)RestOption::Upgrade)
