@@ -120,7 +120,7 @@ void RefurbishManager::Run()
 		renderer.Clear();
 		Character* character = GameManager::GetInstance().GetCharacter();
 
-		renderer.RenderRestMenu(std::vector<std::string>());
+		renderer.RenderRestMenu(character->GetRestTicket(), std::vector<std::string>());
 		
 		
 		InputResult input = Tools<int>::Input(0, (int)RestOption::Heal + 1);
