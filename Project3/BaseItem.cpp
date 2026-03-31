@@ -25,6 +25,8 @@ std::string BaseItem::GetTypeToString(SlotItems value)
 		case SlotItems::Accessory:
 			return "¿ÂΩ≈±∏";
 	}
+
+	return "";
 }
 
 int BaseItem::GetPrice() const

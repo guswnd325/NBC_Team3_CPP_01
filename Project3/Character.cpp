@@ -122,9 +122,9 @@ void Character::LevelUp()
 	
 	while (true)
 	{
-		if (GetExp() > levelUpExp)
+		if (GetExp() > (int)levelUpExp)
 		{
-			SetExp(GetExp() - levelUpExp);
+			SetExp(GetExp() - (int)levelUpExp);
 			level++;
 			levelUpExp *= 1.5;
 		}

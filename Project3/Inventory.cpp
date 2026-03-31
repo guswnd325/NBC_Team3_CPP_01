@@ -18,7 +18,7 @@ void Inventory::Run()
 	{
 		Renderer& renderer = Renderer::GetInstance();
 		Character * character = GameManager::GetInstance().GetCharacter();
-		renderer.RenderInventory(character->GetLevel(), character->GetExp(), character->GetLevelUpExp(), character->GetRestTicket(), slots, gearStorege, diceStorege, std::vector<std::string>());
+		renderer.RenderInventory(character->GetLevel(), character->GetExp(), (int)character->GetLevelUpExp(), character->GetRestTicket(), slots, gearStorege, diceStorege, std::vector<std::string>());
 
 		InputResult input = Tools<int>::Input(0, (int)gearStorege.size());
 
