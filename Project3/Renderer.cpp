@@ -171,20 +171,33 @@ void Renderer::RenderSplitScreen(const std::vector<std::string>& leftContent,
 
     // 4. 하단 로그 출력 (전투/시스템 모드 스위칭)
     if (isBattleMode) {
+        // 1. 헤더 출력
         PrintLeftLine("[ 실시간 전투 로그 ]", Renderer::UI_WIDTH, GRAY);
+
+        // 2. 개별 로그 출력 (각 로그가 가진 고유 색상 적용)
         for (const auto& log : battleLogs) {
-            PrintLeftLine(" >> " + log, Renderer::UI_WIDTH, WHITE);
+            // log.color 변수를 PrintLeftLine의 세 번째 인자로 넘겨줍니다.
+            PrintLeftLine(" >> " + log.message, Renderer::UI_WIDTH, log.color);
         }
-        for (int i = 0; i < (MAX_LOGS - (int)battleLogs.size()); i++) PrintLeftLine("", Renderer::UI_WIDTH);
+
+        // 3. 빈 줄 채우기
+        int remainingLines = MAX_LOGS - (int)battleLogs.size();
+        for (int i = 0; i < remainingLines; i++) {
+            PrintLeftLine("", Renderer::UI_WIDTH);
+        }
     }
     else {
+        // 시스템 메시지 영역 (보통은 흰색이나 회색으로 통일)
         PrintLeftLine("[ 시스템 메시지 ]", Renderer::UI_WIDTH, GRAY);
         for (const auto& log : systemLogs) {
             PrintLeftLine(" >> " + log, Renderer::UI_WIDTH, WHITE);
         }
-        for (int i = 0; i < (MAX_MENU_LOGS - (int)systemLogs.size()); i++) PrintLeftLine("", Renderer::UI_WIDTH);
-    }
 
+        int remainingLines = MAX_MENU_LOGS - (int)systemLogs.size();
+        for (int i = 0; i < remainingLines; i++) {
+            PrintLeftLine("", Renderer::UI_WIDTH);
+        }
+    }
     PrintBottom(Renderer::UI_WIDTH);
 }
 
@@ -261,17 +274,17 @@ void Renderer::RenderCreatePlayer(const std::vector<std::string>& diceFrame) {
 
     std::vector<std::string> destinyDice = {
         "",
-        "      < 운명의 주사위 >",
+        std::string(BRIGHT_YELLOW) + "         < 운명의 주사위 >      " + RESET,
         "",
-        "          _______",
-        "         /      /|",
-        "        /   o  / |",
-        "       /______/  |",
-        "       |      | o|",
-        "       |  o   |  /",
-        "       |______| /",
+        std::string(WHITE) + "              _______          " + RESET,
+        std::string(WHITE) + "             /      /|         " + RESET,
+        std::string(WHITE) + "            /   o  / |         " + RESET,
+        std::string(WHITE) + "           /______/  |         " + RESET,
+        std::string(WHITE) + "           |      | o|         " + RESET,
+        std::string(WHITE) + "           |  o   |  /         " + RESET,
+        std::string(WHITE) + "           |______| /          " + RESET,
         "",
-        "    당신의 행운을 믿으십시오."
+        std::string(GRAY) + "      당신의 행운을 믿으십시오.  " + RESET
     };
 
     // 3. 공용 엔진 호출 (제목: 운명의 집행자 선택)
@@ -928,7 +941,7 @@ void Renderer::RenderBuyResult(BuyStatus status, BaseItem* item, int playerGold)
     Delay(1500);
 }
 
-void Renderer::RenderInventory(int level, int CurExp, int MaxLevelExp, BaseItem* slots[], const std::vector<ItemSlot>& gearStorage,
+void Renderer::RenderInventory(int level, int CurExp, int MaxLevelExp, int restTicketCount, BaseItem* slots[], const std::vector<ItemSlot>& gearStorage,
     const std::vector<DiceSlot>& diceStorage, const std::vector<std::string>& diceFrame)
 {
     // 1. 왼쪽 영역 (invContent): 상태, 장착 장비, 주사위 정보
@@ -940,15 +953,33 @@ void Renderer::RenderInventory(int level, int CurExp, int MaxLevelExp, BaseItem*
     invContent.push_back(std::string(BRIGHT_YELLOW) + "  [ CHARACTER STATUS ]" + RESET);
     invContent.push_back("  - 현재 레벨 : " + std::string(BRIGHT_WHITE) + "LV. " + std::to_string(level) + RESET);
     invContent.push_back("  - 경 험 치   : " + std::string(BRIGHT_CYAN) + std::to_string(CurExp) + RESET + " / " + std::to_string(MaxLevelExp));
+
+    // 휴식 티켓 정보 추가 (분홍색/밝은 자색 계열로 눈에 띄게 배치)
+    invContent.push_back("  - 휴식 티켓 : " + std::string(BRIGHT_MAGENTA) + std::to_string(restTicketCount) + " 장" + RESET);
+
     invContent.push_back(divider);
 
     // [섹션 1] 현재 장착 장비
     invContent.push_back(std::string(BRIGHT_CYAN) + "  [ 현재 장착 장비 ]" + RESET);
     const char* slotNames[] = { "무기", "헬멧", "갑옷", "신발", "반지" };
     for (int i = 0; i < 5; i++) {
-        std::string line = "  - " + std::string(slotNames[i]) + "   : ";
+        std::string line = "  - " + std::string(slotNames[i]) + "    : ";
         if (slots[i] != nullptr) {
             line += std::string(BRIGHT_YELLOW) + slots[i]->GetName() + RESET;
+            StatDelta delta = slots[i]->GetStatDelta();
+            std::string statInfo = "";
+
+            if (delta.atk != 0 && delta.def == 0) {
+                statInfo = " (" + std::string(RED) + "공격력 +" + std::to_string(delta.atk) + RESET + ")";
+            }
+            else if (delta.def != 0 && delta.atk == 0) {
+                statInfo = " (" + std::string(BRIGHT_CYAN) + "방어력 +" + std::to_string(delta.def) + RESET + ")";
+            }
+            else if (delta.atk != 0 && delta.def != 0) {
+                statInfo = " (" + std::string(RED) + "공+" + std::to_string(delta.atk) + RESET +
+                    " " + std::string(BRIGHT_CYAN) + "방+" + std::to_string(delta.def) + RESET + ")";
+            }
+            line += statInfo;
         }
         else {
             line += std::string(DARK_GRAY) + "---" + RESET;
@@ -957,7 +988,7 @@ void Renderer::RenderInventory(int level, int CurExp, int MaxLevelExp, BaseItem*
     }
     invContent.push_back(divider);
 
-    // [섹션 2] 소지 주사위 (왼쪽 하단으로 배치)
+    // [섹션 2] 소지 주사위
     invContent.push_back(std::string(BRIGHT_YELLOW) + "  [ 소지 중인 주사위 ]" + RESET);
     if (diceStorage.empty()) {
         invContent.push_back(std::string(DARK_GRAY) + "    (비어 있음)" + RESET);
@@ -972,8 +1003,7 @@ void Renderer::RenderInventory(int level, int CurExp, int MaxLevelExp, BaseItem*
     invContent.push_back(divider);
     invContent.push_back("  " + std::string(WHITE) + "[0] 마을로 돌아가기 (RETURN)" + RESET);
 
-
-    // 2. 오른쪽 영역 (rightContent): 원래 diceFrame 자리에 소지 장비 목록을 넣음
+    // 2. 오른쪽 영역 (rightContent): 소지 장비 목록
     std::vector<std::string> rightContent;
     rightContent.push_back("");
     rightContent.push_back(std::string(BRIGHT_GREEN) + "  [ INVENTORY : 소지 장비 ]" + RESET);
@@ -984,9 +1014,8 @@ void Renderer::RenderInventory(int level, int CurExp, int MaxLevelExp, BaseItem*
         rightContent.push_back(std::string(DARK_GRAY) + "    (소지품이 비어 있습니다.)" + RESET);
     }
     else {
-        // 오른쪽 영역은 높이가 넉넉하므로 최대 10개까지 출력 가능
         for (int i = 0; i < (int)gearStorage.size(); i++) {
-            if (i >= 12) { // 너무 많으면 잘라줌
+            if (i >= 12) {
                 rightContent.push_back(std::string(GRAY) + "      ..." + RESET);
                 break;
             }
@@ -998,7 +1027,7 @@ void Renderer::RenderInventory(int level, int CurExp, int MaxLevelExp, BaseItem*
         }
     }
 
-    // 3. 공용 엔진 호출 (오른쪽 매개변수에 diceFrame 대신 rightContent를 전달)
+    // 3. 공용 엔진 호출
     RenderSplitScreen(invContent, rightContent, "ADVENTURER'S BACKPACK", false);
 
     // 4. 입력 위치 고정
