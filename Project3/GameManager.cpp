@@ -21,12 +21,11 @@ void GameManager::Run()
 
 	while (true)
 	{
-		InputResult input = Tools<int>::Input(1, 2);
-
 		renderer.RenderMenu();
 
 		//AudioManager::GetInstance().PlaySFX(SFXList::Button_Click);
-		std::cin.ignore((std::numeric_limits<std::streamsize>::max)(), '\n');
+
+		InputResult input = Tools<int>::Input(1, 2);
 
 		switch (input.value)
 		{
