@@ -5,6 +5,7 @@
 #include "Tools.h"
 
 class Renderer;
+class GameManager;
 
 class Character : public Actor
 {
@@ -20,6 +21,7 @@ public:
 	void InitializeCharacter(std::string name);
 	Inventory* GetInventory();
 	int GetGold();
+	void PlayerDead();
 	void SetRestTicket(int value);
 	int GetRestTicket() const;
 	void SetGold(int value);

@@ -87,9 +87,14 @@ Character* GameManager::GetCharacter() const
 	return player;
 }
 
+void GameManager::SetGameState(GameState state)
+{
+	this->state = state;
+}
+
 void GameManager::StartGame()
 {
-	while (!player->IsDead())
+	while (state == GameState::Running)
 	{
 		Renderer::GetInstance().Clear();
 		Renderer::GetInstance().RenderMainMenu();

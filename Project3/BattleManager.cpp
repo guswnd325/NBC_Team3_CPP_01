@@ -54,6 +54,7 @@ BattleResult BattleManager::Run(Character* player, Monster* monster)
         // 전투 종료 여부 체크
         if (player->IsDead())
         {
+            player->PlayerDead();
             Renderer::GetInstance().AddBattleLog("플레이어가 사망했습니다...");
             Sleep(3000);
             return BattleResult::PlayerDead;

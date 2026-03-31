@@ -12,13 +12,20 @@ enum class Player
 
 };
 
+
+enum class GameState
+{
+    Running,
+    Stoped
+};
+
 class Renderer;
 
 class GameManager
 {
 private:
     Character* player;
-
+    GameState state;
     MonsterManager* monsterManager;
     CombatManager* combatManager;
     ShopManager* shopManager;
@@ -37,7 +44,7 @@ public:
     Character* GetCharacter() const;
 public:
     void Run();
-
+    void SetGameState(GameState state);
 private:
     void CreateCharacter();
     void StartGame();

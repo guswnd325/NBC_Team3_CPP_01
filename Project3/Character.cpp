@@ -1,5 +1,6 @@
 #include "Character.h"
 #include "Renderer.h"
+#include "GameManager.h"
 
 constexpr int defaultGold = 3000;
 constexpr int maxHP = 100;
@@ -18,6 +19,11 @@ Character::Character()
 Character::~Character()
 {
 	delete inventory;
+}
+
+void Character::PlayerDead()
+{
+	GameManager::GetInstance().SetGameState(GameState::Stoped);
 }
 
 void Character::InitializeCharacter(std::string name)
