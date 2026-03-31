@@ -107,20 +107,24 @@ BattleResult CombatManager::Run(Character* player)
 
 void CombatManager::ShowCredit()
 {
+    int totalRolls = DiceManager::GetRollCount();
     std::string divider = "\033[90m ------------------------------------------\033[0m";
 
     std::vector<std::string> creditLines = {
         "==============================",
         "         GAME OVER",
         "==============================",
+        ""
+        "\033[93m 언리얼 8기쿤.. 사실 나도 게임을 이겨본적이 없어...\033[0m",
+        ""
+        "\033[90m  총 주사위 굴린 횟수 : \033[97m" + std::to_string(totalRolls) + "회\033[0m",
         "",
         "\033[97m  플레이해주셔서 감사합니다.\033[0m",
         "",
         "\033[36m  Developed by 3조\033[0m",
         "",
         "\033[93m  Thank you for playing!\033[0m",
-        "",
-        "\033[93m 언리얼 8기쿤.. 사실 나도 게임을 이겨본적이 없어...\033[0m",
+        ""
     };
 
     std::vector<std::string> currentContent;  

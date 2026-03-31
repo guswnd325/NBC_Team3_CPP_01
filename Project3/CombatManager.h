@@ -22,12 +22,12 @@ private:
        {"Mine",     1},   // 초기 해금  (폐광)
        {"Mountain", 1},   // 초기 해금  (산)
        {"Desert",   2},
-       {"Cave",     8},
-       {"Alley",    12},
-       {"Jungle",   16},
-       {"Temple",   20},
-       {"Ocean",    25},
-       {"Nest",     30},
+       {"Cave",     15},
+       {"Alley",    5},
+       {"Jungle",   6},
+       {"Temple",   7},
+       {"Ocean",    8},
+       {"Nest",     11},
     };
 
     std::vector<std::string> areaName = {

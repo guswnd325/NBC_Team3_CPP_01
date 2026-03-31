@@ -12,6 +12,7 @@ std::mt19937 DiceManager::gen(DiceManager::rd());
 DiceManager::DiceManager() {}
 DiceManager::~DiceManager() {}
 
+int DiceManager::rollCount = 0;
 
 void DiceManager::DiceAnimationRollNumber(int result)
 {
@@ -75,6 +76,7 @@ void DiceManager::DiceAnimationRollNumber(int result)
 
 int DiceManager::Roll(Character* character)
 {
+    rollCount++;
     int totalSum = 0;
     auto& diceList = character->GetInventory()->GetDiceStorege();
 

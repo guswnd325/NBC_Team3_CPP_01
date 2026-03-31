@@ -96,6 +96,8 @@ private:
 	static std::random_device rd;
 	static std::mt19937 gen;
 
+    static int rollCount;
+
 
 public:
 	DiceManager();
@@ -115,6 +117,8 @@ public:
     void DiceAnimationRollNumber(int result);
 
     std::vector<std::string>GetDiceFrame(int num);
+
+    static int GetRollCount() { return rollCount; }
 
 };
 
