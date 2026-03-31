@@ -34,13 +34,13 @@ public:
 class Sword : public BaseItem
 {
 public:
-	Sword() : BaseItem("½Â¸®ÀÇ °Ë", SlotItems::Weapon, StatDelta(10), 200, (int)Gears::Sword) {}
+	Sword() : BaseItem("°­µ¿¿í Æ©ÅÍ´ÔÀÇ »Ð¸ÁÄ¡", SlotItems::Weapon, StatDelta(10), 200, (int)Gears::Sword) {}
 };
 
 class Bow : public BaseItem
 {
 public:
-	Bow() : BaseItem("½Â¸®ÀÇ È°", SlotItems::Weapon, StatDelta(20), 1000, (int)Gears::Bow) {}
+	Bow() : BaseItem("½Â¸®ÀÇ °Ë", SlotItems::Weapon, StatDelta(20), 1000, (int)Gears::Bow) {}
 };
 
 class Mace : public BaseItem
@@ -88,7 +88,7 @@ public:
 class TutorTears : public BaseItem
 {
 public:
-	TutorTears() : BaseItem("°­µ¿¿í Æ©ÅÍ´ÔÀÇ ´«¹°", SlotItems::Accessory, StatDelta(5,4), 1103, (int)Gears::TutorTears) {}
+	TutorTears() : BaseItem("Áø¼öÀÎ ¸Å´ÏÀú´ÔÀÇ ´«¹°", SlotItems::Accessory, StatDelta(5,4), 1103, (int)Gears::TutorTears) {}
 };
 
 class Wing : public BaseItem
