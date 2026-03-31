@@ -8,8 +8,27 @@ AudioManager& AudioManager::GetInstance()
 
 void AudioManager::PlaySFX(SFXList index)
 {
+	
+	std::string alias = "sfx_" + std::to_string((int)index);
+
+	
+	mciSendStringA(("stop " + alias).c_str(), NULL, 0, NULL);
+	mciSendStringA(("close " + alias).c_str(), NULL, 0, NULL);
+
+	
 	std::string fullPath = "./" + sfxPaths[(int)index];
-	PlaySoundA(fullPath.c_str(), NULL, SND_FILENAME | SND_ASYNC);
+
+	
+	std::string openCommand = "open \"" + fullPath + "\" type mpegvideo alias " + alias;
+	mciSendStringA(openCommand.c_str(), NULL, 0, NULL);
+
+	//소리 변경 시 해당 볼륨 값 변경
+	int targetVolume = 150;
+	std::string volCmd = "setaudio " + alias + " volume to " + std::to_string(targetVolume);
+	mciSendStringA(volCmd.c_str(), NULL, 0, NULL);
+
+	
+	mciSendStringA(("play " + alias + " from 0").c_str(), NULL, 0, NULL);
 }
 
 void AudioManager::PlayBGM(BGMList index, bool repeat)
