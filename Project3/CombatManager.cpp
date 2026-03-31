@@ -39,7 +39,7 @@ std::string CombatManager::SelectArea() {
 
     while (true) {
         
-        // 1. 입력 성공 여부와 범위 확인
+       
         if (std::cin >> input && input >= 1 && input <= 3) {
             // 입력 성공 시: 버퍼를 비우고 즉시 결과 반환 (함수 종료)
             std::cin.ignore((std::numeric_limits<std::streamsize>::max)(), '\n');
