@@ -325,33 +325,48 @@ void Renderer::RenderMainMenu(const std::vector<std::string>& diceFrame) {
 void Renderer::RenderBattleAction(Monster* monster, Character* player, const std::vector<std::string>& diceFrame) {
     // 1. 왼쪽 영역 데이터 구성 (몬스터 정보 + 이미지 + 플레이어 정보)
     std::vector<std::string> battleContent;
+    std::string divider = std::string(GRAY) + " ------------------------------------------" + RESET;
 
-    // [상단] 몬스터 정보 (이름 및 HP)
-    std::string mHealth = " HP: " + std::to_string(monster->GetHP());
-    battleContent.push_back(" [ ENEMY ] " + monster->GetName());
-    battleContent.push_back(mHealth);
-    battleContent.push_back(" ------------------------------------------");
+    // [상단] 몬스터 정보 (이름 및 HP) - 위협적인 RED 테마
+    std::string mName = std::string(BRIGHT_RED) + " [ ENEMY ] " + monster->GetName() + RESET;
+    // HP가 낮아지면 색이 변하게 할 수도 있지만, 우선은 일관되게 RED로 강조
+    std::string mStats = " HP: " + std::string(RED) + std::to_string(monster->GetHP()) + RESET +
+        "  |  DEF: " + std::string(BRIGHT_CYAN) + std::to_string(monster->GetDef()) + RESET;
+
+    battleContent.push_back("");
+    battleContent.push_back(mName);
+    battleContent.push_back(mStats);
+    battleContent.push_back(divider);
 
     // [중간] 몬스터 이미지 (원본 GetVisual() 활용)
     const std::vector<std::string>& visual = monster->GetVisual();
     for (int i = 0; i < 7; i++) { // 이미지 공간 7줄 할당
-        if (i < (int)visual.size()) battleContent.push_back(" " + visual[i]);
-        else battleContent.push_back("");
+        if (i < (int)visual.size()) {
+            // 몬스터 이미지는 기본적으로 흰색이나 밝은 회색으로 출력
+            battleContent.push_back(" " + std::string(WHITE) + visual[i] + RESET);
+        }
+        else {
+            battleContent.push_back("");
+        }
     }
 
-    battleContent.push_back(" ------------------------------------------");
+    battleContent.push_back(divider);
 
-    // [하단] 플레이어 정보
-    std::string pHealth = " HP: " + std::to_string(player->GetHP()) + " / 100";
-    battleContent.push_back(" [ PLAYER ] " + player->GetName());
+    // [하단] 플레이어 정보 - 아군 느낌의 GREEN/CYAN 테마
+    // 플레이어의 현재 체력 비율에 따라 색상을 조절하면 더 좋습니다 (여기선 기본 CYAN)
+    std::string pName = std::string(BRIGHT_CYAN) + " [ PLAYER ] " + player->GetName() + RESET;
+    std::string pHealth = " HP: " + std::string(BRIGHT_GREEN) + std::to_string(player->GetHP()) + RESET + " / 100";
+
+    battleContent.push_back(pName);
     battleContent.push_back(pHealth);
     battleContent.push_back("");
-    battleContent.push_back("  [1] 전  투             [2] 도  망");
 
-    // 2. 공용 엔진 호출 
-    // - diceFrame: 현재 굴러가는 주사위나 결과값이 담김
-    // - title: "!!! BATTLE IN PROGRESS !!!"
-    // - isBattleMode: true (하단 로그창을 battleLogs로 스위칭)
+    // 선택지 강조
+    std::string actions = "  " + std::string(BRIGHT_YELLOW) + "[1] 전 투" + RESET +
+        "               " + std::string(BRIGHT_MAGENTA) + "[2] 도 망" + RESET;
+    battleContent.push_back(actions);
+
+    // 2. 공용 엔진 호출  
     RenderSplitScreen(battleContent, diceFrame, "!!! BATTLE IN PROGRESS !!!", true);
 
     // 3. 입력 위치 고정
@@ -362,26 +377,33 @@ void Renderer::RenderBattleAction(Monster* monster, Character* player, const std
 void Renderer::RenderRewardSelect(const std::vector<std::string>& diceFrame) {
     // 1. 왼쪽 영역: 승리 메시지 및 선택지 구성
     std::vector<std::string> rewardContent;
+    std::string divider = std::string(GRAY) + " ------------------------------------------" + RESET;
 
     rewardContent.push_back("");
-    rewardContent.push_back(" [ VICTORY ]");
-    rewardContent.push_back(" 전투에서 승리하여 값진 전리품을 발견했습니다!");
-    rewardContent.push_back(" 어떤 방식으로 보상을 챙기시겠습니까?");
+    // 승리 문구 - 화려한 노란색/금색 강조
+    rewardContent.push_back(std::string(BRIGHT_YELLOW) + "  [ VICTORY ]" + RESET);
+    rewardContent.push_back("  전투에서 승리하여 값진 전리품을 발견했습니다!");
+    rewardContent.push_back("  어떤 방식으로 보상을 챙기시겠습니까?");
     rewardContent.push_back("");
-    rewardContent.push_back(" ------------------------------------------");
+    rewardContent.push_back(divider);
     rewardContent.push_back("");
-    rewardContent.push_back("  [1] 일반 보상 (안전)");
-    rewardContent.push_back("      - 휴식권 1회 + 확정 골드 획득");
+
+    // [1] 일반 보상 - 하늘색 (안정, 휴식 느낌)
+    rewardContent.push_back(std::string(BRIGHT_CYAN) + "  [1] 일반 보상 (안전)" + RESET);
+    rewardContent.push_back(std::string(GRAY) + "      - 휴식권 1회 + 확정 골드 획득" + RESET);
     rewardContent.push_back("");
-    rewardContent.push_back("  [2] 리스크 보상 (도전!)");
-    rewardContent.push_back("      - 주사위를 굴려 더 큰 보상에 도전");
+
+    // [2] 리스크 보상 - 주황/빨강 계열 (도전, 위험 느낌)
+    rewardContent.push_back(std::string(BRIGHT_RED) + "  [2] 리스크 보상 (도전!)" + RESET);
+    rewardContent.push_back(std::string(GRAY) + "      - 주사위를 굴려 더 큰 보상에 도전" + RESET);
     rewardContent.push_back("");
-    rewardContent.push_back(" ------------------------------------------");
-    rewardContent.push_back("  당신의 운을 시험해 보십시오.");
+
+    rewardContent.push_back(divider);
+    rewardContent.push_back("  " + std::string(BRIGHT_WHITE) + "당신의 운을 시험해 보십시오." + RESET);
 
     // 2. 공용 엔진 호출
     // 오른쪽(diceFrame)에는 현재 대기 중인 주사위나 보물상자 아트가 들어갑니다.
-    RenderSplitScreen(rewardContent, diceFrame, "전리품 획득", false);
+    RenderSplitScreen(rewardContent, diceFrame, "REWARD SELECTION", false);
 
     // 3. 입력 위치 고정
     MoveCursor(0, Renderer::ZONE_PLAYER_Y + 6);
@@ -438,24 +460,32 @@ void Renderer::RenderAreaChoices(const std::vector<std::string>& choices,
 {
     // 1. 왼쪽 영역: 지역 리스트 구성
     std::vector<std::string> areaContent;
+    std::string divider = std::string(GRAY) + " ------------------------------------------" + RESET;
 
     areaContent.push_back("");
-    areaContent.push_back(" [ 탐험할 지역을 선택하십시오 ]");
-    areaContent.push_back(" ------------------------------------------");
+    // 제목: 푸른색 계열로 탐험/지도 느낌 강조
+    areaContent.push_back(std::string(BRIGHT_CYAN) + "  [ 탐험할 지역을 선택하십시오 ]" + RESET);
+    areaContent.push_back(divider);
     areaContent.push_back("");
 
     for (int i = 0; i < (int)choices.size(); ++i) {
         // 한국어 이름이 있으면 가져오고, 없으면 영문 이름 사용
         std::string korName = displayMap.count(choices[i]) ? displayMap.at(choices[i]) : choices[i];
-        areaContent.push_back("   [" + std::to_string(i + 1) + "] " + korName);
+
+        // 번호는 초록색, 지역 이름은 밝은 노란색으로 강조
+        std::string idx = std::string(BRIGHT_GREEN) + "[" + std::to_string(i + 1) + "]" + RESET;
+        std::string areaName = std::string(BRIGHT_YELLOW) + korName + RESET;
+
+        areaContent.push_back("    " + idx + " " + areaName);
         areaContent.push_back(""); // 가독성을 위해 한 줄 띔
     }
 
-    areaContent.push_back(" ------------------------------------------");
-    areaContent.push_back("  [0] 마을로 돌아가기 (RETURN)");
+    areaContent.push_back(divider);
+    // 마을 돌아가기 옵션
+    areaContent.push_back("  " + std::string(WHITE) + "[0] 마을로 돌아가기 (RETURN)" + RESET);
 
     // 2. 공용 엔진 호출
-    // 오른쪽(diceFrame)에는 지도나 나침반, 혹은 현재 선택 중인 연출용 프레임이 들어갑니다.
+    // 오른쪽(diceFrame)에는 지도나 나침반 등이 들어갑니다.
     RenderSplitScreen(areaContent, diceFrame, "WORLD MAP : EXPLORATION", false);
 
     // 3. 입력 위치 고정
@@ -515,38 +545,42 @@ void Renderer::RenderRestMenu(const std::vector<std::string>& diceFrame) {
 void Renderer::RenderDiceUpgradeList(const std::vector<DiceSlot>& storage, const std::vector<std::string>& diceFrame) {
     // 1. 왼쪽 영역: 주사위 강화 목록 데이터 구성
     std::vector<std::string> upgradeContent;
+    std::string divider = std::string(GRAY) + " ------------------------------------------" + RESET;
 
     upgradeContent.push_back("");
-    upgradeContent.push_back(" [ 주사위 강화소 ]");
-    upgradeContent.push_back(" 어떤 주사위의 운명을 강화하시겠습니까?");
-    upgradeContent.push_back(" ------------------------------------------");
+    // 제목: 강화소의 신비로운 보라색 테마
+    upgradeContent.push_back(std::string(BRIGHT_MAGENTA) + "  [ 주사위 강화소 ]" + RESET);
+    upgradeContent.push_back("  어떤 주사위의 운명을 강화하시겠습니까?");
+    upgradeContent.push_back(divider);
     upgradeContent.push_back("");
 
     if (storage.empty()) {
-        upgradeContent.push_back("  (강화할 수 있는 주사위가 없습니다.)");
+        upgradeContent.push_back(std::string(DARK_GRAY) + "    (강화할 수 있는 주사위가 없습니다.)" + RESET);
     }
     else {
         for (int i = 0; i < (int)storage.size(); i++) {
-            // 최대 8개까지 출력 (2분할 높이 제한에 맞춤)
+            // 최대 8개까지 출력
             if (i >= 8) {
-                upgradeContent.push_back("      ...");
+                upgradeContent.push_back(std::string(GRAY) + "      ..." + RESET);
                 break;
             }
 
-            std::string diceName = storage[i].dice->DiceIdToString();
-            std::string diceCount = " (" + std::to_string(storage[i].count) + "개)";
+            // 번호는 초록색, 이름은 노란색, 개수는 흰색으로 시각적 분리
+            std::string idx = std::string(BRIGHT_GREEN) + "[" + std::to_string(i + 1) + "]" + RESET;
+            std::string diceName = std::string(BRIGHT_YELLOW) + storage[i].dice->DiceIdToString() + RESET;
+            std::string diceCount = std::string(WHITE) + " (" + std::to_string(storage[i].count) + "개)" + RESET;
 
-            // 리스트 형식으로 저장
-            upgradeContent.push_back("  [" + std::to_string(i + 1) + "] " + diceName + diceCount);
+            // 들여쓰기를 맞춰서 리스트 형식으로 저장
+            upgradeContent.push_back("    " + idx + " " + diceName + diceCount);
         }
     }
 
     upgradeContent.push_back("");
-    upgradeContent.push_back(" ------------------------------------------");
-    upgradeContent.push_back("  [0] 취소하고 돌아가기");
+    upgradeContent.push_back(divider);
+    // 취소 옵션 강조
+    upgradeContent.push_back("  " + std::string(WHITE) + "[0] 취소하고 돌아가기 (CANCEL)" + RESET);
 
     // 2. 공용 엔진 호출
-    // 오른쪽(diceFrame)에는 현재 강화 대기 중인 주사위의 '눈' 정보나 아트를 띄웁니다.
     RenderSplitScreen(upgradeContent, diceFrame, "DICE UPGRADE SHOP", false);
 
     // 3. 입력 위치 고정
@@ -601,6 +635,7 @@ void Renderer::RenderUpgradeResult(UpgradeStatus status, int prevLevel, int curL
     std::vector<std::string> upgradeContent;
     std::string title;
     std::string titleColor;
+    std::string divider = std::string(GRAY) + " ------------------------------------------" + RESET;
 
     upgradeContent.push_back("");
 
@@ -608,47 +643,51 @@ void Renderer::RenderUpgradeResult(UpgradeStatus status, int prevLevel, int curL
         title = "UPGRADE SUCCESS";
         titleColor = BRIGHT_GREEN;
 
-        upgradeContent.push_back(" [ 강 화 성 공 ]");
-        upgradeContent.push_back(" ------------------------------------------");
+        upgradeContent.push_back(std::string(BRIGHT_GREEN) + "  [ 강 화 성 공 ]" + RESET);
+        upgradeContent.push_back(divider);
         upgradeContent.push_back("");
-        upgradeContent.push_back(" 주사위의 잠재력이 해방되었습니다!");
+        upgradeContent.push_back("  주사위의 " + std::string(BRIGHT_YELLOW) + "잠재력이 해방" + RESET + "되었습니다!");
         upgradeContent.push_back("");
-        upgradeContent.push_back(" 강화 등급 변화:");
-        upgradeContent.push_back(" [ Lv." + std::to_string(prevLevel) + " ] >>> [ Lv." + std::to_string(curLevel) + " ]");
+        upgradeContent.push_back("  강화 등급 변화:");
+        // 레벨 변화 강조 (이전 레벨은 회색, 현재 레벨은 밝은 하늘색)
+        upgradeContent.push_back("  [ " + std::string(GRAY) + "Lv." + std::to_string(prevLevel) + RESET +
+            " ] >>> [ " + std::string(BRIGHT_CYAN) + "Lv." + std::to_string(curLevel) + RESET + " ]");
         upgradeContent.push_back("");
-        upgradeContent.push_back(" 이제 더 강력한 운명을 개척할 수 있습니다.");
+        upgradeContent.push_back("  이제 더 강력한 운명을 개척할 수 있습니다.");
     }
     else {
         title = "UPGRADE FAILED";
-        titleColor = RED;
+        titleColor = BRIGHT_RED;
 
-        upgradeContent.push_back(" [ 강화 불가 ]");
-        upgradeContent.push_back(" ------------------------------------------");
+        upgradeContent.push_back(std::string(BRIGHT_RED) + "  [ 강화 불가 ]" + RESET);
+        upgradeContent.push_back(divider);
         upgradeContent.push_back("");
-        upgradeContent.push_back(" 이 주사위는 이미 한계치에 도달했습니다.");
+        upgradeContent.push_back("  이 주사위는 이미 " + std::string(BRIGHT_RED) + "한계치" + RESET + "에 도달했습니다.");
         upgradeContent.push_back("");
-        upgradeContent.push_back(" 현재 등급: [ Lv." + std::to_string(prevLevel) + " ] (MAX)");
+        // MAX 레벨 강조
+        upgradeContent.push_back("  현재 등급: [ " + std::string(BRIGHT_YELLOW) + "Lv." + std::to_string(prevLevel) + RESET + " ] " +
+            std::string(BRIGHT_RED) + "(MAX)" + RESET);
         upgradeContent.push_back("");
-        upgradeContent.push_back(" 다른 주사위를 강화해 보십시오.");
+        upgradeContent.push_back("  다른 주사위를 강화해 보십시오.");
     }
 
     upgradeContent.push_back("");
-    upgradeContent.push_back(" ------------------------------------------");
-    upgradeContent.push_back(" 대장장이가 장비를 정리합니다...");
+    upgradeContent.push_back(divider);
+    upgradeContent.push_back(std::string(DARK_GRAY) + "  대장장이가 장비를 정리합니다..." + RESET);
 
-    // 2. 오른쪽 영역: 대장장이의 망치 ASCII 아트
+    // 2. 오른쪽 영역: 대장장이의 망치/모루 ASCII 아트 (금속 느낌 색상 추가)
     std::vector<std::string> upgradeArt = {
         "",
-        "      _ .--.           ",
-        "     ( `    )   .-.    ",
-        "    .-'      `-'   )   ",
-        "   (      _      -'    ",
-        "    |    | |    |      ",
-        "   _|    | |    |_     ",
-        "  [      |_|      ]    ",
-        "   '--------------'    ",
+        std::string(GRAY) + "      _ .--.            " + RESET,
+        std::string(GRAY) + "     ( `    )   .-.     " + RESET,
+        std::string(GRAY) + "    .-'      `-'   )    " + RESET,
+        std::string(GRAY) + "   (      _      -'     " + RESET,
+        std::string(WHITE) + "    |    | |    |      " + RESET,
+        std::string(WHITE) + "   _|    | |    |_     " + RESET,
+        std::string(BRIGHT_WHITE) + "  [      |_|      ]    " + RESET,
+        std::string(GRAY) + "   '--------------'    " + RESET,
         "",
-        "    [ SMITH'S ANVIL ]  "
+        std::string(BRIGHT_YELLOW) + "    [ SMITH'S ANVIL ]  " + RESET
     };
 
     // 3. 공용 엔진 호출
@@ -657,7 +696,6 @@ void Renderer::RenderUpgradeResult(UpgradeStatus status, int prevLevel, int curL
     // 4. 결과 확인을 위한 딜레이
     Delay(1500);
 }
-
 void Renderer::RenderTicketInsufficient() {
     // 1. 왼쪽 영역: 경고 메시지 구성
     std::vector<std::string> alertContent;

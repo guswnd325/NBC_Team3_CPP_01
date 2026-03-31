@@ -68,7 +68,7 @@ public:
     void RenderBattleAction(Monster* monster, Character* player, const std::vector<std::string>& diceFrame);
     void RenderShopItemList(const std::vector<BaseItem*>& itemLists, int playerGold, const std::vector<std::string>& diceFrame);
     void RenderAreaChoices(const std::vector<std::string>& choices, const std::unordered_map<std::string, std::string>& displayMap, const std::vector<std::string>& diceFrame);
-    void RenderInventory(int level, BaseItem* slots[], const std::vector<ItemSlot>& gearStorage, const std::vector<DiceSlot>& diceStorage, const std::vector<std::string>& diceFrame);
+    void RenderInventory(int level,int CurExp, int MaxLevelExp, BaseItem* slots[], const std::vector<ItemSlot>& gearStorage, const std::vector<DiceSlot>& diceStorage, const std::vector<std::string>& diceFrame);
 
     // [수정] 보상, 휴식, 생성 화면도 diceFrame을 받도록 변경
     void RenderRewardSelect(const std::vector<std::string>& diceFrame);
