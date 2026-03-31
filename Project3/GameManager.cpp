@@ -103,6 +103,8 @@ void GameManager::StartGame()
 {
 	Renderer::GetInstance().ClearSystemLogs();
 
+	state = GameState::Running;
+
 	while (state == GameState::Running)
 	{
 		Renderer::GetInstance().RenderMainMenu(std::vector<std::string>());

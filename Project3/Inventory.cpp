@@ -2,6 +2,7 @@
 #include "BaseItem.h"
 #include "Character.h"
 #include "Renderer.h"
+#include "GameManager.h"
 
 Inventory::Inventory()
 {
@@ -17,7 +18,7 @@ void Inventory::Run()
 	{
 		Renderer& renderer = Renderer::GetInstance();
 
-		renderer.RenderInventory(slots, gearStorege, diceStorege, std::vector<std::string>());
+		renderer.RenderInventory(GameManager::GetInstance().GetCharacter()->GetLevel(), slots, gearStorege, diceStorege, std::vector<std::string>());
 
 		InputResult input = Tools<int>::Input(0, (int)gearStorege.size());
 
