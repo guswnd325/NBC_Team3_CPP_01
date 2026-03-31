@@ -11,7 +11,7 @@
 BattleResult BattleManager::Run(Character* player, Monster* monster, CombatManager* combatManager)
 {
     Renderer::GetInstance().ClearBattleLogs();
-    Renderer::GetInstance().AddBattleLog(monster->GetName() + "(이)가 나타났다!");
+    Renderer::GetInstance().AddBattleLog(monster->GetName() + "(이)가 나타났다!", BRIGHT_YELLOW);
     Renderer::GetInstance().RenderBattleAction(monster, player, std::vector<std::string>());
     Sleep(1500);
 
@@ -37,7 +37,7 @@ BattleResult BattleManager::Run(Character* player, Monster* monster, CombatManag
 
             if (TryEscape(player, monster, monsterRoll))
             {
-                Renderer::GetInstance().AddBattleLog("도망에 성공했습니다!");
+                Renderer::GetInstance().AddBattleLog("도망에 성공했습니다!", BRIGHT_GREEN);
                 Renderer::GetInstance().RenderBattleAction(monster, player, {});
                 Sleep(3000);
 
@@ -45,7 +45,7 @@ BattleResult BattleManager::Run(Character* player, Monster* monster, CombatManag
             }
             else
             {
-                Renderer::GetInstance().AddBattleLog("도망에 실패! " + monster->GetName() + "이(가) 공격합니다!");
+                Renderer::GetInstance().AddBattleLog("도망에 실패! " + monster->GetName() + "이(가) 공격합니다!", BRIGHT_RED);
                 Renderer::GetInstance().RenderBattleAction(monster, player, {});
 
                 CalculateDamage(monster, player, monsterRoll,false);
@@ -65,7 +65,7 @@ BattleResult BattleManager::Run(Character* player, Monster* monster, CombatManag
         if (player->IsDead())
         {
             player->PlayerDead();
-            Renderer::GetInstance().AddBattleLog("플레이어가 사망했습니다...");
+            Renderer::GetInstance().AddBattleLog("플레이어가 사망했습니다...", BRIGHT_RED);
             Renderer::GetInstance().RenderBattleAction(monster, player, {});
             AudioManager::GetInstance().StopMusic();
             AudioManager::GetInstance().PlayBGM(BGMList::Jane, false);
@@ -78,19 +78,19 @@ BattleResult BattleManager::Run(Character* player, Monster* monster, CombatManag
         {
             if (monster->GetType() == MonsterType::MaxRabbit)
             {
-                Renderer::GetInstance().AddBattleLog(monster->GetName() + "을(를) 처치했습니다!");
+                Renderer::GetInstance().AddBattleLog(monster->GetName() + "을(를) 처치했습니다!", BRIGHT_GREEN);
                 Renderer::GetInstance().RenderBattleAction(monster, player, {});
 
                 Sleep(3000);
                 return BattleResult::PlayerClear;
             }
 
-            Renderer::GetInstance().AddBattleLog(monster->GetName() + "을(를) 처치했습니다!");
+            Renderer::GetInstance().AddBattleLog(monster->GetName() + "을(를) 처치했습니다!", BRIGHT_GREEN);
             Renderer::GetInstance().RenderBattleAction(monster, player, {});
 
             int gainedExp = monster->GetExp();
             player->SetExp(player->GetExp() + gainedExp);
-            Renderer::GetInstance().AddBattleLog("경험치 " + std::to_string(gainedExp) + " 획득! (현재 경험치 : " + std::to_string(player->GetExp()) + ")");
+            Renderer::GetInstance().AddBattleLog("경험치 " + std::to_string(gainedExp) + " 획득! (현재 경험치 : " + std::to_string(player->GetExp()) + ")", BRIGHT_GREEN);
             Renderer::GetInstance().RenderBattleAction(monster, player, {});
 
             if (player->GetExp() >= player->GetLevelUpExp())
@@ -150,14 +150,14 @@ void BattleManager::StartBattle(Character* player, Monster* monster)
         Sleep(40 + (i * 10));
     }
     DrawDiceDirectly(playerRoll);
-    Renderer::GetInstance().AddBattleLog("플레이어 주사위 결과: [" + std::to_string(playerRoll) + "]");
+    Renderer::GetInstance().AddBattleLog("플레이어 주사위 결과: [" + std::to_string(playerRoll) + "]", BRIGHT_GREEN);
     Sleep(800);
 
     
     ClearDiceDirectly();
 
     // [몬스터 배틀 로그에 추가]
-    Renderer::GetInstance().AddBattleLog(monster->GetName() + "이(가) " + std::to_string(monster->GetDiceCount()) + "개의 주사위를 굴립니다!");
+    Renderer::GetInstance().AddBattleLog(monster->GetName() + "이(가) " + std::to_string(monster->GetDiceCount()) + "개의 주사위를 굴립니다!", BRIGHT_RED);
     Renderer::GetInstance().RenderBattleAction(monster, player, {}); 
 
     AudioManager::GetInstance().PlaySFX(SFXList::Dice_Roll);
@@ -169,20 +169,18 @@ void BattleManager::StartBattle(Character* player, Monster* monster)
     DrawDiceDirectly(monsterRoll);
 
     // 결과 로그 추가
-    Renderer::GetInstance().AddBattleLog(monster->GetName() + "의 주사위 결과: [" + std::to_string(monsterRoll) + "]");
+    Renderer::GetInstance().AddBattleLog(monster->GetName() + "의 주사위 결과: [" + std::to_string(monsterRoll) + "]", BRIGHT_RED);
     Sleep(800);
-
-    
     Renderer::GetInstance().RenderBattleAction(monster, player, {});
 
     
     if (playerRoll >= monsterRoll) {
-        Renderer::GetInstance().AddBattleLog("플레이어 승리! 공격 개시.");
+        Renderer::GetInstance().AddBattleLog("플레이어 승리! 공격 개시.", BRIGHT_GREEN);
         AudioManager::GetInstance().PlaySFX(SFXList::Hit);
         CalculateDamage(player, monster, playerRoll, true);
     }
     else {
-        Renderer::GetInstance().AddBattleLog(monster->GetName() + " 승리! 반격 당함.");
+        Renderer::GetInstance().AddBattleLog(monster->GetName() + " 승리! 반격 당함.", BRIGHT_RED);
         AudioManager::GetInstance().PlaySFX(SFXList::Hit);
         CalculateDamage(monster, player, monsterRoll, false);
     }
@@ -193,7 +191,7 @@ void BattleManager::StartBattle(Character* player, Monster* monster)
 // ---------------------------------------------------------------
 bool BattleManager::TryEscape(Character* player, Monster* monster, int& outMonsterRoll)
 {
-    Renderer::GetInstance().AddBattleLog("[ 도망 시도 ]");
+    Renderer::GetInstance().AddBattleLog("[ 도망 시도 ]", BRIGHT_YELLOW);
 
     Renderer::GetInstance().RenderBattleAction(monster, player, {});
 
@@ -205,14 +203,14 @@ bool BattleManager::TryEscape(Character* player, Monster* monster, int& outMonst
         Sleep(40 + (i * 10));
     }
     DrawDiceDirectly(playerRoll);
-    Renderer::GetInstance().AddBattleLog("플레이어 주사위 결과: [" + std::to_string(playerRoll) + "]");
+    Renderer::GetInstance().AddBattleLog("플레이어 주사위 결과: [" + std::to_string(playerRoll) + "]", BRIGHT_GREEN);
     Sleep(800);
 
 
     ClearDiceDirectly();
 
     // [몬스터 배틀 로그에 추가]
-    Renderer::GetInstance().AddBattleLog(monster->GetName() + "이(가) " + std::to_string(monster->GetDiceCount()) + "개의 주사위를 굴립니다!");
+    Renderer::GetInstance().AddBattleLog(monster->GetName() + "이(가) " + std::to_string(monster->GetDiceCount()) + "개의 주사위를 굴립니다!", BRIGHT_RED);
     Renderer::GetInstance().RenderBattleAction(monster, player, {});
 
     AudioManager::GetInstance().PlaySFX(SFXList::Dice_Roll);
@@ -224,7 +222,7 @@ bool BattleManager::TryEscape(Character* player, Monster* monster, int& outMonst
     DrawDiceDirectly(monsterRoll);
 
     // 결과 로그 추가
-    Renderer::GetInstance().AddBattleLog(monster->GetName() + "의 주사위 결과: [" + std::to_string(monsterRoll) + "]");
+    Renderer::GetInstance().AddBattleLog(monster->GetName() + "의 주사위 결과: [" + std::to_string(monsterRoll) + "]", BRIGHT_RED);
     Sleep(800);
 
     Renderer::GetInstance().RenderBattleAction(monster, player, {});
@@ -232,7 +230,7 @@ bool BattleManager::TryEscape(Character* player, Monster* monster, int& outMonst
     // 아웃파라미터로 몬스터 roll값 저장
     outMonsterRoll = monsterRoll;
 
-    Renderer::GetInstance().AddBattleLog("플레이어 [" + std::to_string(playerRoll) + "] vs " + monster->GetName() + " [" + std::to_string(monsterRoll) + "]");
+    Renderer::GetInstance().AddBattleLog("플레이어 [" + std::to_string(playerRoll) + "] vs " + monster->GetName() + " [" + std::to_string(monsterRoll) + "]", BRIGHT_YELLOW);
 
     return playerRoll > monsterRoll;
 }
@@ -244,7 +242,6 @@ void BattleManager::CalculateDamage(Actor* attacker, Actor* defender, int Roll, 
     // 데미지 계산 (최소 1 보장)
     int rawDamage = attacker->GetAtk() + Roll - defender->GetDef();
     int damage = (rawDamage > 1) ? rawDamage : 1;
-
     
     int currentHp = defender->GetHP() - damage;
     int newHp = (currentHp > 0) ? currentHp : 0;
@@ -263,7 +260,7 @@ void BattleManager::CalculateDamage(Actor* attacker, Actor* defender, int Roll, 
 
     
     Renderer::GetInstance().AddBattleLog(attacker->GetName() + "의 공격! " +
-        defender->GetName() + "에게 " + std::to_string(damage) + " 데미지!");
+        defender->GetName() + "에게 " + std::to_string(damage) + " 데미지!", BRIGHT_YELLOW);
 
     // monster/player 포인터를 올바르게 넘겨야 함
     if (defenderIsMonster) {
