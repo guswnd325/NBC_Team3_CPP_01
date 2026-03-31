@@ -29,7 +29,7 @@ void DiceManager::DiceAnimationRollNumber(const std::vector<int>& results)
     SetConsoleCursorInfo(hOut, &cursorInfo);
 
     srand(static_cast<unsigned int>(time(nullptr)));
-    AudioManager::GetInstance().PlaySFX(SFXList::dice_roll);
+    AudioManager::GetInstance().PlaySFX(SFXList::Dice_Roll);
 
     
     auto makeFrame = [](int num) -> std::vector<std::string> {

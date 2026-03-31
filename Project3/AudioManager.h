@@ -13,24 +13,52 @@
 
 const std::string bgmPaths[] =
 {
-    "Background Test.wav",
+    "Main_Theme.wav",
+    "Shop.wav"
 };
 
 enum class BGMList
 {
-    Test,
+    Main_Theme,
+    Shop
 };
 
 const std::string sfxPaths[] =
 {
-    "SFX Test.wav",
     "dice_roll.wav",
+    "Button_Lite.wav",
+    "Button_Click.wav",
+    "Buy_Item.wav",
+    "Equip.wav",
+    "Error.wav",
+    "FootStep.wav",
+    "Game_Complete.wav",
+    "Go_Exploer.wav",
+    "Heal.wav",
+    "Hit.wav",
+    "LevelUp.wav",
+    "Reward_Fail.wav",
+    "Upgrade_Dice.wav",
 };
 
 enum class SFXList
 {
-    Test,
-    dice_roll,
+    Dice_Roll,
+
+    Button_Lite,
+    Button_Click,
+    Buy_Item,
+    Equip,
+    Error,
+    FootStep,
+    Game_Complete,
+    Go_Exploer,
+    Heal,
+    Hit,
+    LevelUp,
+    Reward_Fail,
+    Upgrade_Dice,
+    
 };
 
 class AudioManager

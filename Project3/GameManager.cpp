@@ -25,6 +25,7 @@ void GameManager::Run()
 
 		int input;
 		std::cin >> input;
+		//AudioManager::GetInstance().PlaySFX(SFXList::Button_Click);
 		std::cin.ignore((std::numeric_limits<std::streamsize>::max)(), '\n');
 
 		switch (input)

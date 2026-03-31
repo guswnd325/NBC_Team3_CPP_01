@@ -163,6 +163,25 @@
     <ClCompile Include="RefurbishManager.cpp" />
     <ClCompile Include="ShopManager.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <Media Include="Button_Click.wav" />
+    <Media Include="Button_Lite.wav" />
+    <Media Include="Buy_Item.wav" />
+    <Media Include="dice_roll.wav" />
+    <Media Include="Equip.wav" />
+    <Media Include="Error.wav" />
+    <Media Include="FootStep.wav" />
+    <Media Include="Game_Complete.wav" />
+    <Media Include="Go_Exploer.mp3" />
+    <Media Include="Heal.wav" />
+    <Media Include="Hit.wav" />
+    <Media Include="Level_Up.wav" />
+    <Media Include="Main_Theme.wav" />
+    <Media Include="Reward_Fail.wav" />
+    <Media Include="Shop.wav" />
+    <Media Include="Upgrade_Dice.wav" />
+    <Media Include="Victory.wav" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

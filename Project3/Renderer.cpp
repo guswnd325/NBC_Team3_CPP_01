@@ -446,7 +446,7 @@ void Renderer::RenderInventory(BaseItem* slots[], const std::vector<ItemSlot>& g
     PrintCenterLine("[ 장비 슬롯 ]", UI_WIDTH, WHITE);
     PrintDivider(UI_WIDTH);
 
-    const char* slotNames[] = { "무기", "헬멧", "갑옷", "신발", "장신구" };
+    const char* slotNames[] = { "무기  ", "헬멧  ", "갑옷  ", "신발  ", "장신구" };
     for (int i = 0; i < 5; i++) {
         std::string itemName = (slots[i] != nullptr) ? slots[i]->GetName() : "---";
         PrintLeftLine(std::string(slotNames[i]) + " : " + itemName, UI_WIDTH, (slots[i] ? YELLOW : GRAY));
