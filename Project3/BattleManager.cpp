@@ -12,7 +12,7 @@ BattleResult BattleManager::Run(Character* player, Monster* monster, CombatManag
 {
     Renderer::GetInstance().AddBattleLog(monster->GetName() + "(이)가 나타났다!");
     Renderer::GetInstance().RenderBattleAction(monster, player, std::vector<std::string>());
-    Sleep(3000);
+    Sleep(1500);
 
     while (true)
     {
@@ -261,6 +261,25 @@ void BattleManager::CalculateDamage(Actor* attacker, Actor* defender, int Roll, 
     
     Renderer::GetInstance().AddBattleLog(attacker->GetName() + "의 공격! " +
         defender->GetName() + "에게 " + std::to_string(damage) + " 데미지!");
+
+    // monster/player 포인터를 올바르게 넘겨야 함
+    if (defenderIsMonster) {
+        Renderer::GetInstance().RenderBattleAction(
+            static_cast<Monster*>(defender),
+            static_cast<Character*>(attacker),
+            {}
+        );
+    }
+    else {
+        Renderer::GetInstance().RenderBattleAction(
+            static_cast<Monster*>(attacker),
+            static_cast<Character*>(defender),
+            {}
+        );
+    }
+
+    Sleep(2000); // 데미지 로그 확인 시간
+
 }
 
 // ---------------------------------------------------------------
