@@ -67,6 +67,7 @@ void GameManager::CreateCharacter()
 		default:
 		{
 			Renderer::GetInstance().AddSystemLog("잘못된 입력입니다. 제공된 번호로 입력해주세요!");
+			Renderer::GetInstance().RenderCreatePlayer();
 			continue;
 		}
 		}
