@@ -16,7 +16,7 @@ static const std::string bgmPaths[] =
 {
     "Main_Theme.wav",
     "Shop.wav",
-    "jane.wav"
+    "jane.wav",
 
     "Forest.wav",
     "Desert.wav",
@@ -28,6 +28,8 @@ static const std::string bgmPaths[] =
     "Alley.wav",
     "Mountain.wav",
     "Nest.wav",
+
+    "Village.wav",
 };
 
 enum class BGMList
@@ -45,7 +47,9 @@ enum class BGMList
     Ocean,
     Alley,
     Mountain,
-    Nest
+    Nest,
+
+    Village,
 };
 
 static const std::string sfxPaths[] =

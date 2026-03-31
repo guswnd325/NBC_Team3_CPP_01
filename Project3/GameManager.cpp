@@ -107,6 +107,8 @@ void GameManager::StartGame()
 
 	while (state == GameState::Running)
 	{
+		AudioManager::PlayBGM(BGMList::Village);
+
 		Renderer::GetInstance().RenderMainMenu(std::vector<std::string>());
 
 		InputResult input = Tools<int>::Input(1, 4);
@@ -115,6 +117,7 @@ void GameManager::StartGame()
 		{
 		case 1:
 		{
+			AudioManager::PlaySFX(SFXList::FootStep);
 			Renderer::GetInstance().ClearSystemLogs();
 			BattleResult result = combatManager->Run(player);
 			if (BattleResult::PlayerDead == result)
