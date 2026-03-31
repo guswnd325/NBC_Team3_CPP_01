@@ -39,26 +39,6 @@ void ShopManager::Run(Character* character)
 		else if (input.status == InputStatus::Exit) break;
 		else if (input.status == InputStatus::IndexOver) continue;
 
-
-		int buyItemIndex;
-
-		std::cin >> buyItemIndex;
-		
-		if (std::cin.fail())
-		{
-			std::cin.clear();
-			std::cin.ignore((std::numeric_limits<std::streamsize>::max)(), '\n');
-			continue;
-		}
-		else if (!buyItemIndex)
-		{
-			break;
-		}
-		if (buyItemIndex > itemLists.size())
-		{
-			continue;
-		}
-		
 		std::pair<BuyStatus, BaseItem *> status = BuyItem(input.value, character);
 		
 		renderer.RenderBuyResult(status.first, status.second, character->GetGold());
