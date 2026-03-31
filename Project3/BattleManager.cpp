@@ -10,6 +10,7 @@
 // ---------------------------------------------------------------
 BattleResult BattleManager::Run(Character* player, Monster* monster, CombatManager* combatManager)
 {
+    Renderer::GetInstance().ClearBattleLogs();
     Renderer::GetInstance().AddBattleLog(monster->GetName() + "(이)가 나타났다!");
     Renderer::GetInstance().RenderBattleAction(monster, player, std::vector<std::string>());
     Sleep(3000);
@@ -79,6 +80,8 @@ BattleResult BattleManager::Run(Character* player, Monster* monster, CombatManag
             {
                 Renderer::GetInstance().AddBattleLog(monster->GetName() + "을(를) 처치했습니다!");
                 Renderer::GetInstance().RenderBattleAction(monster, player, {});
+
+                Sleep(3000);
                 return BattleResult::PlayerClear;
             }
 
@@ -98,6 +101,7 @@ BattleResult BattleManager::Run(Character* player, Monster* monster, CombatManag
                 combatManager->UnlockAreas(player->GetLevel());
             }    
                 
+            Sleep(3000);
             GiveReward(player, monster);
 
             return BattleResult::PlayerWin;
@@ -222,7 +226,6 @@ bool BattleManager::TryEscape(Character* player, Monster* monster, int& outMonst
     // 결과 로그 추가
     Renderer::GetInstance().AddBattleLog(monster->GetName() + "의 주사위 결과: [" + std::to_string(monsterRoll) + "]");
     Sleep(800);
-
 
     Renderer::GetInstance().RenderBattleAction(monster, player, {});
 
