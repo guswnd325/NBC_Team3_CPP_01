@@ -55,7 +55,8 @@ BattleResult BattleManager::Run(Character* player, Monster* monster, CombatManag
         }
         default:
         {
-            Renderer::GetInstance().AddBattleLog("잘못된 입력입니다. 1 또는 2를 입력해주세요.");
+            Renderer::GetInstance().AddBattleLog("잘못된 입력입니다. 1 또는 2를 입력해주세요.", BRIGHT_YELLOW);
+            Renderer::GetInstance().RenderBattleAction(monster, player, {});
             Sleep(3000);
             break;
         }
