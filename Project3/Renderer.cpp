@@ -393,11 +393,13 @@ void Renderer::RenderMainMenu(const std::vector<std::string>& diceFrame) {
 
 void Renderer::RenderBattleAction(Monster* monster, Character* player, const std::vector<std::string>& diceFrame) {
     std::vector<std::string> battleContent;
-    std::string divider = std::string(GRAY) + " --------------------------------------------------------" + RESET;
+    std::string divider = std::string(GRAY) + "--------------------------------------------------------" + RESET;
 
-    // [상단] 몬스터 정보
+    // [상단] 몬스터 정보 (현재 HP / 최대 HP 표시)
     std::string mName = std::string(BRIGHT_RED) + " [ ENEMY ] " + monster->GetName() + RESET;
-    std::string mStats = " HP: " + std::string(RED) + std::to_string(monster->GetHP()) + RESET +
+
+    // 헤더의 GetMaxHp()를 호출하여 출력
+    std::string mStats = " HP: " + std::string(RED) + std::to_string(monster->GetHP()) + " / " + std::to_string(monster->GetMaxHp()) + RESET +
         " | ATK: " + std::string(RED) + std::to_string(monster->GetAtk()) + RESET +
         " | DEF: " + std::string(BRIGHT_CYAN) + std::to_string(monster->GetDef()) + RESET;
 
@@ -406,22 +408,59 @@ void Renderer::RenderBattleAction(Monster* monster, Character* player, const std
     battleContent.push_back(mStats);
     battleContent.push_back(divider);
 
-    // [중간] 몬스터 이미지 (원본 GetVisual() 활용)
-    const std::vector<std::string>& visual = monster->GetVisual();
-    for (int i = 0; i < 7; i++) { // 이미지 공간 7줄 할당
-        if (i < (int)visual.size()) {
-            // 몬스터 이미지는 기본적으로 흰색이나 밝은 회색으로 출력
-            battleContent.push_back(" " + std::string(WHITE) + visual[i] + RESET);
+    // --- [동적 HP바 계산] ---
+    int currentHp = monster->GetHP();
+    int maxHp = monster->GetMaxHp();
+
+    int barWidth = 15;
+    int filledWidth = 0;
+
+    if (maxHp > 0) {
+        filledWidth = (currentHp * barWidth) / maxHp;
+    }
+    // 안전장치
+    if (filledWidth < 0) filledWidth = 0;
+    if (filledWidth > barWidth) filledWidth = barWidth;
+
+   
+    std::string hpBar = ""; 
+
+    for (int i = 0; i < barWidth; i++) {
+        if (i < filledWidth) {
+            // 찬 부분: 빨간색 적용
+            hpBar += std::string(RED) + "=";
         }
         else {
-            battleContent.push_back("");
+            // 빈 부분: 회색 적용
+            hpBar += std::string(GRAY) + "-";
         }
+    }
+    // 마지막에 모든 색상 초기화 (매우 중요!)
+    hpBar += RESET;
+    // ------------------------------------------------
+
+    const std::vector<std::string>& visual = monster->GetVisual();
+    for (int i = 0; i < 7; i++) {
+        std::string line = " ";
+        if (i < (int)visual.size()) {
+            line += std::string(WHITE) + visual[i] + RESET;
+        }
+        else {
+            line += "             ";
+        }
+
+        if (i == 3) {
+            // 퍼센트 계산
+            int percent = (maxHp > 0) ? (currentHp * 100 / maxHp) : 0;
+            // 시각적 보정을 위해 뒤에 공백을 좀 더 줍니다.
+            line += "  [HP] [" + hpBar + "] " + std::to_string(percent) + "%    ";
+        }
+        battleContent.push_back(line);
     }
 
     battleContent.push_back(divider);
 
-    // [하단] 플레이어 정보 - 아군 느낌의 GREEN/CYAN 테마
-    // 플레이어의 현재 체력 비율에 따라 색상을 조절하면 더 좋습니다 (여기선 기본 CYAN)
+    // [하단] 플레이어 정보 (기존 동일)
     std::string pName = std::string(BRIGHT_CYAN) + " [ PLAYER ] " + player->GetName() + RESET;
     std::string pStats = " HP: " + std::string(BRIGHT_GREEN) + std::to_string(player->GetHP()) + RESET + " / 100" +
         " | ATK: " + std::string(BRIGHT_RED) + std::to_string(player->GetAtk()) + RESET +
@@ -431,7 +470,6 @@ void Renderer::RenderBattleAction(Monster* monster, Character* player, const std
     battleContent.push_back(pStats);
     battleContent.push_back("");
 
-    // 선택지
     std::string actions = std::string("  ") + BRIGHT_YELLOW + "[1] 전 투" + RESET +
         "                " + BRIGHT_MAGENTA + "[2] 도 망" + RESET;
     battleContent.push_back(actions);
@@ -476,50 +514,6 @@ void Renderer::RenderRewardSelect(const std::vector<std::string>& diceFrame) {
     // 3. 입력 위치 고정
     MoveCursor(0, Renderer::ZONE_PLAYER_Y + 6);
     std::cout << BRIGHT_GREEN << " > 보상을 선택해라 : " << RESET;
-}
-
-void Renderer::RenderStatus(Character* player, const std::vector<std::string>& diceFrame) {
-    if (!player) return;
-
-    // 1. 왼쪽 영역: 플레이어 상세 정보 구성
-    std::vector<std::string> statusContent;
-
-    statusContent.push_back(" [ PLAYER STATUS ]");
-    statusContent.push_back(" 닉네임 : " + player->GetName());
-    statusContent.push_back(" HP     : " + std::to_string(player->GetHP()) + " / " + std::to_string(MAX_HP));
-    statusContent.push_back(" ATK    : " + std::to_string(player->GetAtk()) + " | DEF : " + std::to_string(player->GetDef()));
-    statusContent.push_back(" 소지금 : " + std::to_string(player->GetGold()) + " G");
-    statusContent.push_back(" 휴식권 : " + std::to_string(player->GetRestTicket()) + " 장");
-    statusContent.push_back(" ------------------------------------------");
-    statusContent.push_back(" [ 소지한 주사위 ]");
-
-    Inventory* inv = player->GetInventory();
-    if (inv) {
-        const auto& diceList = inv->GetDiceStorege();
-        if (diceList.empty()) {
-            statusContent.push_back("   (소지 중인 주사위가 없습니다.)");
-        }
-        else {
-            int count = 0;
-            for (const auto& slot : diceList) {
-                if (count >= 5) { // 2분할 높이에 맞춰 5개까지 표시
-                    statusContent.push_back("   ...외 다수");
-                    break;
-                }
-                if (!slot.dice) continue;
-                statusContent.push_back(" - " + slot.dice->DiceIdToString() + " x" + std::to_string(slot.count));
-                count++;
-            }
-        }
-    }
-    statusContent.push_back(" ------------------------------------------");
-
-    // 2. 공용 엔진 호출 (제목: 캐릭터 상태창)
-    RenderSplitScreen(statusContent, diceFrame, "CHARACTER STATUS", false);
-
-    // 3. 입력 위치 (상태창은 보통 확인 후 아무 키나 눌러 넘어가므로 하단 고정)
-    MoveCursor(0, Renderer::ZONE_PLAYER_Y + 6);
-    std::cout << YELLOW << " [ 아무 키나 누르면 돌아갑니다 ] " << RESET;
 }
 
 void Renderer::RenderAreaChoices(const std::vector<std::string>& choices,
@@ -849,60 +843,76 @@ void Renderer::RenderDiceUpgradeOption(const std::vector<std::string>& diceFrame
     MoveCursor(0, Renderer::ZONE_PLAYER_Y + 6);
     std::cout << BRIGHT_GREEN << " > 옵션 선택 입력 : " << RESET;
 }
-
 void Renderer::RenderShopItemList(const std::vector<BaseItem*>& itemLists, int playerGold, const std::vector<std::string>& diceFrame) {
     std::vector<std::string> shopContent;
 
-    // 상단 정보: 보유 골드를 밝은 노란색으로 강조
+    // --- [왼쪽 영역: 상품 목록] ---
     shopContent.push_back("  [ 만물상 상점 ]   보유: " + std::string(BRIGHT_YELLOW) + std::to_string(playerGold) + " G" + RESET);
-    shopContent.push_back(std::string(GRAY) + " ------------------------------------------------" + RESET);
+    shopContent.push_back(std::string(GRAY) + " --------------------------------------------------------" + RESET);
+    shopContent.push_back(std::string(CYAN) + "  [#]  아이템 이름               |  타입  |  가격" + RESET);
+    shopContent.push_back(std::string(GRAY) + "  -------------------------------------------------------" + RESET);
 
-    // 헤더: CYAN 색상으로 가독성 상향
-    shopContent.push_back(std::string(CYAN) + "  [#]  아이템 이름              |  타입  |  가격" + RESET);
-    shopContent.push_back(std::string(GRAY) + "  -----------------------------------------------" + RESET);
-
-    int maxDisplay = 10;
     for (int i = 0; i < (int)itemLists.size(); i++) {
-        if (i >= maxDisplay) break;
+        if (i >= 10) break;
 
         std::string name = itemLists[i]->GetName();
         std::string type = itemLists[i]->GetTypeToString(itemLists[i]->GetType());
         std::string price = std::to_string(itemLists[i]->GetPrice()) + "G";
 
-        // 1. 이름 정렬 및 색상 (이름은 기본 WHITE)
         int nameW = GetVisualLength(name);
-        int nameTarget = 24;
-        std::string namePadding = (nameTarget > nameW) ? std::string(nameTarget - nameW, ' ') : "";
-        if (nameW > nameTarget) name = name.substr(0, nameTarget - 2) + "..";
+        std::string namePadding = (24 > nameW) ? std::string(24 - nameW, ' ') : "";
+        std::string coloredType = std::string(BRIGHT_CYAN) + type + std::string(std::max(0, 8 - (int)type.length()), ' ') + RESET;
+        std::string coloredIdx = std::string(BRIGHT_GREEN) + ((i + 1 < 10) ? " " : "") + std::to_string(i + 1) + RESET;
 
-        // 2. 타입 정렬 및 색상 (타입은 밝은 푸른색)
-        int typeW = GetVisualLength(type);
-        int typeTarget = 8;
-        std::string typePadding = (typeTarget > typeW) ? std::string(typeTarget - typeW, ' ') : "";
-        std::string coloredType = std::string(BRIGHT_CYAN) + type + RESET;
-
-        // 3. 가격 색상 (돈이니까 GOLD/YELLOW)
-        std::string coloredPrice = std::string(YELLOW) + price + RESET;
-
-        // 4. 인덱스 번호 (GREEN)
-        std::string idxStr = (i + 1 < 10) ? " " + std::to_string(i + 1) : std::to_string(i + 1);
-        std::string coloredIdx = std::string(BRIGHT_GREEN) + idxStr + RESET;
-
-        // 한 줄 조립 (구분선 '|'은 GRAY로 차분하게)
         std::string line = "  [" + coloredIdx + "] " + name + namePadding + std::string(GRAY) + "| " + RESET
-            + coloredType + typePadding + std::string(GRAY) + "| " + RESET + coloredPrice;
+            + coloredType + std::string(GRAY) + "| " + RESET + std::string(YELLOW) + price + RESET;
 
         shopContent.push_back(line);
     }
-
     while (shopContent.size() < 15) shopContent.push_back("");
-
-    shopContent.push_back(std::string(GRAY) + " ------------------------------------------------" + RESET);
+    shopContent.push_back(std::string(GRAY) + " --------------------------------------------------------" + RESET);
     shopContent.push_back("  [0] " + std::string(WHITE) + "마을로 돌아가기 (RETURN)" + RESET);
 
-    RenderSplitScreen(shopContent, diceFrame, "GENERAL STORE", false);
 
-    // 입력 위치 보정 (박스 하단 테두리 아래로)
+    // --- [오른쪽 영역: 아이템 상세 스탯 정보 - 이름 제외 버전] ---
+    std::vector<std::string> infoContent;
+    infoContent.push_back("");
+    infoContent.push_back(std::string(BRIGHT_WHITE) + "   < 아이템 성능 수치 >" + RESET);
+    infoContent.push_back(std::string(GRAY) + "  --------------------------" + RESET);
+    infoContent.push_back("");
+
+    for (int i = 0; i < (int)itemLists.size(); i++) {
+        if (i >= 10) break;
+
+        // 번호만 표시 (예: 1. )
+        std::string line = " " + std::string(BRIGHT_GREEN) + std::to_string(i + 1) + "." + RESET + " ";
+
+        if (itemLists[i] != nullptr) {
+            StatDelta delta = itemLists[i]->GetStatDelta();
+            std::string statInfo = "";
+
+            // 이름 없이 바로 능력치 정보만 조립
+            if (delta.atk != 0 && delta.def == 0) {
+                statInfo = std::string(RED) + "공격력 +" + std::to_string(delta.atk) + RESET;
+            }
+            else if (delta.def != 0 && delta.atk == 0) {
+                statInfo = std::string(BRIGHT_CYAN) + "방어력 +" + std::to_string(delta.def) + RESET;
+            }
+            else if (delta.atk != 0 && delta.def != 0) {
+                statInfo = std::string(RED) + "공격 +" + std::to_string(delta.atk) + RESET +
+                    "  " + std::string(BRIGHT_CYAN) + "방어 +" + std::to_string(delta.def) + RESET;
+            }
+            else {
+                statInfo = std::string(GRAY) + "(특수 효과 없음)" + RESET;
+            }
+            line += statInfo;
+        }
+        infoContent.push_back(line);
+    }
+
+    // 3. 엔진 호출
+    RenderSplitScreen(shopContent, infoContent, "GENERAL STORE : ITEM STATS", false);
+
     MoveCursor(0, 48);
     std::cout << BRIGHT_GREEN << " > 구매 아이템 번호 입력 : " << RESET;
 }

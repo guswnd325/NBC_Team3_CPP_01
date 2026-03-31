@@ -83,7 +83,6 @@ public:
     void RenderCreatePlayer(const std::vector<std::string>& diceFrame);
 
     // 결과창 및 단순 정보창 (필요에 따라 diceFrame 추가 가능)
-    void RenderStatus(Character* player, const std::vector<std::string>& diceFrame);
     void RenderBuyResult(BuyStatus status, BaseItem* item, int currentGold);
     void RenderDiceUpgradeList(const std::vector<DiceSlot>& storage, const std::vector<std::string>& diceFrame);
     void RenderHealResult(int healValue, int prevHP, int curHP, int maxHP, const std::vector<std::string>& diceFrame);
