@@ -1,17 +1,16 @@
 #include "BattleManager.h"
 #include <iostream>
 #include <limits>
+#include <string>
 
 // ---------------------------------------------------------------
 // Run - 전투 전체 흐름
 // ---------------------------------------------------------------
 BattleResult BattleManager::Run(Character* player, Monster* monster)
 {
-    Renderer::GetInstance().RenderBattleStart(monster);
-
     while (true)
     {
-        Renderer::GetInstance().RenderBattleAction();
+        Renderer::GetInstance().RenderBattleAction(monster);
 
         InputResult input = Tools<int>::Input(1, 2);
 
@@ -27,30 +26,28 @@ BattleResult BattleManager::Run(Character* player, Monster* monster)
 
             if (TryEscape(player, monster, monsterRoll))
             {
-                // TODO: Renderer::GetInstance().RenderEscapeResult(true)
-                std::cout << "도망에 성공했습니다!\n" << std::endl;
+                Renderer::GetInstance().AddBattleLog("도망에 성공했습니다!");
+                Sleep(3000);
                 return BattleResult::Escaped;
             }
             else
             {
-                // TODO: Renderer::GetInstance().RenderEscapeResult(false)
-                std::cout << "도망에 실패! " << monster->GetName()
-                    << "이(가) 공격합니다!\n" << std::endl;
+                Renderer::GetInstance().AddBattleLog("도망에 실패! " + monster->GetName() + "이(가) 공격합니다!");
                 CalculateDamage(monster, player, monsterRoll);
             }
         }
         else
         {
-            // TODO: Renderer::GetInstance().RenderInvalidInput()
-            std::cout << "잘못된 입력입니다. 1 또는 2를 입력해주세요." << std::endl;
+            Renderer::GetInstance().AddBattleLog("잘못된 입력입니다. 1 또는 2를 입력해주세요.");
+            Sleep(3000);
             continue;
         }
 
         // 전투 종료 여부 체크
         if (player->IsDead())
         {
-            // TODO: Renderer::GetInstance().RenderBattleOver(false)
-            std::cout << "\n플레이어가 사망했습니다..." << std::endl;
+            Renderer::GetInstance().AddBattleLog("플레이어가 사망했습니다...");
+            Sleep(3000);
             return BattleResult::PlayerDead;
         }
 
@@ -58,18 +55,16 @@ BattleResult BattleManager::Run(Character* player, Monster* monster)
         {
             if (monster->GetType() == MonsterType::MaxRabbit)
             {
-                std::cout << "\n" << monster->GetName() << "을(를) 처치했습니다!" << std::endl;
+                Renderer::GetInstance().AddBattleLog(monster->GetName() + "을(를) 처치했습니다!");
                 return BattleResult::PlayerClear;
             }
 
-            // TODO: Renderer::GetInstance().RenderBattleOver(monster)
-            std::cout << "\n" << monster->GetName() << "을(를) 처치했습니다!" << std::endl;
+            Renderer::GetInstance().AddBattleLog(monster->GetName() + "을(를) 처치했습니다!");
 
             int gainedExp = monster->GetExp();
             player->SetExp(player->GetExp() + gainedExp);
 
-            // TODO: Renderer::GetInstance().RenderExpGain(gainedExp)
-            std::cout << "경험치 +" << gainedExp << " 획득!\n" << std::endl;
+            Renderer::GetInstance().AddBattleLog("경험치 " + std::to_string(gainedExp) + " 획득");
 
             GiveReward(player, monster);
             return BattleResult::PlayerWin;
@@ -85,17 +80,16 @@ void BattleManager::StartBattle(Character* player, Monster* monster)
     int playerRoll = diceManager.Roll(player);
     int monsterRoll = monster->RollAttackDice();
 
-    std::cout << "플레이어 [" << playerRoll << "] vs "
-        << monster->GetName() << " [" << monsterRoll << "]" << std::endl;
+    Renderer::GetInstance().AddBattleLog("플레이어 [" + std::to_string(playerRoll) + monster->GetName() + " [" + std::to_string(monsterRoll) + "]");
 
     if (playerRoll >= monsterRoll)
     {
-        std::cout << "플레이어가 공격합니다!" << std::endl;
+        Renderer::GetInstance().AddBattleLog("플레이어가 공격합니다!");
         CalculateDamage(player, monster, playerRoll);
     }
     else
     {
-        std::cout << monster->GetName() << "이(가) 공격합니다!" << std::endl;
+        Renderer::GetInstance().AddBattleLog(monster->GetName() + "이(가) 공격합니다!");
         CalculateDamage(monster, player, monsterRoll);
     }
 
@@ -107,8 +101,7 @@ void BattleManager::StartBattle(Character* player, Monster* monster)
 // ---------------------------------------------------------------
 bool BattleManager::TryEscape(Character* player, Monster* monster, int& outMonsterRoll)
 {
-    // TODO: Renderer::GetInstance().RenderEscapeTry()
-    std::cout << "[ 도망 시도 ]" << std::endl;
+    Renderer::GetInstance().AddBattleLog("[ 도망 시도 ]");
 
     int playerRoll = diceManager.Roll(player);
     int monsterRoll = monster->RollAttackDice();
@@ -116,9 +109,7 @@ bool BattleManager::TryEscape(Character* player, Monster* monster, int& outMonst
     // 아웃파라미터로 몬스터 roll값 저장
     outMonsterRoll = monsterRoll;
 
-    // TODO: Renderer::GetInstance().RenderBattleResult(playerRoll, monsterRoll)
-    std::cout << "플레이어 [" << playerRoll << "] vs "
-        << monster->GetName() << " [" << monsterRoll << "]" << std::endl;
+    Renderer::GetInstance().AddBattleLog("플레이어 [" + std::to_string(playerRoll) + "] vs " + monster->GetName() + " [" + std::to_string(monsterRoll) + "]");
 
     return playerRoll > monsterRoll;
 }
@@ -133,10 +124,7 @@ void BattleManager::CalculateDamage(Actor* attacker, Actor* defender, int Roll)
 
     defender->SetHP(newHp);
 
-    // TODO: Renderer::GetInstance().RenderDamage(attacker, defender, damage)
-    std::cout << attacker->GetName() << "의 공격! "
-        << defender->GetName() << "에게 " << damage << " 데미지!"
-        << " (남은 HP: " << defender->GetHP() << ")" << std::endl;
+    Renderer::GetInstance().AddBattleLog(attacker->GetName() + "의 공격! " + defender->GetName() + "에게 " + std::to_string(damage) + " 데미지!" + " (남은 HP: " + std::to_string(defender->GetHP()) + ")");
 }
 
 // ---------------------------------------------------------------
@@ -164,8 +152,7 @@ void BattleManager::GiveReward(Character* player, Monster* monster)
         GiveRiskyReward(player, monster);
     else
     {
-        // TODO: Renderer::GetInstance().RenderInvalidInput()
-        std::cout << "잘못된 입력입니다. 1번 일반 보상으로 지급합니다." << std::endl;
+        Renderer::GetInstance().AddBattleLog("잘못된 입력입니다. 1번 일반 보상으로 지급합니다.");
         GiveNormalReward(player, monster);
     }
 }
