@@ -8,6 +8,8 @@
 // ---------------------------------------------------------------
 BattleResult BattleManager::Run(Character* player, Monster* monster)
 {
+    Renderer::GetInstance().ClearBattleLogs();
+    Renderer::GetInstance().AddBattleLog(monster->GetName() + "(이)가 나타났다!");
     while (true)
     {
         Renderer::GetInstance().RenderBattleAction(monster, player);
@@ -22,7 +24,7 @@ BattleResult BattleManager::Run(Character* player, Monster* monster)
         {
             StartBattle(player, monster);
             break;
-        }  
+        }
         case 2:
         {
             int monsterRoll = 0;
@@ -41,32 +43,12 @@ BattleResult BattleManager::Run(Character* player, Monster* monster)
 
             break;
         }
-        case 3:
-        {
-            Renderer::GetInstance().AddBattleLog("탐사에서 도망쳤습니다! ㅋ");
-            Sleep(3000);
-            return BattleResult::Escaped;
-        }
         default:
         {
             Renderer::GetInstance().AddBattleLog("잘못된 입력입니다. 1 또는 2를 입력해주세요.");
             Sleep(3000);
             break;
         }
-        }
-
-        if (1 == input.value)
-        {
-            
-        }
-        else if (2 == input.value)
-        {
-            
-        }
-        else
-        {
-            
-            continue;
         }
 
         // 전투 종료 여부 체크
@@ -87,11 +69,10 @@ BattleResult BattleManager::Run(Character* player, Monster* monster)
 
             Renderer::GetInstance().AddBattleLog(monster->GetName() + "을(를) 처치했습니다!");
 
-            player->SetExp(player->GetExp() + monster->GetExp());
-            if (player->GetExp() >= player->GetLevelUpExp())
-                player->LevelUp();
+            int gainedExp = monster->GetExp();
+            player->SetExp(player->GetExp() + gainedExp);
 
-            Renderer::GetInstance().AddBattleLog("경험치 " + std::to_string(monster->GetExp()) + " 획득! (현재 경험치 : " + std::to_string(player->GetExp()) + ")");
+            Renderer::GetInstance().AddBattleLog("경험치 " + std::to_string(gainedExp) + " 획득");
 
             GiveReward(player, monster);
             return BattleResult::PlayerWin;
@@ -107,8 +88,7 @@ void BattleManager::StartBattle(Character* player, Monster* monster)
     int playerRoll = diceManager.Roll(player);
     int monsterRoll = monster->RollAttackDice();
 
-    Renderer::GetInstance().AddBattleLog("플레이어의 주사위의 눈은 [" + std::to_string(playerRoll) + "] 입니다!");
-    Renderer::GetInstance().AddBattleLog(monster->GetName() + "의 주사위의 눈은 [" + " [" + std::to_string(monsterRoll) + "] 입니다!");
+    Renderer::GetInstance().AddBattleLog("플레이어 [" + std::to_string(playerRoll) + monster->GetName() + " [" + std::to_string(monsterRoll) + "]");
 
     if (playerRoll >= monsterRoll)
     {
@@ -152,7 +132,7 @@ void BattleManager::CalculateDamage(Actor* attacker, Actor* defender, int Roll)
 
     defender->SetHP(newHp);
 
-    Renderer::GetInstance().AddBattleLog(attacker->GetName() + "의 공격! " + defender->GetName() + "에게 " + std::to_string(damage) + " 데미지!" + " (남은 HP : " + std::to_string(defender->GetHP()) + ")");
+    Renderer::GetInstance().AddBattleLog(attacker->GetName() + "의 공격! " + defender->GetName() + "에게 " + std::to_string(damage) + " 데미지!" + " (남은 HP: " + std::to_string(defender->GetHP()) + ")");
 }
 
 // ---------------------------------------------------------------
@@ -192,26 +172,39 @@ void BattleManager::GiveNormalReward(Character* player, Monster* monster)
     int current = player->GetRestTicket();
     player->SetRestTicket(current + 1);
 
-    Renderer::GetInstance().AddBattleLog("골드 " + std::to_string(gold) + " 획득!" + "휴식권 1회 획득! (현재 골드: " + std::to_string(player->GetGold()) + ")");
-    Renderer::GetInstance().AddBattleLog("휴식권 1회 획득! (현재 휴식권 : " + std::to_string(player->GetRestTicket()) + ")");
+    player->SetExp(player->GetExp() + monster->GetExp());
+    if (player->GetExp() >= player->GetLevelUpExp())
+        player->LevelUp();
+
+    // TODO: Renderer::GetInstance().RenderNormalReward(gold, player->GetGold())
+    // TODO: 휴식권 1회 추가 → RestManager 구현 후 연동
+    std::cout << "골드 +" << gold << " 획득!" << std::endl;
+    std::cout << "휴식권 1회 획득! (현재 골드: " << player->GetGold() << ")" << std::endl;
+    std::cout << "경험치" << monster->GetExp() << "획득!(현재 경험치 : " << player->GetExp() << ")" << std::endl;
 }
 
 void BattleManager::GiveRiskyReward(Character* player, Monster* monster)
 {
-    Renderer::GetInstance().AddBattleLog("[ 리스크 보상 도전! ]");
+    // TODO: Renderer::GetInstance().RenderRiskyReward()
+    std::cout << "[ 리스크 보상 도전! ]" << std::endl;
 
     int playerRoll = diceManager.Roll(player);
     int monsterGetDice = monster->GetDiceChallengeValue();
 
     if (playerRoll >= monsterGetDice)
     {
-        Renderer::GetInstance().AddBattleLog("성공!");
+        std::cout << "성공!" << std::endl;
         player->GetInventory()->AddDice(monster->GetRewardDiceID());
     }
     else
     {
-        Renderer::GetInstance().AddBattleLog("실패!");
+        std::cout << "실패!" << std::endl;
     }
 
+    player->SetExp(player->GetExp() + monster->GetExp());
+    if (player->GetExp() >= player->GetLevelUpExp())
+        player->LevelUp();
+
+    std::cout << "경험치" << monster->GetExp() << "획득!(현재 경험치 : " << player->GetExp() << ")" << std::endl;
     Sleep(3000);
 }
