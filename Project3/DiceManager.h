@@ -114,5 +114,7 @@ public:
 
     void DiceAnimationRollNumber(int result);
 
+    std::vector<std::string>GetDiceFrame(int num);
+
 };
 

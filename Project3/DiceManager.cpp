@@ -208,3 +208,27 @@ DiceID DiceManager::MakeDiceId(int min, int max)
     }
     return static_cast<DiceID>(offset + (max - min)); 
 }
+
+std::vector<std::string> DiceManager::GetDiceFrame(int num) {
+    std::string numStr = std::to_string(num);
+    std::string center;
+
+    // 숫자의 길이에 따른 중앙 정렬 처리
+    if (numStr.size() == 1)      center = "  " + numStr + "  ";
+    else if (numStr.size() == 2) center = "  " + numStr + " ";
+    else                         center = " " + numStr + " ";
+
+    // Renderer의 RIGHT_WIDTH(37) 공간 안에서 주사위(+-------+)를 중앙에 놓기 위한 여백 계산
+    // 주사위 가로 길이가 9이므로 (37 - 9) / 2 = 14칸 정도의 앞 공백 필요
+    std::string padding(14, ' ');
+
+    return {
+        "", // 상단 여백
+        padding + "+-------+",
+        padding + "|       |",
+        padding + "| " + center + " |",
+        padding + "|       |",
+        padding + "+-------+",
+        ""  // 하단 여백
+    };
+}

@@ -3,6 +3,8 @@
 #include <string>
 #include <Windows.h>
 
+
+
 class EffectManager {
 public:
     // 흔들림 + 색상 변경 히트 효과
