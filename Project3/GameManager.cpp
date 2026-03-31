@@ -19,7 +19,7 @@ void GameManager::Run()
 {
 	while (true)
 	{
-		Renderer::GetInstance().RenderMenu();
+		Renderer::GetInstance().RenderMenu(std::vector<std::string>());
 
 		InputResult input = Tools<int>::Input(1, 2);
 
@@ -41,7 +41,7 @@ void GameManager::CreateCharacter()
 {
 	Renderer::GetInstance().ClearSystemLogs();
 	Renderer::GetInstance().Clear();
-	Renderer::GetInstance().RenderCreatePlayer();
+	Renderer::GetInstance().RenderCreatePlayer(std::vector<std::string>());
 
 	std::string job;
 
@@ -67,7 +67,7 @@ void GameManager::CreateCharacter()
 		default:
 		{
 			Renderer::GetInstance().AddSystemLog("잘못된 입력입니다. 제공된 번호로 입력해주세요!");
-			Renderer::GetInstance().RenderCreatePlayer();
+			Renderer::GetInstance().RenderCreatePlayer(std::vector<std::string>());
 			continue;
 		}
 		}
@@ -102,7 +102,7 @@ void GameManager::StartGame()
 	while (state == GameState::Running)
 	{
 		Renderer::GetInstance().Clear();
-		Renderer::GetInstance().RenderMainMenu();
+		Renderer::GetInstance().RenderMainMenu(std::vector<std::string>());
 
 		InputResult input = Tools<int>::Input(1, 4);
 

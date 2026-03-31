@@ -25,7 +25,7 @@ void ShopManager::Run(Character* character)
 		Renderer& renderer = Renderer::GetInstance();
 		renderer.Clear();
 		
-		renderer.RenderShopItemList(itemLists, character->GetGold());
+		renderer.RenderShopItemList(itemLists, character->GetGold(), std::vector<std::string>());
 
 		InputResult input = Tools<int>::Input(0, (int)itemLists.size());
 

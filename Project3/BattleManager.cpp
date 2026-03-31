@@ -13,7 +13,7 @@ BattleResult BattleManager::Run(Character* player, Monster* monster)
     Renderer::GetInstance().AddBattleLog(monster->GetName() + "(이)가 나타났다!");
     while (true)
     {
-        Renderer::GetInstance().RenderBattleAction(monster, player);
+        Renderer::GetInstance().RenderBattleAction(monster, player, std::vector<std::string>());
 
         InputResult input = Tools<int>::Input(1, 2);
 
@@ -145,7 +145,7 @@ void BattleManager::CalculateDamage(Actor* attacker, Actor* defender, int Roll, 
         EffectManager::PlayMonsterHitEffect(m->GetVisual(), 0, startY, 60);
 
         // 이펙트 후 전체 화면 리프레시 (로그 등 나머지 UI 복구)
-        Renderer::GetInstance().RenderBattleAction(m, (Character*)attacker);
+        Renderer::GetInstance().RenderBattleAction(m, (Character*)attacker, std::vector<std::string>());
     }
 
     Renderer::GetInstance().AddBattleLog(attacker->GetName() + "의 공격! " +
@@ -165,7 +165,7 @@ bool BattleManager::IsOver(Character* player, Monster* monster)
 // ---------------------------------------------------------------
 void BattleManager::GiveReward(Character* player, Monster* monster)
 {
-    Renderer::GetInstance().RenderRewardSelect();
+    Renderer::GetInstance().RenderRewardSelect(std::vector<std::string>());
 
     InputResult input = Tools<int>::Input(1, 2);
 

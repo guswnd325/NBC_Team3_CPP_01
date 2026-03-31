@@ -30,7 +30,7 @@ void CombatManager::UnlockAreas(int level)
 
 void CombatManager::DisplayChoices()
 {
-    Renderer::GetInstance().RenderAreaChoices(currentChoices, areaDisplayname);
+    Renderer::GetInstance().RenderAreaChoices(currentChoices, areaDisplayname, std::vector<std::string>());
 }
 
 std::string CombatManager::SelectArea() {

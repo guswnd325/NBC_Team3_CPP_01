@@ -17,7 +17,7 @@ void Inventory::Run()
 	{
 		Renderer& renderer = Renderer::GetInstance();
 
-		renderer.RenderInventory(slots, gearStorege, diceStorege);
+		renderer.RenderInventory(slots, gearStorege, diceStorege, std::vector<std::string>());
 
 		InputResult input = Tools<int>::Input(0, (int)gearStorege.size());
 

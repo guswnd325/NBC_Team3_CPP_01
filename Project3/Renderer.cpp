@@ -15,11 +15,11 @@ Renderer::Renderer() {
     HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
     CONSOLE_CURSOR_INFO cursorInfo;
     GetConsoleCursorInfo(hOut, &cursorInfo);
-    cursorInfo.bVisible = FALSE;
+    cursorInfo.bVisible = FALSE; 
     SetConsoleCursorInfo(hOut, &cursorInfo);
 
-    // 콘솔 창 크기 고정 (UI_WIDTH에 맞춰 설정 추천)
-    // system("mode con cols=110 lines=35"); 
+
+    system("mode con cols=115 lines=40");
 }
 
 Renderer::~Renderer() {}
@@ -38,10 +38,12 @@ void Renderer::MoveCursor(int x, int y) {
 void Renderer::ClearZone(int startY, int height) {
     for (int i = 0; i < height; i++) {
         MoveCursor(0, startY + i);
-        std::cout << std::string(Renderer::UI_WIDTH + 2, ' ') << std::flush;
+        // UI_WIDTH보다 약간 넉넉하게 지워줍니다.
+        std::cout << std::string(Renderer::UI_WIDTH + 5, ' ') << std::flush;
     }
 }
 
+// 간단한 한 줄 로그 출력 (기존 유지)
 void Renderer::RenderLog(const std::string& message) {
     MoveCursor(0, Renderer::ZONE_LOG_Y);
     PrintTop(Renderer::UI_WIDTH);
@@ -49,11 +51,12 @@ void Renderer::RenderLog(const std::string& message) {
     PrintBottom(Renderer::UI_WIDTH);
 }
 
+// 시스템 로그 추가 (기존 로직 유지)
 void Renderer::AddSystemLog(std::string msg) {
     systemLogs.push_back(msg);
 
-    // 설정한 최대 로그 줄 수(예: 4줄)를 넘으면 가장 오래된 것 삭제
-    if (systemLogs.size() > 4) {
+    // 설정한 최대 로그 줄 수(4줄) 초과 시 삭제
+    if (systemLogs.size() > MAX_MENU_LOGS) {
         systemLogs.erase(systemLogs.begin());
     }
 }
@@ -61,13 +64,15 @@ void Renderer::AddSystemLog(std::string msg) {
 void Renderer::ClearSystemLogs() {
     systemLogs.clear();
 }
+
+// 1. 시각적 길이 계산 (한글 2칸, 영문 1칸)
 int Renderer::GetVisualLength(const std::string& str) {
     int length = 0;
-    for (int i = 0; i < str.length(); i++) {
+    for (int i = 0; i < (int)str.length(); i++) {
         // 멀티바이트(한글) 체크
         if ((unsigned char)str[i] >= 0x80) {
             length += 2;
-            i += 1; // EUC-KR 기준 (UTF-8 환경이면 시스템에 따라 조정 필요)
+            i += 1; // EUC-KR 기준
         }
         else {
             length += 1;
@@ -76,793 +81,866 @@ int Renderer::GetVisualLength(const std::string& str) {
     return length;
 }
 
-// --- 테두리 및 라인 출력 (Renderer 멤버 함수로 통합) ---
-
+// 2. 상단 테두리
 void Renderer::PrintTop(int width) {
-    std::cout << GOLD << "┌" << std::string(width - 2, '-') << "┐" << RESET << std::endl;
+    // 특수문자 2칸을 제외한 나머지를 '-'로 채웁니다.
+    std::cout << GOLD << "┌" << std::string(std::max(0, width - 2), '-') << "┐" << RESET << std::endl;
 }
 
+// 3. 중간 구분선
 void Renderer::PrintDivider(int width) {
-    std::cout << GOLD << "├" << std::string(width - 2, '-') << "┤" << RESET << std::endl;
+    std::cout << GOLD << "├" << std::string(std::max(0, width - 2), '-') << "┤" << RESET << std::endl;
 }
 
+// 4. 하단 테두리
 void Renderer::PrintBottom(int width) {
-    std::cout << GOLD << "└" << std::string(width - 2, '-') << "┘" << RESET << std::endl;
+    std::cout << GOLD << "└" << std::string(std::max(0, width - 2), '-') << "┘" << RESET << std::endl;
 }
 
+// 5. 중앙 정렬 라인
 void Renderer::PrintCenterLine(const std::string& text, int width, std::string color) {
     int vLen = GetVisualLength(text);
-    int padding = (width - 2 - vLen) / 2;
-    int extra = (width - 2 - vLen) % 2;
+    int totalPadding = width - 2 - vLen; // 양 끝 테두리 제외 가용 공간
 
-    if (padding < 0) padding = 0;
+    if (totalPadding < 0) totalPadding = 0;
 
-    std::cout << GOLD << "│" << RESET << std::string(padding, ' ') << color << text << RESET << std::string(padding + extra, ' ') << GOLD << "│" << RESET << std::endl;
+    int padding = totalPadding / 2;
+    int extra = totalPadding % 2;
+
+    std::cout << GOLD << "│" << RESET
+        << std::string(padding, ' ') << color << text << RESET
+        << std::string(padding + extra, ' ') << GOLD << "│" << RESET << std::endl;
 }
 
+// 6. 왼쪽 정렬 라인
 void Renderer::PrintLeftLine(const std::string& text, int width, std::string color) {
     int vLen = GetVisualLength(text);
-    // "│  " (3칸) + 글자 + "  │" 형태를 맞추기 위한 패딩 계산
+    // "│  " (공백 포함 앞부분) + 글자 + 남은 공백 + "│"
+    // 테두리(2) + 앞공백(2) = 4칸을 기본으로 제외합니다.
     int padding = width - 2 - vLen - 2;
 
     if (padding < 0) padding = 0;
 
-    std::cout << GOLD << "│  " << RESET << color << text << RESET << std::string(padding, ' ') << GOLD << "│" << RESET << std::endl;
+    std::cout << GOLD << "│  " << RESET
+        << color << text << RESET
+        << std::string(padding, ' ') << GOLD << "│" << RESET << std::endl;
 }
-void Renderer::RenderMenu() {
-    // 1. 전체 화면 초기화 및 시작 위치 고정
+
+void Renderer::RenderSplitScreen(const std::vector<std::string>& leftContent,
+    const std::vector<std::string>& diceFrame,
+    const std::string& title,
+    bool isBattleMode)
+{
+    // 1. 화면 초기화 및 상단 타이틀
     Clear();
     MoveCursor(0, Renderer::ZONE_SCREEN_Y);
-
-    // [박스 시작]
     PrintTop(Renderer::UI_WIDTH);
-
-    // 타이틀 ASCII ART
-    PrintCenterLine(R"(      .-------.    ____  _ ____ ____      )", Renderer::UI_WIDTH, WHITE);
-    PrintCenterLine(R"(     /   o   /|   |  _ \(_) ___|  __|      )", Renderer::UI_WIDTH, WHITE);
-    PrintCenterLine(R"(    /  o    / o|  | | | | | |   | |__       )", Renderer::UI_WIDTH, WHITE);
-    PrintCenterLine(R"(   /   o   / o |  | |_| | | |___|  __|      )", Renderer::UI_WIDTH, WHITE);
-    PrintCenterLine(R"(  '-------' o /   |____/|_|\____|____|      )", Renderer::UI_WIDTH, WHITE);
-    PrintCenterLine(R"(  | o     |  /      _   ____ ____ _  _ ___ )", Renderer::UI_WIDTH, WHITE);
-    PrintCenterLine(R"(  |    o  | /      /_\ | __ |___ |\ |  |   )", Renderer::UI_WIDTH, WHITE);
-    PrintCenterLine(R"(  | o     |/      /_  \|__] |___ | \|  |   )", Renderer::UI_WIDTH, WHITE);
-    PrintCenterLine(R"(  '-------'                                 )", Renderer::UI_WIDTH, WHITE);
-
-    PrintCenterLine("DICE ADVENTURE : THE ROGUELIKE", Renderer::UI_WIDTH, CYAN);
-
-    for (int i = 0; i < 3; i++) {
-        PrintLeftLine("", Renderer::UI_WIDTH);
-    }
-
-    // --- [하단 메뉴 선택지 구역] ---
+    PrintCenterLine("[ " + title + " ]", Renderer::UI_WIDTH, CYAN);
     PrintDivider(Renderer::UI_WIDTH);
-    PrintCenterLine("[1] 게임 시작          [2] 게임 종료", Renderer::UI_WIDTH, YELLOW);
 
+    // 2. 중앙 분할 구역 (고정 높이 사용으로 화면 떨림 방지)
+    for (int i = 0; i < Renderer::CONTENT_HEIGHT; i++) {
+        std::cout << GOLD << "│" << RESET;
+
+        // [LEFT] 왼쪽 영역 (60칸)
+        std::string lLine = (i < (int)leftContent.size()) ? leftContent[i] : "";
+        int lLen = GetVisualLength(lLine);
+        std::cout << " " << lLine << std::string(std::max(0, Renderer::LEFT_WIDTH - lLen - 1), ' ');
+
+        // [CENTER DIVIDER] 중앙 세로선
+        std::cout << GOLD << "│" << RESET;
+
+        // [RIGHT] 오른쪽 영역 (37칸)
+        std::string rLine = (i < (int)diceFrame.size()) ? diceFrame[i] : "";
+        int rLen = GetVisualLength(rLine);
+        std::cout << " " << rLine << std::string(std::max(0, Renderer::RIGHT_WIDTH - rLen - 1), ' ');
+
+        std::cout << GOLD << "│" << RESET << std::endl;
+    }
+
+    // 3. 하단 로그 구역 구분선
     PrintDivider(Renderer::UI_WIDTH);
-    PrintLeftLine(" [ 시스템 메시지 ]", Renderer::UI_WIDTH, GRAY);
 
-    for (const auto& log : systemLogs) {
-        PrintLeftLine(" >> " + log, Renderer::UI_WIDTH, WHITE);
+    // 4. 하단 로그 출력 (전투/시스템 모드 스위칭)
+    if (isBattleMode) {
+        PrintLeftLine("[ 실시간 전투 로그 ]", Renderer::UI_WIDTH, GRAY);
+        for (const auto& log : battleLogs) {
+            PrintLeftLine(" >> " + log, Renderer::UI_WIDTH, WHITE);
+        }
+        for (int i = 0; i < (MAX_LOGS - (int)battleLogs.size()); i++) PrintLeftLine("", Renderer::UI_WIDTH);
     }
-    // 로그 빈 줄 채우기 (높이 유지)
-    for (int i = 0; i < (MAX_MENU_LOGS - (int)systemLogs.size()); i++) {
-        PrintLeftLine("", Renderer::UI_WIDTH);
+    else {
+        PrintLeftLine("[ 시스템 메시지 ]", Renderer::UI_WIDTH, GRAY);
+        for (const auto& log : systemLogs) {
+            PrintLeftLine(" >> " + log, Renderer::UI_WIDTH, WHITE);
+        }
+        for (int i = 0; i < (MAX_MENU_LOGS - (int)systemLogs.size()); i++) PrintLeftLine("", Renderer::UI_WIDTH);
     }
-    PrintBottom(Renderer::UI_WIDTH); // [박스 끝]
 
-    // 입력 위치 고정
+    PrintBottom(Renderer::UI_WIDTH);
+}
+
+void Renderer::RenderMenu(const std::vector<std::string>& diceFrame) {
+    std::vector<std::string> menuArt = {
+        R"(      .-------.    ____  _ ____ ____      )",
+        R"(     /   o   /|   |  _ \(_) ___|  __|     )",
+        R"(    /  o    / o|  | | | | | |   | |__       )",
+        R"(   /   o   / o |  | |_| | | |___|  __|      )",
+        R"(  '-------' o /   |____/|_|\____|____|      )",
+        R"(  | o     |  /      _    ____ ____ _  _ ___ )",
+        R"(  |    o  | /      /_\ | __ |___ |\ |  |    )",
+        R"(  | o     |/      /_  \|__] |___ | \|  |    )",
+        R"(  '-------'                                 )",
+        "",
+        "       [1] 게임 시작          [2] 게임 종료"
+    };
+
+    
+    RenderSplitScreen(menuArt, diceFrame, "DICE ADVENTURE : THE ROGUELIKE", false);
+
     MoveCursor(0, Renderer::ZONE_PLAYER_Y + 4);
-    std::cout << BRIGHT_GREEN << " > InPut : " << RESET;
+    std::cout << BRIGHT_GREEN << " > Input : " << RESET;
 }
-void Renderer::RenderCreatePlayer() {
-    // 1. 화면 전체 초기화
-    Clear();
-    MoveCursor(0, Renderer::ZONE_SCREEN_Y);
 
-    // [거대 박스 시작]
-    PrintTop(Renderer::UI_WIDTH);
-    PrintCenterLine("[ 운명의 집행자 선택 ]", Renderer::UI_WIDTH, WHITE);
-    PrintDivider(Renderer::UI_WIDTH);
+void Renderer::RenderCreatePlayer(const std::vector<std::string>& diceFrame) {
+    // 1. 왼쪽 영역에 들어갈 캐릭터 선택 정보 준비
+    std::vector<std::string> charSelectionInfo = {
+        " 세상을 구할 마지막 희망이여,",
+        " 당신의 운명을 결정할 집행자를 선택하십시오.",
+        "",
+        " ------------------------------------------",
+        "",
+        "  [1] 전  사  (안정형: 주사위 1 ~ 6  (3개))",
+        "      - 높은 안정성과 체력을 가진 표준 직업",
+        "",
+        "  [2] 마법사  (표준형: 주사위 2 ~ 6  (2개))",
+        "      - 강력한 한 방과 지능적인 플레이",
+        "",
+        "  [3] 모험가  (도박형: 주사위 1 ~ 24 (1개))",
+        "      - 운에 모든 것을 맡기는 극단적 재미",
+        "",
+        " ------------------------------------------"
+    };
 
-    // 2. 상단 안내 구역 (질문을 먼저 던져서 동기 부여)
-    PrintLeftLine("", Renderer::UI_WIDTH);
-    PrintCenterLine("세계를 구할 마지막 희망이여,", Renderer::UI_WIDTH, GRAY);
-    PrintCenterLine("당신의 운명을 결정할 집행자를 선택하십시오.", Renderer::UI_WIDTH, CYAN);
-    PrintLeftLine("", Renderer::UI_WIDTH);
+    std::vector<std::string> destinyDice = {
+        "",
+        "      < 운명의 주사위 >",
+        "",
+        "          _______",
+        "         /      /|",
+        "        /   o  / |",
+        "       /______/  |",
+        "       |      | o|",
+        "       |  o   |  /",
+        "       |______| /",
+        "",
+        "    당신의 행운을 믿으십시오."
+    };
 
-    PrintDivider(Renderer::UI_WIDTH); // 영역 구분
+    // 3. 공용 엔진 호출 (제목: 운명의 집행자 선택)
+    RenderSplitScreen(charSelectionInfo, destinyDice, "운명의 집행자 선택", false);
 
-    // 3. 캐릭터 선택 목록 (중앙 집중 배치)
-    PrintLeftLine("", Renderer::UI_WIDTH);
-    PrintLeftLine("  [1] 전  사  (안정형: 주사위 1 ~ 6  (3개))", Renderer::UI_WIDTH, YELLOW);
-    PrintLeftLine("", Renderer::UI_WIDTH); // 캐릭터 사이 간격 추가로 가독성 확보
-    PrintLeftLine("  [2] 마법사  (표준형: 주사위 2 ~ 6  (2개))", Renderer::UI_WIDTH, CYAN);
-    PrintLeftLine("", Renderer::UI_WIDTH);
-    PrintLeftLine("  [3] 모험가  (도박형: 주사위 1 ~ 24 (1개))", Renderer::UI_WIDTH, RED);
-
-    for (int i = 0; i < 3; i++) {
-        PrintLeftLine("", Renderer::UI_WIDTH);
-    }
-    PrintDivider(Renderer::UI_WIDTH);
-    PrintLeftLine(" [ 시스템 메시지 ]", Renderer::UI_WIDTH, GRAY);
-
-    for (const auto& log : systemLogs) {
-        PrintLeftLine(" >> " + log, Renderer::UI_WIDTH, WHITE);
-    }
-    // 로그 빈 줄 채우기 (높이 유지)
-    for (int i = 0; i < (MAX_MENU_LOGS - (int)systemLogs.size()); i++) {
-        PrintLeftLine("", Renderer::UI_WIDTH);
-    }
-    PrintBottom(Renderer::UI_WIDTH); // [박스 끝]
-
-    // 5. 입력 위치 고정
+    // 4. 입력 위치 고정
     MoveCursor(0, Renderer::ZONE_PLAYER_Y + 4);
     std::cout << BRIGHT_GREEN << " > 집행자 번호 입력 : " << RESET;
 }
 
-void Renderer::RenderMainMenu() {
-    // 1. 화면 초기화 및 시작 위치 고정
-    ClearZone(Renderer::ZONE_SCREEN_Y, 30);
-    MoveCursor(0, Renderer::ZONE_SCREEN_Y);
+void Renderer::RenderMainMenu(const std::vector<std::string>& diceFrame) {
+    // 1. 왼쪽 영역: 마을 풍경 ASCII와 행동 선택지 준비
+    std::vector<std::string> townContent;
 
-    // [박스 시작]
-    PrintTop(Renderer::UI_WIDTH);
-    PrintCenterLine("[ 평화로운 마을 ]", Renderer::UI_WIDTH, CYAN);
-    PrintDivider(Renderer::UI_WIDTH);
+    townContent.push_back("");
+    townContent.push_back("      _ ^ _      ");
+    townContent.push_back("     / |_| \\     ");
+    townContent.push_back("    |_______|    "); // 마을 집 모양
+    townContent.push_back("");
+    townContent.push_back(" 모닥불 소리와 새들의 지저귐이 들리는");
+    townContent.push_back(" 평화로운 마을 '다이스톤'입니다.");
+    townContent.push_back("");
+    townContent.push_back(" ------------------------------------------");
+    townContent.push_back("");
+    townContent.push_back("  [1] 탐  사 (지역 조사)");
+    townContent.push_back("  [2] 상  점 (아이템 매매)");
+    townContent.push_back("  [3] 장비창 (인벤토리)");
+    townContent.push_back("  [4] 휴  식 (회복 및 강화)");
+    townContent.push_back("");
+    townContent.push_back(" ------------------------------------------");
 
-    // --- [상단: 마을 정보/풍경 구역] ---
-    PrintLeftLine("", Renderer::UI_WIDTH);
-    PrintCenterLine("   _ ^ _   ", Renderer::UI_WIDTH, WHITE);
-    PrintCenterLine("  / |_| \  ", Renderer::UI_WIDTH, WHITE);
-    PrintCenterLine(" |_______| ", Renderer::UI_WIDTH, WHITE); // 간단한 집 모양 ASCII
-    PrintCenterLine("모닥불 소리와 새들의 지저귐이 들리는 평화로운 마을입니다.", Renderer::UI_WIDTH, GRAY);
+    // 2. 공용 엔진 호출
+    // 마을 화면에서도 오른쪽에 diceFrame(주사위나 마을 전용 로그)을 띄웁니다.
+    RenderSplitScreen(townContent, diceFrame, "평화로운 마을", false);
 
-    // --- [중간: 빈 공간/로그 구역 테두리 유지] ---
-    // 로그가 찍히지 않아도 테두리(│)를 유지하며 하단까지 박스를 늘립니다.
-    // 이 구간이 아까 어색해 보였던 그 빈 공간을 메워주는 역할입니다.
-    for (int i = 0; i < 8; i++) {
-        PrintLeftLine("", Renderer::UI_WIDTH);
-    }
-   
-
-    // --- [하단: 행동 선택지 구역] ---
-    PrintDivider(Renderer::UI_WIDTH);
-    PrintLeftLine("[1] 탐  사 (지역 조사)    [2] 상  점 (아이템 매매)", Renderer::UI_WIDTH, YELLOW);
-    PrintLeftLine("[3] 장비창 (인벤토리)     [4] 휴  식 (회복 및 강화)", Renderer::UI_WIDTH, YELLOW);
-
-    PrintDivider(Renderer::UI_WIDTH);
-    PrintLeftLine(" [ 시스템 메시지 ]", Renderer::UI_WIDTH, GRAY);
-
-    for (const auto& log : systemLogs) {
-        PrintLeftLine(" >> " + log, Renderer::UI_WIDTH, WHITE);
-    }
-    // 로그 빈 줄 채우기 (높이 유지)
-    for (int i = 0; i < (MAX_MENU_LOGS - (int)systemLogs.size()); i++) {
-        PrintLeftLine("", Renderer::UI_WIDTH);
-    }
-    PrintBottom(Renderer::UI_WIDTH); // [박스 끝]
-
-    // 입력 위치 고정 (박스 바깥 하단)
+    // 3. 입력 위치 고정 (UI 하단부)
     MoveCursor(0, Renderer::ZONE_PLAYER_Y + 4);
     std::cout << BRIGHT_GREEN << " > 행동을 선택해라 : " << RESET;
 }
 
-void Renderer::RenderBattleAction(Monster* monster, Character* player) { // player 인자 추가
-    Clear();
-    MoveCursor(0, Renderer::ZONE_SCREEN_Y);
+void Renderer::RenderBattleAction(Monster* monster, Character* player, const std::vector<std::string>& diceFrame) {
+    // 1. 왼쪽 영역 데이터 구성 (몬스터 정보 + 이미지 + 플레이어 정보)
+    std::vector<std::string> battleContent;
 
-    PrintTop(Renderer::UI_WIDTH);
-    PrintCenterLine("!!! BATTLE IN PROGRESS !!!", Renderer::UI_WIDTH, RED);
-    PrintDivider(Renderer::UI_WIDTH);
+    // [상단] 몬스터 정보 (이름 및 HP)
+    std::string mHealth = " HP: " + std::to_string(monster->GetHP());
+    battleContent.push_back(" [ ENEMY ] " + monster->GetName());
+    battleContent.push_back(mHealth);
+    battleContent.push_back(" ------------------------------------------");
 
-    // 2. 상단: 몬스터 정보
-    std::string mStats = " [ ENEMY ] " + monster->GetName() + " | HP: " + std::to_string(monster->GetHP());
-    PrintCenterLine(mStats, Renderer::UI_WIDTH, YELLOW);
-
-    PrintDivider(Renderer::UI_WIDTH);
-    // 1. 몬스터 이미지 구역 (8줄 고정)
+    // [중간] 몬스터 이미지 (원본 GetVisual() 활용)
     const std::vector<std::string>& visual = monster->GetVisual();
-    for (int i = 0; i < 8; i++) {
-        if (i < (int)visual.size()) {
-            int vLen = GetVisualLength(visual[i]);
-            int leftPad = (Renderer::UI_WIDTH - 2 - vLen) / 2;
-            int rightPad = Renderer::UI_WIDTH - 2 - vLen - leftPad;
-            std::cout << GOLD << "│" << RESET << std::string(leftPad, ' ') << WHITE << visual[i] << RESET
-                << std::string(rightPad, ' ') << GOLD << "│" << RESET << std::endl;
-        }
-        else {
-            PrintLeftLine("", Renderer::UI_WIDTH);
-        }
+    for (int i = 0; i < 7; i++) { // 이미지 공간 7줄 할당
+        if (i < (int)visual.size()) battleContent.push_back(" " + visual[i]);
+        else battleContent.push_back("");
     }
 
+    battleContent.push_back(" ------------------------------------------");
 
-    // 3. 중앙: 플레이어 상태 정보 (새로 추가)
-    PrintDivider(Renderer::UI_WIDTH);
-    std::string pStats = " [ PLAYER ] " + player->GetName() + " | HP: " + std::to_string(player->GetHP()) + " / " + "100";
-    PrintCenterLine(pStats, Renderer::UI_WIDTH, BRIGHT_GREEN);
+    // [하단] 플레이어 정보
+    std::string pHealth = " HP: " + std::to_string(player->GetHP()) + " / 100";
+    battleContent.push_back(" [ PLAYER ] " + player->GetName());
+    battleContent.push_back(pHealth);
+    battleContent.push_back("");
+    battleContent.push_back("  [1] 전  투             [2] 도  망");
 
-    // 4. 누적 전투 로그 구역
-    PrintDivider(Renderer::UI_WIDTH);
-    PrintLeftLine(" [ 실시간 전투 로그 ]", Renderer::UI_WIDTH, GRAY);
-    for (const auto& log : battleLogs) {
-        PrintLeftLine(" >> " + log, Renderer::UI_WIDTH, WHITE);
-    }
-    for (int i = 0; i < (MAX_LOGS - (int)battleLogs.size()); i++) {
-        PrintLeftLine("", Renderer::UI_WIDTH);
-    }
+    // 2. 공용 엔진 호출 
+    // - diceFrame: 현재 굴러가는 주사위나 결과값이 담김
+    // - title: "!!! BATTLE IN PROGRESS !!!"
+    // - isBattleMode: true (하단 로그창을 battleLogs로 스위칭)
+    RenderSplitScreen(battleContent, diceFrame, "!!! BATTLE IN PROGRESS !!!", true);
 
-    // 5. 하단 선택지
-    PrintDivider(Renderer::UI_WIDTH);
-    PrintCenterLine("[1] 전 투            [2] 도 망", Renderer::UI_WIDTH, YELLOW);
-    PrintBottom(Renderer::UI_WIDTH);
-
+    // 3. 입력 위치 고정
     MoveCursor(0, Renderer::ZONE_PLAYER_Y + 4);
     std::cout << BRIGHT_GREEN << " > 행동 선택 : " << RESET;
 }
 
-void Renderer::RenderRewardSelect() {
-    // 1. 전체 구역 초기화 (이전 전투 흔적 제거)
-    Clear();
-    MoveCursor(0, Renderer::ZONE_SCREEN_Y);
+void Renderer::RenderRewardSelect(const std::vector<std::string>& diceFrame) {
+    // 1. 왼쪽 영역: 승리 메시지 및 선택지 구성
+    std::vector<std::string> rewardContent;
 
-    PrintTop(Renderer::UI_WIDTH);
-    PrintCenterLine("[ VICTORY ]", Renderer::UI_WIDTH, YELLOW);
-    PrintDivider(Renderer::UI_WIDTH);
+    rewardContent.push_back("");
+    rewardContent.push_back(" [ VICTORY ]");
+    rewardContent.push_back(" 전투에서 승리하여 값진 전리품을 발견했습니다!");
+    rewardContent.push_back(" 어떤 방식으로 보상을 챙기시겠습니까?");
+    rewardContent.push_back("");
+    rewardContent.push_back(" ------------------------------------------");
+    rewardContent.push_back("");
+    rewardContent.push_back("  [1] 일반 보상 (안전)");
+    rewardContent.push_back("      - 휴식권 1회 + 확정 골드 획득");
+    rewardContent.push_back("");
+    rewardContent.push_back("  [2] 리스크 보상 (도전!)");
+    rewardContent.push_back("      - 주사위를 굴려 더 큰 보상에 도전");
+    rewardContent.push_back("");
+    rewardContent.push_back(" ------------------------------------------");
+    rewardContent.push_back("  당신의 운을 시험해 보십시오.");
 
-    PrintLeftLine("", Renderer::UI_WIDTH);
-    PrintCenterLine("전투에서 승리하여 값진 전리품을 발견했습니다!", Renderer::UI_WIDTH, WHITE);
-    PrintCenterLine("어떤 방식으로 보상을 챙기시겠습니까?", Renderer::UI_WIDTH, WHITE);
-    PrintLeftLine("", Renderer::UI_WIDTH);
+    // 2. 공용 엔진 호출
+    // 오른쪽(diceFrame)에는 현재 대기 중인 주사위나 보물상자 아트가 들어갑니다.
+    RenderSplitScreen(rewardContent, diceFrame, "전리품 획득", false);
 
-    for (int i = 0; i < 6; i++) {
-        PrintLeftLine("", Renderer::UI_WIDTH);
-    }
-
-    PrintDivider(Renderer::UI_WIDTH);
-    PrintLeftLine(" [1] 일반 보상 (휴식권 1회 + 골드)", Renderer::UI_WIDTH, BRIGHT_GREEN);
-    PrintLeftLine(" [2] 리스크 보상 (주사위로 고보상 도전)", Renderer::UI_WIDTH, RED);
-
-    PrintLeftLine("", Renderer::UI_WIDTH);
-    PrintBottom(Renderer::UI_WIDTH);
-
+    // 3. 입력 위치 고정
     MoveCursor(0, Renderer::ZONE_PLAYER_Y + 4);
     std::cout << BRIGHT_GREEN << " > 보상을 선택해라 : " << RESET;
 }
 
-void Renderer::RenderStatus(Character* player) {
+void Renderer::RenderStatus(Character* player, const std::vector<std::string>& diceFrame) {
     if (!player) return;
 
-    ClearZone(Renderer::ZONE_SCREEN_Y, 16);
-    MoveCursor(0, Renderer::ZONE_SCREEN_Y);
+    // 1. 왼쪽 영역: 플레이어 상세 정보 구성
+    std::vector<std::string> statusContent;
 
-    PrintTop(Renderer::UI_WIDTH);
-    std::string topInfo = " [ PLAYER STATUS ]           REST TICKET : " + std::to_string(player->GetRestTicket());
-    PrintLeftLine(topInfo, Renderer::UI_WIDTH, WHITE);
-
-    PrintDivider(Renderer::UI_WIDTH);
-    PrintLeftLine(" 닉네임 : " + player->GetName(), Renderer::UI_WIDTH, YELLOW);
-    PrintLeftLine(" HP     : " + std::to_string(player->GetHP()) + " / " + std::to_string(MAX_HP), Renderer::UI_WIDTH, RED);
-    PrintLeftLine(" ATK    : " + std::to_string(player->GetAtk()) + " | DEF : " + std::to_string(player->GetDef()), Renderer::UI_WIDTH, WHITE);
-    PrintLeftLine(" 소지금 : " + std::to_string(player->GetGold()) + " G", Renderer::UI_WIDTH, GOLD);
-
-    PrintDivider(Renderer::UI_WIDTH);
-    PrintLeftLine(" [ 소지한 주사위 ]", Renderer::UI_WIDTH, CYAN);
+    statusContent.push_back(" [ PLAYER STATUS ]");
+    statusContent.push_back(" 닉네임 : " + player->GetName());
+    statusContent.push_back(" HP     : " + std::to_string(player->GetHP()) + " / " + std::to_string(MAX_HP));
+    statusContent.push_back(" ATK    : " + std::to_string(player->GetAtk()) + " | DEF : " + std::to_string(player->GetDef()));
+    statusContent.push_back(" 소지금 : " + std::to_string(player->GetGold()) + " G");
+    statusContent.push_back(" 휴식권 : " + std::to_string(player->GetRestTicket()) + " 장");
+    statusContent.push_back(" ------------------------------------------");
+    statusContent.push_back(" [ 소지한 주사위 ]");
 
     Inventory* inv = player->GetInventory();
     if (inv) {
         const auto& diceList = inv->GetDiceStorege();
         if (diceList.empty()) {
-            PrintLeftLine("   (소지 중인 주사위가 없습니다.)", Renderer::UI_WIDTH, GRAY);
+            statusContent.push_back("   (소지 중인 주사위가 없습니다.)");
         }
         else {
             int count = 0;
             for (const auto& slot : diceList) {
-                if (count >= 3) { PrintLeftLine("   ...", Renderer::UI_WIDTH, GRAY); break; }
+                if (count >= 5) { // 2분할 높이에 맞춰 5개까지 표시
+                    statusContent.push_back("   ...외 다수");
+                    break;
+                }
                 if (!slot.dice) continue;
-                PrintLeftLine(" - " + slot.dice->DiceIdToString() + " x" + std::to_string(slot.count), Renderer::UI_WIDTH, CYAN);
+                statusContent.push_back(" - " + slot.dice->DiceIdToString() + " x" + std::to_string(slot.count));
                 count++;
             }
         }
     }
-    PrintBottom(Renderer::UI_WIDTH);
+    statusContent.push_back(" ------------------------------------------");
+
+    // 2. 공용 엔진 호출 (제목: 캐릭터 상태창)
+    RenderSplitScreen(statusContent, diceFrame, "CHARACTER STATUS", false);
+
+    // 3. 입력 위치 (상태창은 보통 확인 후 아무 키나 눌러 넘어가므로 하단 고정)
+    MoveCursor(0, Renderer::ZONE_PLAYER_Y + 4);
+    std::cout << YELLOW << " [ 아무 키나 누르면 돌아갑니다 ] " << RESET;
 }
 
-void Renderer::RenderAreaChoices(const std::vector<std::string>& choices, const std::unordered_map<std::string, std::string>& displayMap) {
-    Clear();
-    MoveCursor(0, Renderer::ZONE_SCREEN_Y);
+void Renderer::RenderAreaChoices(const std::vector<std::string>& choices,
+    const std::unordered_map<std::string, std::string>& displayMap,
+    const std::vector<std::string>& diceFrame)
+{
+    // 1. 왼쪽 영역: 지역 리스트 구성
+    std::vector<std::string> areaContent;
 
-    // [상단] 타이틀
-    PrintTop(Renderer::UI_WIDTH);
-    PrintCenterLine("[ 탐험 지역 선택 ]", Renderer::UI_WIDTH, WHITE);
-    PrintDivider(Renderer::UI_WIDTH);
+    areaContent.push_back("");
+    areaContent.push_back(" [ 탐험할 지역을 선택하십시오 ]");
+    areaContent.push_back(" ------------------------------------------");
+    areaContent.push_back("");
 
-    // [중앙] 메인 콘텐츠 (지역 리스트)
-    PrintLeftLine("", Renderer::UI_WIDTH);
     for (int i = 0; i < (int)choices.size(); ++i) {
+        // 한국어 이름이 있으면 가져오고, 없으면 영문 이름 사용
         std::string korName = displayMap.count(choices[i]) ? displayMap.at(choices[i]) : choices[i];
-        PrintLeftLine("    [" + std::to_string(i + 1) + "] " + korName, Renderer::UI_WIDTH, YELLOW);
+        areaContent.push_back("   [" + std::to_string(i + 1) + "] " + korName);
+        areaContent.push_back(""); // 가독성을 위해 한 줄 띔
     }
 
-    // 콘텐츠 영역 높이 고정 (예: 6줄)
-    for (int i = 0; i < (6 - (int)choices.size()); i++) PrintLeftLine("", Renderer::UI_WIDTH);
+    areaContent.push_back(" ------------------------------------------");
+    areaContent.push_back("  [0] 마을로 돌아가기 (RETURN)");
 
-    // [하단] 로그 구역 (이미지 속 전투 로그와 동일한 구조)
-    PrintDivider(Renderer::UI_WIDTH);
-    PrintLeftLine(" [ 시스템 메시지 ]", Renderer::UI_WIDTH, GRAY);
+    // 2. 공용 엔진 호출
+    // 오른쪽(diceFrame)에는 지도나 나침반, 혹은 현재 선택 중인 연출용 프레임이 들어갑니다.
+    RenderSplitScreen(areaContent, diceFrame, "WORLD MAP : EXPLORATION", false);
 
-    for (const auto& log : systemLogs) {
-        PrintLeftLine(" >> " + log, Renderer::UI_WIDTH, WHITE);
-    }
-    // 로그 빈 줄 채우기 (높이 유지)
-    for (int i = 0; i < (MAX_MENU_LOGS - (int)systemLogs.size()); i++) {
-        PrintLeftLine("", Renderer::UI_WIDTH);
-    }
-
-    // [최하단] 조작 가이드
-    PrintDivider(Renderer::UI_WIDTH);
-    PrintCenterLine("[0] 마을로 돌아가기", Renderer::UI_WIDTH, RED);
-    PrintBottom(Renderer::UI_WIDTH);
-
+    // 3. 입력 위치 고정
     MoveCursor(0, Renderer::ZONE_PLAYER_Y + 4);
     std::cout << BRIGHT_GREEN << " > 지역 번호 입력 : " << RESET;
 }
 
-void Renderer::RenderRestMenu() {
-    // 1. 화면 전체 구역 초기화 (충분한 높이 확보)
-    ClearZone(Renderer::ZONE_SCREEN_Y, 30);
-    MoveCursor(0, Renderer::ZONE_SCREEN_Y);
+void Renderer::RenderRestMenu(const std::vector<std::string>& diceFrame) {
+    // 1. 왼쪽 영역: 모닥불 ASCII 아트와 휴식 옵션 구성
+    std::vector<std::string> restContent;
 
-    // [박스 시작]
-    PrintTop(Renderer::UI_WIDTH);
-    PrintCenterLine("[ 캠프파이어 (휴식소) ]", Renderer::UI_WIDTH, WHITE);
-    PrintDivider(Renderer::UI_WIDTH);
+    restContent.push_back("");
+    restContent.push_back("      (  )  (  )  (  )      ");
+    restContent.push_back("       )  (  )  (  (        ");
+    restContent.push_back("      [____________]        "); // 모닥불 ASCII
+    restContent.push_back("");
+    restContent.push_back(" 타오르는 불꽃이 지친 몸을 달래줍니다.");
+    restContent.push_back(" 이곳에서 전열을 가다듬으십시오.");
+    restContent.push_back("");
+    restContent.push_back(" ------------------------------------------");
+    restContent.push_back("");
+    restContent.push_back("  [1] 주사위 강화 (휴식권 소모)");
+    restContent.push_back("      - 주사위의 눈을 영구적으로 업그레이드");
+    restContent.push_back("");
+    restContent.push_back("  [2] 체력 회복   (휴식권 소모)");
+    restContent.push_back("      - 잃은 체력의 일정량을 회복");
+    restContent.push_back("");
+    restContent.push_back("  [0] 마을로 돌아가기 (RETURN)");
 
-    // --- [중앙: 캠프파이어 연출 구역] ---
-    PrintLeftLine("", Renderer::UI_WIDTH);
-    PrintCenterLine("  (  )  (  )  (  )  ", Renderer::UI_WIDTH, RED);
-    PrintCenterLine("   )  (  )  (  (    ", Renderer::UI_WIDTH, YELLOW);
-    PrintCenterLine("  [__________]  ", Renderer::UI_WIDTH, WHITE);
-    PrintLeftLine("", Renderer::UI_WIDTH);
-    PrintCenterLine("타오르는 불꽃이 지친 몸을 달래줍니다.", Renderer::UI_WIDTH, GRAY);
+    // 2. 공용 엔진 호출
+    // 오른쪽(diceFrame)에는 모닥불 연출이나 주사위 강화 대기 상태를 띄웁니다.
+    RenderSplitScreen(restContent, diceFrame, "CAMPFIRE : REST AREA", false);
 
-    // --- [중간: 빈 공간 테두리 유지] ---
-    // 로그 구역만큼 박스를 아래로 늘려줍니다. (약 10줄 정도)
-    for (int i = 0; i < 10; i++) {
-        PrintLeftLine("", Renderer::UI_WIDTH);
-    }
-
-    // --- [하단: 휴식 옵션 선택지 구역] ---
-    PrintDivider(Renderer::UI_WIDTH);
-    PrintLeftLine(" [1] 주사위 강화 (티켓 소모)    [2] 체력 회복 (티켓 소모)", Renderer::UI_WIDTH, YELLOW);
-    PrintLeftLine(" [0] 마을로 돌아가기", Renderer::UI_WIDTH, WHITE);
-
-    PrintBottom(Renderer::UI_WIDTH); // [박스 끝]
-
-    // 2. 입력 위치 고정 (박스 외부 하단)
+    // 3. 입력 위치 고정
     MoveCursor(0, Renderer::ZONE_PLAYER_Y + 4);
     std::cout << BRIGHT_GREEN << " > 옵션을 선택 : " << RESET;
 }
 
-void Renderer::RenderDiceUpgradeList(const std::vector<DiceSlot>& storage) {
-    // 1. 화면 전체 초기화 (잔상 완벽 제거)
-    Clear();
-    MoveCursor(0, Renderer::ZONE_SCREEN_Y);
+void Renderer::RenderDiceUpgradeList(const std::vector<DiceSlot>& storage, const std::vector<std::string>& diceFrame) {
+    // 1. 왼쪽 영역: 주사위 강화 목록 데이터 구성
+    std::vector<std::string> upgradeContent;
 
-    // [거대 박스 시작]
-    PrintTop(Renderer::UI_WIDTH);
-    PrintCenterLine("[ 주사위 강화소 ]", Renderer::UI_WIDTH, YELLOW);
-    PrintDivider(Renderer::UI_WIDTH);
+    upgradeContent.push_back("");
+    upgradeContent.push_back(" [ 주사위 강화소 ]");
+    upgradeContent.push_back(" 어떤 주사위의 운명을 강화하시겠습니까?");
+    upgradeContent.push_back(" ------------------------------------------");
+    upgradeContent.push_back("");
 
-    // 2. 상단 안내 및 질문 (가독성을 위해 위로 올림)
-    PrintLeftLine("", Renderer::UI_WIDTH);
-    PrintCenterLine("어떤 주사위의 운명을 강화하시겠습니까?", Renderer::UI_WIDTH, WHITE);
-    PrintCenterLine("강화할 주사위를 신중하게 선택하십시오.", Renderer::UI_WIDTH, GRAY);
-    PrintLeftLine("", Renderer::UI_WIDTH);
-    PrintDivider(Renderer::UI_WIDTH);
-
-    // 3. 주사위 목록 출력
-    PrintLeftLine("", Renderer::UI_WIDTH);
     if (storage.empty()) {
-        PrintCenterLine("(강화할 수 있는 주사위가 없습니다.)", Renderer::UI_WIDTH, GRAY);
-        for (int i = 0; i < 7; i++) PrintLeftLine("", Renderer::UI_WIDTH);
+        upgradeContent.push_back("  (강화할 수 있는 주사위가 없습니다.)");
     }
     else {
         for (int i = 0; i < (int)storage.size(); i++) {
-            // 최대 8개 출력 제한
+            // 최대 8개까지 출력 (2분할 높이 제한에 맞춤)
             if (i >= 8) {
-                PrintLeftLine("      ...", Renderer::UI_WIDTH, GRAY);
+                upgradeContent.push_back("      ...");
                 break;
             }
 
-            // [번호] 주사위이름 (보유량) 형식
             std::string diceName = storage[i].dice->DiceIdToString();
             std::string diceCount = " (" + std::to_string(storage[i].count) + "개)";
 
-            // 들여쓰기를 넣어 리스트처럼 보이게 함
-            std::string diceInfo = "    [" + std::to_string(i + 1) + "] " + diceName + diceCount;
-            PrintLeftLine(diceInfo, Renderer::UI_WIDTH, CYAN);
-        }
-
-        // 목록 높이 고정 (박스가 찌그러지지 않게)
-        int remaining = 8 - (int)storage.size();
-        for (int i = 0; i < (remaining > 0 ? remaining : 0); i++) {
-            PrintLeftLine("", Renderer::UI_WIDTH);
+            // 리스트 형식으로 저장
+            upgradeContent.push_back("  [" + std::to_string(i + 1) + "] " + diceName + diceCount);
         }
     }
 
-    // 4. 하단 취소 메뉴 및 마감
-    PrintDivider(Renderer::UI_WIDTH);
-    PrintLeftLine("  [0] 취소하고 돌아가기", Renderer::UI_WIDTH, RED);
-    PrintBottom(Renderer::UI_WIDTH); // [박스 끝 - 여기서 딱 한 번 닫음]
+    upgradeContent.push_back("");
+    upgradeContent.push_back(" ------------------------------------------");
+    upgradeContent.push_back("  [0] 취소하고 돌아가기");
 
-    // 5. 입력 위치 고정 (박스 외부 하단)
+    // 2. 공용 엔진 호출
+    // 오른쪽(diceFrame)에는 현재 강화 대기 중인 주사위의 '눈' 정보나 아트를 띄웁니다.
+    RenderSplitScreen(upgradeContent, diceFrame, "DICE UPGRADE SHOP", false);
+
+    // 3. 입력 위치 고정
     MoveCursor(0, Renderer::ZONE_PLAYER_Y + 4);
     std::cout << BRIGHT_GREEN << " > 강화할 주사위 번호 입력 : " << RESET;
 }
 
 void Renderer::RenderHealResult(int healValue, int prevHP, int curHP, int maxHP) {
-    Clear();
-    MoveCursor(0, Renderer::ZONE_SCREEN_Y);
+    // 1. 왼쪽 영역: 치료 결과 정보 구성
+    std::vector<std::string> healContent;
 
-    PrintTop(Renderer::UI_WIDTH);
-    PrintCenterLine("[ 휴식 및 치료 완료 ]", Renderer::UI_WIDTH, BRIGHT_GREEN);
-    PrintDivider(Renderer::UI_WIDTH);
+    healContent.push_back("");
+    healContent.push_back(" [ 휴식 및 치료 완료 ]");
+    healContent.push_back(" ------------------------------------------");
+    healContent.push_back("");
 
-    PrintLeftLine("", Renderer::UI_WIDTH);
     if (prevHP >= maxHP) {
-        PrintCenterLine("이미 최상의 컨디션입니다!", Renderer::UI_WIDTH, YELLOW);
-        PrintCenterLine("현재 HP: " + std::to_string(maxHP) + " / " + std::to_string(maxHP), Renderer::UI_WIDTH, WHITE);
+        healContent.push_back(" 이미 최상의 컨디션입니다!");
+        healContent.push_back("");
+        healContent.push_back(" 현재 HP: " + std::to_string(maxHP) + " / " + std::to_string(maxHP));
     }
     else {
-        PrintCenterLine("따뜻한 휴식으로 체력을 회복했습니다.", Renderer::UI_WIDTH, WHITE);
-        PrintLeftLine("", Renderer::UI_WIDTH);
-
-        std::string msg = "체력 [ +" + std::to_string(healValue) + " ] 회복 완료!";
-        PrintCenterLine(msg, Renderer::UI_WIDTH, BRIGHT_GREEN);
-
-        std::string hpMsg = "HP 변화: " + std::to_string(prevHP) + " - " + std::to_string(curHP) + " / " + std::to_string(maxHP);
-        PrintCenterLine(hpMsg, Renderer::UI_WIDTH, WHITE);
+        healContent.push_back(" 따뜻한 휴식으로 체력을 회복했습니다.");
+        healContent.push_back("");
+        healContent.push_back(" 체력 [ +" + std::to_string(healValue) + " ] 회복 완료!");
+        healContent.push_back("");
+        healContent.push_back(" HP 변화: " + std::to_string(prevHP) + " -> " + std::to_string(curHP));
+        healContent.push_back(" 최대 HP: " + std::to_string(maxHP));
     }
 
-    // 높이 유지를 위한 공백 (전투 화면 등과 높이를 맞춤)
-    for (int i = 0; i < 10; i++) PrintLeftLine("", Renderer::UI_WIDTH);
+    healContent.push_back("");
+    healContent.push_back(" ------------------------------------------");
+    healContent.push_back(" 잠시 후 메뉴로 돌아갑니다...");
 
-    PrintDivider(Renderer::UI_WIDTH);
-    PrintCenterLine("잠시 후 메뉴로 돌아갑니다...", Renderer::UI_WIDTH, GRAY);
-    PrintBottom(Renderer::UI_WIDTH);
+    // 2. 오른쪽 영역: 치료 전용 ASCII 아트
+    std::vector<std::string> healArt = {
+        "",
+        "       .--------.       ",
+        "    _  |        |  _    ",
+        "   | |_|        |_| |   ",
+        "   |  _    REC   _  |   ",
+        "   |_| |        | |_|   ",
+        "       |        |       ",
+        "       '--------'       ",
+        "",
+        "    REST & RECOVERED    "
+    };
 
+    // 3. 공용 엔진 호출 (제목: 치료 결과)
+    RenderSplitScreen(healContent, healArt, "HEAL COMPLETED", false);
+
+    // 4. 결과 확인을 위한 딜레이
     Delay(1500);
 }
 
 void Renderer::RenderUpgradeResult(UpgradeStatus status, int prevLevel, int curLevel) {
-    Clear();
-    MoveCursor(0, Renderer::ZONE_SCREEN_Y);
+    // 1. 왼쪽 영역: 강화 결과 메시지 구성
+    std::vector<std::string> upgradeContent;
+    std::string title;
+    std::string titleColor;
 
-    PrintTop(Renderer::UI_WIDTH);
+    upgradeContent.push_back("");
+
     if (status == UpgradeStatus::Success) {
-        PrintCenterLine("[ 강 화 성 공 ]", Renderer::UI_WIDTH, YELLOW);
-        PrintDivider(Renderer::UI_WIDTH);
-        PrintLeftLine("", Renderer::UI_WIDTH);
-        PrintCenterLine("주사위의 잠재력이 해방되었습니다!", Renderer::UI_WIDTH, BRIGHT_GREEN);
-        PrintLeftLine("", Renderer::UI_WIDTH);
+        title = "UPGRADE SUCCESS";
+        titleColor = BRIGHT_GREEN;
 
-        std::string msg = "강화 등급: [ Lv." + std::to_string(prevLevel) + " ] >>> [ Lv." + std::to_string(curLevel) + " ]";
-        PrintCenterLine(msg, Renderer::UI_WIDTH, WHITE);
+        upgradeContent.push_back(" [ 강 화 성 공 ]");
+        upgradeContent.push_back(" ------------------------------------------");
+        upgradeContent.push_back("");
+        upgradeContent.push_back(" 주사위의 잠재력이 해방되었습니다!");
+        upgradeContent.push_back("");
+        upgradeContent.push_back(" 강화 등급 변화:");
+        upgradeContent.push_back(" [ Lv." + std::to_string(prevLevel) + " ] >>> [ Lv." + std::to_string(curLevel) + " ]");
+        upgradeContent.push_back("");
+        upgradeContent.push_back(" 이제 더 강력한 운명을 개척할 수 있습니다.");
     }
     else {
-        PrintCenterLine("[ 강화 불가 ]", Renderer::UI_WIDTH, RED);
-        PrintDivider(Renderer::UI_WIDTH);
-        PrintLeftLine("", Renderer::UI_WIDTH);
-        PrintCenterLine("이 주사위는 이미 한계치에 도달했습니다.", Renderer::UI_WIDTH, WHITE);
-        PrintLeftLine("", Renderer::UI_WIDTH);
+        title = "UPGRADE FAILED";
+        titleColor = RED;
+
+        upgradeContent.push_back(" [ 강화 불가 ]");
+        upgradeContent.push_back(" ------------------------------------------");
+        upgradeContent.push_back("");
+        upgradeContent.push_back(" 이 주사위는 이미 한계치에 도달했습니다.");
+        upgradeContent.push_back("");
+        upgradeContent.push_back(" 현재 등급: [ Lv." + std::to_string(prevLevel) + " ] (MAX)");
+        upgradeContent.push_back("");
+        upgradeContent.push_back(" 다른 주사위를 강화해 보십시오.");
     }
 
-    for (int i = 0; i < 11; i++) PrintLeftLine("", Renderer::UI_WIDTH);
+    upgradeContent.push_back("");
+    upgradeContent.push_back(" ------------------------------------------");
+    upgradeContent.push_back(" 대장장이가 장비를 정리합니다...");
 
-    PrintDivider(Renderer::UI_WIDTH);
-    PrintCenterLine("대장장이가 장비를 정리합니다...", Renderer::UI_WIDTH, GRAY);
-    PrintBottom(Renderer::UI_WIDTH);
+    // 2. 오른쪽 영역: 대장장이의 망치 ASCII 아트
+    std::vector<std::string> upgradeArt = {
+        "",
+        "      _ .--.           ",
+        "     ( `    )   .-.    ",
+        "    .-'      `-'   )   ",
+        "   (      _      -'    ",
+        "    |    | |    |      ",
+        "   _|    | |    |_     ",
+        "  [      |_|      ]    ",
+        "   '--------------'    ",
+        "",
+        "    [ SMITH'S ANVIL ]  "
+    };
 
+    // 3. 공용 엔진 호출
+    RenderSplitScreen(upgradeContent, upgradeArt, title, false);
+
+    // 4. 결과 확인을 위한 딜레이
     Delay(1500);
 }
 
 void Renderer::RenderTicketInsufficient() {
-    Clear();
-    MoveCursor(0, Renderer::ZONE_SCREEN_Y);
+    // 1. 왼쪽 영역: 경고 메시지 구성
+    std::vector<std::string> alertContent;
 
-    PrintTop(Renderer::UI_WIDTH);
-    PrintCenterLine("! 출입 제한 !", Renderer::UI_WIDTH, RED);
-    PrintDivider(Renderer::UI_WIDTH);
+    alertContent.push_back("");
+    alertContent.push_back(" [ 출 입 제 한 ]");
+    alertContent.push_back(" ------------------------------------------");
+    alertContent.push_back("");
+    alertContent.push_back(" 필요한 [ 휴식권 ]이 부족합니다.");
+    alertContent.push_back("");
+    alertContent.push_back(" 현재 보유하신 티켓으로는");
+    alertContent.push_back(" 이 작업을 수행할 수 없습니다.");
+    alertContent.push_back("");
+    alertContent.push_back(" 마을에서 준비를 더 마친 뒤에 다시 오십시오.");
+    alertContent.push_back("");
+    alertContent.push_back(" ------------------------------------------");
+    alertContent.push_back(" 잠시 후 이전 화면으로 돌아갑니다...");
 
-    for (int i = 0; i < 6; i++) PrintLeftLine("", Renderer::UI_WIDTH);
+    // 2. 오른쪽 영역: 부족함을 알리는 자물쇠/X 아트
+    std::vector<std::string> alertArt = {
+        "",
+        "       .--------.       ",
+        "      /          \\      ",
+        "     |   ______   |     ",
+        "     |  |      |  |     ",
+        "     |  |  [X] |  |     ",
+        "     |__|______|__|     ",
+        "     | [LOCKED]   |     ",
+        "     '------------'     ",
+        "",
+        "    INSUFFICIENT TICKET  "
+    };
 
-    PrintCenterLine("필요한 [ 휴식권 ]이 부족합니다.", Renderer::UI_WIDTH, RED);
-    PrintCenterLine("마을에서 준비를 더 마친 뒤에 다시 오십시오.", Renderer::UI_WIDTH, WHITE);
+    // 3. 공용 엔진 호출 (제목: 자원 부족)
+    RenderSplitScreen(alertContent, alertArt, "! ACCESS DENIED !", false);
 
-    for (int i = 0; i < 7; i++) PrintLeftLine("", Renderer::UI_WIDTH);
-
-    PrintBottom(Renderer::UI_WIDTH);
+    // 4. 경고를 인지할 수 있도록 딜레이
     Delay(1500);
 }
 
-void Renderer::RenderDiceUpgradeOption() {
-    Clear();
-    MoveCursor(0, Renderer::ZONE_SCREEN_Y);
+void Renderer::RenderDiceUpgradeOption(const std::vector<std::string>& diceFrame) {
+    // 1. 왼쪽 영역: 강화 경로 및 상세 설명 구성
+    std::vector<std::string> upgradeOptionContent;
 
-    PrintTop(Renderer::UI_WIDTH);
-    PrintCenterLine("[ 강화 경로 선택 ]", Renderer::UI_WIDTH, CYAN);
-    PrintDivider(Renderer::UI_WIDTH);
+    upgradeOptionContent.push_back("");
+    upgradeOptionContent.push_back(" [ 강화 경로 선택 ]");
+    upgradeOptionContent.push_back(" 어떤 방향으로 주사위를 개조하시겠습니까?");
+    upgradeOptionContent.push_back(" ------------------------------------------");
+    upgradeOptionContent.push_back("");
 
-    PrintLeftLine("", Renderer::UI_WIDTH);
-    PrintCenterLine("어떤 방향으로 주사위를 개조하시겠습니까?", Renderer::UI_WIDTH, WHITE);
-    PrintLeftLine("", Renderer::UI_WIDTH);
-    PrintDivider(Renderer::UI_WIDTH);
+    upgradeOptionContent.push_back("  [1] 최소값 +1 증가 (MIN UP)");
+    upgradeOptionContent.push_back("      - 저점을 높여 안정적인 성능을 보장합니다.");
+    upgradeOptionContent.push_back("");
+    upgradeOptionContent.push_back("  [2] 최대값 +1 증가 (MAX UP)");
+    upgradeOptionContent.push_back("      - 고점을 높여 폭발적인 데미지를 노립니다.");
+    upgradeOptionContent.push_back("");
+    upgradeOptionContent.push_back(" ------------------------------------------");
+    upgradeOptionContent.push_back("  [0] 취소하고 돌아가기 (CANCEL)");
 
-    PrintLeftLine("", Renderer::UI_WIDTH);
-    PrintLeftLine("  [1] 최소값 +1 증가 - 안정적인 최소 성능을 보장합니다.", Renderer::UI_WIDTH, YELLOW);
-    PrintLeftLine("", Renderer::UI_WIDTH);
-    PrintLeftLine("  [2] 최대값 +1 증가 - 더 높은 고점의 데미지를 노립니다.", Renderer::UI_WIDTH, RED);
-    PrintLeftLine("", Renderer::UI_WIDTH);
-    PrintLeftLine("  [0] 취소하고 돌아가기", Renderer::UI_WIDTH, GRAY);
+    // 2. 공용 엔진 호출
+    // 오른쪽(diceFrame)에는 현재 강화 중인 주사위나 선택 중인 효과의 미리보기를 띄웁니다.
+    RenderSplitScreen(upgradeOptionContent, diceFrame, "DICE REFORGING", false);
 
-    for (int i = 0; i < 6; i++) PrintLeftLine("", Renderer::UI_WIDTH);
-
-    PrintBottom(Renderer::UI_WIDTH);
-
+    // 3. 입력 위치 고정
     MoveCursor(0, Renderer::ZONE_PLAYER_Y + 4);
     std::cout << BRIGHT_GREEN << " > 옵션 선택 입력 : " << RESET;
 }
 
-void Renderer::RenderShopItemList(const std::vector<BaseItem*>& itemLists, int playerGold) {
-    Clear();
-    MoveCursor(0, Renderer::ZONE_SCREEN_Y);
+void Renderer::RenderShopItemList(const std::vector<BaseItem*>& itemLists, int playerGold, const std::vector<std::string>& diceFrame) {
+    // 1. 왼쪽 영역: 상점 목록 데이터 구성
+    std::vector<std::string> shopContent;
 
-    PrintTop(Renderer::UI_WIDTH);
-    PrintCenterLine("[ 만물상 상점 ]", Renderer::UI_WIDTH, WHITE);
-    PrintCenterLine("보유 골드: " + std::to_string(playerGold) + " G", Renderer::UI_WIDTH, GOLD);
-    PrintDivider(Renderer::UI_WIDTH);
+    shopContent.push_back(" [ 만물상 상점 ]   보유: " + std::to_string(playerGold) + " G");
+    shopContent.push_back(" ------------------------------------------");
 
-    // 헤더 부분도 동일한 간격으로 설정
-    // [번호] 7칸, 이름 22칸, 타입 12칸, 가격순
-    PrintLeftLine("  [번호]  아이템 이름           |    타입    |   가격", Renderer::UI_WIDTH, CYAN);
-    PrintLeftLine("  -------------------------------------------------------------------------------------", Renderer::UI_WIDTH, GRAY);
+    // 헤더 (공간 제약상 간소화: 번호(4), 이름(16), 타입(8), 가격(8))
+    shopContent.push_back("  [#]  아이템 이름     |  타입  |  가격");
+    shopContent.push_back("  ------------------------------------------");
 
-    int maxDisplay = 10;
+    int maxDisplay = 10; // 2분할 높이에 맞춘 출력 제한
     for (int i = 0; i < (int)itemLists.size(); i++) {
         if (i >= maxDisplay) break;
 
         std::string name = itemLists[i]->GetName();
         std::string type = itemLists[i]->GetTypeToString(itemLists[i]->GetType());
-        std::string price = std::to_string(itemLists[i]->GetPrice()) + " G";
+        std::string price = std::to_string(itemLists[i]->GetPrice()) + "G";
 
-        // 1. 이름 칸 정렬 (한글 폭 계산)
+        // 이름 정렬 (한글 폭 계산 - 이름 칸 16칸 할당)
         int nameW = GetVisualLength(name);
-        int nameTarget = 22; // 이름 칸 총 너비
-        std::string namePadding = (nameTarget > nameW) ? std::string(nameTarget - nameW, ' ') : "";
+        std::string namePadding = (16 > nameW) ? std::string(16 - nameW, ' ') : "";
 
-        // 2. 타입 칸 정렬
+        // 타입 정렬 (타입 칸 6칸 할당)
         int typeW = GetVisualLength(type);
-        int typeTarget = 10; // 타입 칸 총 너비
-        std::string typePadding = (typeTarget > typeW) ? std::string(typeTarget - typeW, ' ') : "";
+        std::string typePadding = (6 > typeW) ? std::string(6 - typeW, ' ') : "";
 
-        // 3. 인덱스 번호 보정 ( [ 1] 형태 )
+        // 인덱스 번호 ([ 1])
         std::string idxStr = (i + 1 < 10) ? " " + std::to_string(i + 1) : std::to_string(i + 1);
 
-        // 최종 조립 (중간에 | 구분선 삽입)
-        std::string info = "   [" + idxStr + "]  " + name + namePadding + " | "
-            + type + typePadding + " | " + price;
+        // 한 줄 조립
+        std::string line = "  [" + idxStr + "] " + name + namePadding + "| "
+            + type + typePadding + "| " + price;
 
-        PrintLeftLine(info, Renderer::UI_WIDTH, WHITE);
+        shopContent.push_back(line);
     }
 
-    // 빈 줄 채우기
-    for (int i = 0; i < (maxDisplay - (int)itemLists.size()); i++) PrintLeftLine("", Renderer::UI_WIDTH);
+    // 목록이 짧을 경우 하단 고정을 위한 빈 줄 (선택사항, 엔진이 처리해주지만 가독성용)
+    while (shopContent.size() < 13) shopContent.push_back("");
 
-    PrintDivider(Renderer::UI_WIDTH);
-    PrintLeftLine(" [0] 마을로 돌아가기", Renderer::UI_WIDTH, RED);
-    PrintBottom(Renderer::UI_WIDTH);
+    shopContent.push_back(" ------------------------------------------");
+    shopContent.push_back("  [0] 마을로 돌아가기 (RETURN)");
 
+    // 2. 공용 엔진 호출
+    // 오른쪽(diceFrame)에는 상점 주인 NPC나 아이템 주사위 정보를 띄웁니다.
+    RenderSplitScreen(shopContent, diceFrame, "GENERAL STORE", false);
+
+    // 3. 입력 위치 고정
     MoveCursor(0, Renderer::ZONE_PLAYER_Y + 4);
     std::cout << BRIGHT_GREEN << " > 구매 아이템 번호 입력 : " << RESET;
 }
 
 void Renderer::RenderBuyResult(BuyStatus status, BaseItem* item, int playerGold) {
-    // 1. 화면 전체 초기화 (잔상 제거 및 일관된 배경 확보)
-    Clear();
-    MoveCursor(0, Renderer::ZONE_SCREEN_Y);
-
-    // [박스 시작]
-    PrintTop(Renderer::UI_WIDTH);
-    PrintCenterLine("[ 상점 이용 결과 ]", Renderer::UI_WIDTH, WHITE);
-    PrintDivider(Renderer::UI_WIDTH);
-
-    // 2. 결과 메시지 설정
-    std::string message = "";
+    // 1. 왼쪽 영역: 구매 결과 메시지 구성
+    std::vector<std::string> buyContent;
+    std::vector<std::string> resultArt;
+    std::string title = "TRANSACTION RESULT";
     std::string color = WHITE;
-    std::string subMessage = "";
+
+    buyContent.push_back("");
 
     switch (status) {
     case BuyStatus::Success:
-        message = "[ 구매 성공! ]";
-        if (item) subMessage = "[" + item->GetName() + "] (을)를 가방에 넣었습니다.";
         color = BRIGHT_GREEN;
+        buyContent.push_back(" [ 구 매 성 공 ! ]");
+        buyContent.push_back(" ------------------------------------------");
+        buyContent.push_back("");
+        if (item) buyContent.push_back(" [" + item->GetName() + "] (을)를");
+        buyContent.push_back(" 가방에 안전하게 넣었습니다.");
+        buyContent.push_back("");
+        buyContent.push_back(" 남은 골드: " + std::to_string(playerGold) + " G");
+
+        // 성공 시 돈주머니 아트
+        resultArt = { "", "      .----. ", "     |  $$  |", "    '--[  ]--'", "     (  $   )", "      '----' ", "", "   THANK YOU! " };
         break;
+
     case BuyStatus::InsufficientGold:
-        message = "!! 골드 부족 !!";
-        if (item) subMessage = "필요 골드: " + std::to_string(item->GetPrice()) + " G (현재: " + std::to_string(playerGold) + " G)";
         color = RED;
+        buyContent.push_back(" !! 골 드 부 족 !!");
+        buyContent.push_back(" ------------------------------------------");
+        buyContent.push_back("");
+        buyContent.push_back(" 지갑이 가벼워 물건을 살 수 없습니다.");
+        if (item) buyContent.push_back(" 필요 골드: " + std::to_string(item->GetPrice()) + " G");
+        buyContent.push_back(" 현재 골드: " + std::to_string(playerGold) + " G");
+
+        // 부족 시 빈 지갑 아트
+        resultArt = { "", "      .----. ", "     | EMPTY|", "    '--[  ]--'", "     (      )", "      '----' ", "", "  NEED MORE GOLD" };
         break;
+
     case BuyStatus::Possessed:
-        message = "!! 중복 소유 !!";
-        subMessage = "이미 가방에 동일한 아이템이 있습니다.";
         color = YELLOW;
+        buyContent.push_back(" !! 중 복 소 유 !!");
+        buyContent.push_back(" ------------------------------------------");
+        buyContent.push_back("");
+        buyContent.push_back(" 이미 동일한 아이템을 가지고 있습니다.");
+        buyContent.push_back(" 중복 구매는 허용되지 않습니다.");
+
+        // 중복 시 경고 아트
+        resultArt = { "", "      .----. ", "     |  !!  |", "    '--[  ]--'", "     (  ALREADY )", "      '----' ", "", "   DUPLICATED" };
         break;
+
     default:
-        message = "!! 구매 실패 !!";
-        subMessage = "알 수 없는 이유로 거래가 중단되었습니다.";
         color = RED;
+        buyContent.push_back(" !! 구 매 실 패 !!");
+        buyContent.push_back(" ------------------------------------------");
+        buyContent.push_back("");
+        buyContent.push_back(" 거래 도중 문제가 발생했습니다.");
+        resultArt = { "", "      XXXXX   ", "      X   X   ", "      XXXXX   ", "", "   ERROR...   " };
         break;
     }
 
-    // 3. 중앙 배치 연출
-    for (int i = 0; i < 6; i++) PrintLeftLine("", Renderer::UI_WIDTH);
+    buyContent.push_back("");
+    buyContent.push_back(" ------------------------------------------");
+    buyContent.push_back(" 잠시 후 상점으로 돌아갑니다...");
 
-    PrintCenterLine(message, Renderer::UI_WIDTH, color);
-    if (!subMessage.empty()) {
-        PrintCenterLine(subMessage, Renderer::UI_WIDTH, WHITE);
-    }
+    // 2. 공용 엔진 호출
+    RenderSplitScreen(buyContent, resultArt, title, false);
 
-    // 높이 유지를 위한 하단 공백
-    for (int i = 0; i < 7; i++) PrintLeftLine("", Renderer::UI_WIDTH);
-
-    PrintDivider(Renderer::UI_WIDTH);
-    PrintCenterLine("잠시 후 상점 목록으로 돌아갑니다...", Renderer::UI_WIDTH, GRAY);
-    PrintBottom(Renderer::UI_WIDTH); // [박스 끝]
-
-    // 4. 짧은 대기 후 복귀
+    // 3. 결과 확인 딜레이
     Delay(1500);
 }
 
-void Renderer::RenderInventory(BaseItem* slots[], const std::vector<ItemSlot>& gearStorage, const std::vector<DiceSlot>& diceStorage) {
-    // 1. 화면 전체 구역 초기화 (인벤토리는 정보가 많으므로 높게!)
-    ClearZone(Renderer::ZONE_SCREEN_Y, 35);
-    MoveCursor(0, Renderer::ZONE_SCREEN_Y);
+void Renderer::RenderInventory(BaseItem* slots[], const std::vector<ItemSlot>& gearStorage,
+    const std::vector<DiceSlot>& diceStorage, const std::vector<std::string>& diceFrame)
+{
+    // 1. 왼쪽 영역: 장착 및 소지품 정보 구성
+    std::vector<std::string> invContent;
 
-    // [박스 시작]
-    PrintTop(Renderer::UI_WIDTH);
-    PrintCenterLine("[ 인벤토리 ]", Renderer::UI_WIDTH, WHITE);
-    PrintDivider(Renderer::UI_WIDTH);
-
-    // --- [섹션 1: 장착 슬롯] ---
-    PrintLeftLine(" [ 현재 장착 장비 ]", Renderer::UI_WIDTH, CYAN);
-    const char* slotNames[] = { "무  기", "헬  멧", "갑  옷", "신  발", "장신구" };
+    // [섹션 1] 장착 슬롯 (간결하게 표현)
+    invContent.push_back(" [ 현재 장착 장비 ]");
+    const char* slotNames[] = { "무기", "헬멧", "갑옷", "신발", "장신구" };
     for (int i = 0; i < 5; i++) {
-        std::string itemName = (slots[i] != nullptr) ? slots[i]->GetName() : "---";
-        PrintLeftLine("  - " + std::string(slotNames[i]) + " : " + itemName, Renderer::UI_WIDTH, (slots[i] ? YELLOW : GRAY));
+        std::string name = (slots[i] != nullptr) ? slots[i]->GetName() : "---";
+        invContent.push_back("  - " + std::string(slotNames[i]) + " : " + name);
     }
+    invContent.push_back(" ------------------------------------------");
 
-    PrintDivider(Renderer::UI_WIDTH);
-
-    // --- [섹션 2: 소지 장비 리스트] ---
-    PrintLeftLine(" [ 소지 중인 장비 ]", Renderer::UI_WIDTH, CYAN);
+    // [섹션 2] 소지 장비 (최대 5개 표시)
+    invContent.push_back(" [ 소지 중인 장비 ]");
     if (gearStorage.empty()) {
-        PrintLeftLine("    (비어 있음)", Renderer::UI_WIDTH, GRAY);
+        invContent.push_back("   (비어 있음)");
     }
     else {
-        for (int i = 0; i < std::min((int)gearStorage.size(), 6); i++) {
-            std::string info = "  [" + std::to_string(i + 1) + "] " +
-                gearStorage[i].item->GetName() +
-                " (" + std::to_string(gearStorage[i].count) + "개)";
-            PrintLeftLine(info, Renderer::UI_WIDTH, WHITE);
+        for (int i = 0; i < std::min((int)gearStorage.size(), 5); i++) {
+            invContent.push_back("   [" + std::to_string(i + 1) + "] " +
+                gearStorage[i].item->GetName() + " (x" + std::to_string(gearStorage[i].count) + ")");
         }
     }
+    invContent.push_back(" ------------------------------------------");
 
-    PrintDivider(Renderer::UI_WIDTH);
-
-    // --- [섹션 3: 소지 주사위 리스트] ---
-    PrintLeftLine(" [ 소지 중인 주사위 ]", Renderer::UI_WIDTH, BRIGHT_GREEN);
+    // [섹션 3] 소지 주사위 (한 줄 요약)
+    invContent.push_back(" [ 소지 중인 주사위 ]");
     if (diceStorage.empty()) {
-        PrintLeftLine("    (비어 있음)", Renderer::UI_WIDTH, GRAY);
+        invContent.push_back("   (비어 있음)");
     }
     else {
-        std::string diceRow = "  ";
+        std::string dRow = "   ";
         for (const auto& ds : diceStorage) {
-            diceRow += ds.dice->DiceIdToString() + "(" + std::to_string(ds.count) + ")  ";
+            dRow += ds.dice->DiceIdToString() + "(" + std::to_string(ds.count) + ") ";
         }
-        PrintLeftLine(diceRow, Renderer::UI_WIDTH, WHITE);
+        invContent.push_back(dRow);
     }
+    invContent.push_back(" ------------------------------------------");
+    invContent.push_back("  [0] 마을로 돌아가기 (RETURN)");
 
-    // --- [중간: 박스 하단까지 연장] ---
-    // 빈 공간을 테두리로 채워 "하단 메뉴"까지 연결합니다.
-    int remaining = 4; // 남은 공간에 따라 조절 가능
-    for (int i = 0; i < remaining; i++) {
-        PrintLeftLine("", Renderer::UI_WIDTH);
-    }
+    // 2. 공용 엔진 호출
+    // 오른쪽(diceFrame)에는 커다란 가방 ASCII나 현재 선택된 아이템의 상세 스탯을 띄웁니다.
+    RenderSplitScreen(invContent, diceFrame, "ADVENTURER'S BACKPACK", false);
 
-    // --- [하단: 조작 안내 구역] ---
-    PrintDivider(Renderer::UI_WIDTH);
-    PrintLeftLine(" [0] 마을로 돌아가기", Renderer::UI_WIDTH, RED);
-    PrintCenterLine("장착할 장비의 번호를 입력해 주세요.", Renderer::UI_WIDTH, GRAY);
-
-    PrintBottom(Renderer::UI_WIDTH); // [박스 끝]
-
-    // 2. 입력 위치 고정
+    // 3. 입력 위치 고정
     MoveCursor(0, Renderer::ZONE_PLAYER_Y + 4);
     std::cout << BRIGHT_GREEN << " > 장비 번호 선택 : " << RESET;
 }
 
 void Renderer::RenderEquipResult(const EquipResult& result) {
-    // 1. 화면 전체 초기화 (잔상 및 쪼개진 박스 방지)
-    Clear();
-    MoveCursor(0, Renderer::ZONE_SCREEN_Y);
-
-    // [박스 시작]
-    PrintTop(Renderer::UI_WIDTH);
-    PrintCenterLine("[ 장비 변경 알림 ]", Renderer::UI_WIDTH, WHITE);
-    PrintDivider(Renderer::UI_WIDTH);
-
-    // 2. 메시지 및 색상 설정
-    std::string mainMsg = "";
-    std::string subMsg = "";
-    std::string color = YELLOW;
+    // 1. 왼쪽 영역: 장착 결과 메시지 구성
+    std::vector<std::string> equipContent;
+    std::vector<std::string> equipArt;
+    std::string title = "EQUIPMENT NOTIFICATION";
+    std::string color = WHITE;
 
     // 안전한 아이템 이름 처리
     std::string itemName = (result.item != nullptr) ? result.item->GetName() : "알 수 없는 아이템";
 
+    equipContent.push_back("");
+
     switch (result.status) {
     case EquipStatus::Equip:
-        mainMsg = "[ 장착 성공 ]";
-        subMsg = "[" + itemName + "] (을)를 성공적으로 착용했습니다.";
         color = BRIGHT_GREEN;
+        equipContent.push_back(" [ 장 착 성 공 ]");
+        equipContent.push_back(" ------------------------------------------");
+        equipContent.push_back("");
+        equipContent.push_back(" 새로운 장비를 몸에 맞췄습니다.");
+        equipContent.push_back("");
+        equipContent.push_back(" 현재 착용: [" + itemName + "]");
+
+        // 장착 성공 아트 (방패/갑옷 느낌)
+        equipArt = { "", "      .----. ", "     /  __  \\", "    |  /  \\  |", "    |  \\__/  |", "     \\      /", "      '----' ", "", "   EQUIPPED! " };
         break;
+
     case EquipStatus::Changed:
-        mainMsg = "[ 장비 교체 완료 ]";
-        // 이전 장비와 새 장비의 대비를 시각적으로 표현
-        subMsg = "[" + result.prevItem + "]  -->  [" + itemName + "]";
         color = CYAN;
+        equipContent.push_back(" [ 장 비 교 체 완 료 ]");
+        equipContent.push_back(" ------------------------------------------");
+        equipContent.push_back("");
+        equipContent.push_back(" 기존 장비를 해제하고 교체했습니다.");
+        equipContent.push_back("");
+        equipContent.push_back(" 이전: [" + result.prevItem + "]");
+        equipContent.push_back("  ▼ ");
+        equipContent.push_back(" 현재: [" + itemName + "]");
+
+        // 교체 아트 (화살표 느낌)
+        equipArt = { "", "       /\\    ", "      /  \\   ", "     |    |  ", "     |    |  ", "      \\  /   ", "       \\/    ", "", "    REPLACED " };
         break;
+
     case EquipStatus::Overlap:
-        mainMsg = "!! 이미 착용 중 !!";
-        subMsg = "동일한 장비 [" + itemName + "] (을)를 이미 사용하고 있습니다.";
         color = RED;
+        equipContent.push_back(" !! 이 미 착 용 중 !!");
+        equipContent.push_back(" ------------------------------------------");
+        equipContent.push_back("");
+        equipContent.push_back(" 동일한 장비를 중복해서 낄 수 없습니다.");
+        equipContent.push_back("");
+        equipContent.push_back(" 대상: [" + itemName + "]");
+
+        equipArt = { "", "      XXXXX   ", "     X     X  ", "     X [!] X  ", "     X     X  ", "      XXXXX   ", "", "   DUPLICATED " };
         break;
+
     default:
-        mainMsg = "!! 장착 불가 !!";
-        subMsg = "해당 아이템을 장착하는 과정에서 오류가 발생했습니다.";
         color = GRAY;
+        equipContent.push_back(" !! 장 착 불 가 !!");
+        equipContent.push_back(" ------------------------------------------");
+        equipContent.push_back("");
+        equipContent.push_back(" 장착 과정에서 알 수 없는 오류 발생.");
+        equipArt = { "", "      ????    ", "     ?    ?   ", "       ??     ", "       ??     ", "              ", "       ??     ", "", "    ERROR...  " };
         break;
     }
 
-    // 3. 중앙 연출 구역
-    for (int i = 0; i < 6; i++) PrintLeftLine("", Renderer::UI_WIDTH);
+    equipContent.push_back("");
+    equipContent.push_back(" ------------------------------------------");
+    equipContent.push_back(" 잠시 후 소지품 창으로 돌아갑니다...");
 
-    PrintCenterLine(mainMsg, Renderer::UI_WIDTH, color);
-    PrintLeftLine("", Renderer::UI_WIDTH); // 메시지 사이 간격
-    PrintCenterLine(subMsg, Renderer::UI_WIDTH, WHITE);
+    // 2. 공용 엔진 호출
+    RenderSplitScreen(equipContent, equipArt, title, false);
 
-    // 높이 유지를 위한 하단 공백
-    for (int i = 0; i < 7; i++) PrintLeftLine("", Renderer::UI_WIDTH);
-
-    PrintDivider(Renderer::UI_WIDTH);
-    PrintCenterLine("잠시 후 소지품 창으로 돌아갑니다...", Renderer::UI_WIDTH, GRAY);
-    PrintBottom(Renderer::UI_WIDTH); // [박스 끝]
-
-    // 4. 결과 확인 대기
+    // 3. 결과 확인 딜레이
     Delay(1500);
 }
-void Renderer::Clear() { system("cls"); }
-void Renderer::Delay(int ms) { Sleep(ms); }
+
+void Renderer::Clear() {
+   
+    system("cls");
+}
+
+void Renderer::Delay(int ms) {
+    Sleep(ms);
+}
 
 void Renderer::PrintTyping(const std::string& text, int speed) {
-    for (int i = 0; i < text.length(); i++) {
+    for (int i = 0; i < (int)text.length(); i++) {
+        // 1. 한글 처리 (2바이트 문자 감지)
         if ((unsigned char)text[i] >= 0x80) {
-            std::cout << text[i] << text[i + 1] << std::flush;
-            i++;
+            if (i + 1 < (int)text.length()) {
+                std::cout << text[i] << text[i + 1] << std::flush;
+                i++;
+            }
         }
+        // 2. 일반 영문/기호 처리
         else {
             std::cout << text[i] << std::flush;
         }
-        Sleep(speed);
+
+        // 3. 딜레이 적용
+        if (speed > 0) Sleep(speed);
     }
+    // 타이핑 종료 후 줄바꿈은 호출하는 쪽에서 제어하도록 하는 것이 UI 배치에 유리할 수 있습니다.
     std::cout << std::endl;
 }

@@ -105,7 +105,7 @@ void RefurbishManager::Run()
 		renderer.Clear();
 		Character* character = GameManager::GetInstance().GetCharacter();
 
-		renderer.RenderRestMenu();
+		renderer.RenderRestMenu(std::vector<std::string>());
 		
 		
 		InputResult input = Tools<int>::Input(0, (int)RestOption::Heal + 1);
@@ -144,13 +144,13 @@ void RefurbishManager::Run()
 			}
 
 			std::vector<DiceSlot> storege = character->GetInventory()->GetDiceStorege();
-			renderer.RenderDiceUpgradeList(storege);
+			renderer.RenderDiceUpgradeList(storege, std::vector<std::string>());
 			InputResult input = Tools<int>::Input(0, (int)RestOption::Heal + 1);
 
 			if (input.status == InputStatus::Exit) continue;
 			if (input.status == InputStatus::Fail) continue;
 			
-			renderer.RenderDiceUpgradeOption();
+			renderer.RenderDiceUpgradeOption(std::vector<std::string>());
 
 			InputResult option = Tools<int>::Input(0, (int)RestOption::Heal + 1);
 
