@@ -859,10 +859,15 @@ void Renderer::RenderBuyResult(BuyStatus status, BaseItem* item, int playerGold)
     Delay(1500);
 }
 
-void Renderer::RenderInventory(BaseItem* slots[], const std::vector<ItemSlot>& gearStorage,
+void Renderer::RenderInventory(int level,BaseItem* slots[], const std::vector<ItemSlot>& gearStorage,
     const std::vector<DiceSlot>& diceStorage, const std::vector<std::string>& diceFrame)
 {
     std::vector<std::string> invContent;
+
+    invContent.push_back(""); // 한 줄 띄우기
+    invContent.push_back(std::string(BRIGHT_YELLOW) + "  [ CHARACTER STATUS ]" + RESET);
+    invContent.push_back("  - 현재 레벨 : " + std::string(BRIGHT_WHITE) + "LV. " + std::to_string(level) + RESET);
+    invContent.push_back(std::string(GRAY) + " ------------------------------------------" + RESET);
 
     // [섹션 1] 현재 장착 장비 - CYAN 테마 (정보/상태)
     invContent.push_back(std::string(BRIGHT_CYAN) + " [ 현재 장착 장비 ]" + RESET);
