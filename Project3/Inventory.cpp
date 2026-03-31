@@ -19,13 +19,21 @@ void Inventory::Run()
 
 		renderer.RenderInventory(slots, gearStorege, diceStorege);
 
-		InputResult input = Tools<int>::Input(0, gearStorege.size());
+		InputResult input = Tools<int>::Input(0, (int)gearStorege.size());
 
 		if (input.status == InputStatus::Fail) continue;
 		if (input.status == InputStatus::Exit) break;
 		if (input.status == InputStatus::IndexOver) continue;
 
 		EquipResult result = EquipByIndex(input.value - 1);
+		if (result.status == EquipStatus::Overlap)
+		{
+			AudioManager::PlaySFX(SFXList::Error);
+		}
+		else
+		{
+			AudioManager::PlaySFX(SFXList::Equip);
+		}
 		renderer.RenderEquipResult(result);
 	}
 }
@@ -90,7 +98,6 @@ EquipResult Inventory::EquipByIndex(int index)
 
 EquipStatus Inventory::EquipByBaseItem(BaseItem* gear)
 {
-
 	// 장비 착용 여부 확인
 
 	int type = (int)gear->GetType();

@@ -21,6 +21,7 @@ enum class EquipStatus
 	Overlap,    // 같은 장비를 착용하길 시도하는 경우 반환
 	Changed,	// 장비가 교체되었을 때 반환
 	UnEquip,     // 장비가 해제됨
+	Default
 };
 
 struct EquipResult
@@ -28,6 +29,13 @@ struct EquipResult
 	EquipStatus status;
 	BaseItem* item;
 	std::string prevItem;
+
+	EquipResult()
+	{
+		status = EquipStatus::Default;
+		item = nullptr;
+		prevItem = "";
+	}
 };
 
 struct ItemSlot 

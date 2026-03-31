@@ -3,7 +3,6 @@
 #include <mmsystem.h>
 #include <string>
 #include <iostream>
-#include "Tools.h"
 
 #pragma comment(lib, "winmm.lib")
 
@@ -11,7 +10,9 @@
 // MP3 to WAV : https://www.freeconvert.com/mp3-to-wav 
 // OGG to WAV : https://www.freeconvert.com/ko/ogg-to-wav
 
-const std::string bgmPaths[] =
+constexpr int defaultVolume = 100;
+
+static const std::string bgmPaths[] =
 {
     "Main_Theme.wav",
     "Shop.wav"
@@ -23,7 +24,7 @@ enum class BGMList
     Shop
 };
 
-const std::string sfxPaths[] =
+static const std::string sfxPaths[] =
 {
     "dice_roll.wav",
     "Button_Lite.wav",
@@ -66,14 +67,15 @@ class AudioManager
 private:
     int bgmVolume;
 public:
-    void PlaySFX(SFXList index);
+    static void PlaySFX(SFXList index);
+    static void PlayBGM(BGMList index, bool repeat = false);
+
 public:
     AudioManager() { bgmVolume = 100; }
-    void PlayBGM(BGMList index, bool repeat = false);
     void PauseMusic();
     void ResumeMusic();
     void StopMusic();
-    void SetVolume(int volume);
+    static void SetVolume(int volume);
 public:
     static AudioManager& GetInstance();
 

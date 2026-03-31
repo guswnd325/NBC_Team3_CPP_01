@@ -18,16 +18,6 @@ const std::vector<BaseItem*>& ShopManager::GetItemLists()
 {
 	return itemLists;
 }
-
-std::streamsize ShopManager::GetMaxLengthByVector(std::vector<BaseItem*>& v)
-{
-	std::streamsize size = 0;
-	for (auto x : v)
-	{
-		size = max(size, v.size());
-	}
-	return size;
-}
 void ShopManager::Run(Character* character)
 {
 	while (true)
@@ -37,7 +27,7 @@ void ShopManager::Run(Character* character)
 		
 		renderer.RenderShopItemList(itemLists, character->GetGold());
 
-		InputResult input = Tools<int>::Input(0, itemLists.size());
+		InputResult input = Tools<int>::Input(0, (int)itemLists.size());
 
 		if (input.status == InputStatus::Fail) continue;
 		else if (input.status == InputStatus::Exit) break;
@@ -45,6 +35,14 @@ void ShopManager::Run(Character* character)
 
 		std::pair<BuyStatus, BaseItem *> status = BuyItem(input.value, character);
 		
+		if (status.first == BuyStatus::Success)
+		{
+			AudioManager::PlaySFX(SFXList::Buy_Item);
+		}
+		else
+		{
+			AudioManager::PlaySFX(SFXList::Error);
+		}
 		renderer.RenderBuyResult(status.first, status.second, character->GetGold());
 	}
 }

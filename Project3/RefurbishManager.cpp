@@ -166,6 +166,15 @@ void RefurbishManager::Run()
 			if (option.status == InputStatus::Fail) continue;
 
 			UpgradeResult info = UpgradeDice(option.value - 1, (UpgradeType)option.value, character);
+			
+			if (info.status == UpgradeStatus::Success)
+			{
+				AudioManager::PlaySFX(SFXList::Upgrade_Dice);
+			}
+			else
+			{
+				AudioManager::PlaySFX(SFXList::Error);
+			}
 			renderer.RenderUpgradeResult(info.status, info.upgradeLevel, info.upgradeLevel + 1);
 
 

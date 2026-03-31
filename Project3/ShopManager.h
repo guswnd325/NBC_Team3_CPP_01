@@ -18,7 +18,6 @@ public:
     ~ShopManager();
     const std::vector<BaseItem*>& GetItemLists();
     bool CheckPossessd(int itemID, Character * character);
-    std::streamsize GetMaxLengthByVector(std::vector<BaseItem*>& v);
     std::pair<BuyStatus, BaseItem*> BuyItem(int index, Character* character);
     void Run(Character* character);
 };

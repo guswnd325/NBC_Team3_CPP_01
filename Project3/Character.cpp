@@ -1,9 +1,9 @@
 #include "Character.h"
 #include "Renderer.h"
 
-constexpr int defaultGold = 200;
+constexpr int defaultGold = 3000;
 constexpr int maxHP = 100;
-constexpr int defaultRestTicket = 10;
+constexpr int defaultRestTicket = 20;
 
 Character::Character()
 {
@@ -106,6 +106,7 @@ int Character::GetRestTicket() const
 
 void Character::LevelUp()
 {
+	AudioManager::PlaySFX(SFXList::LevelUp);
 	level++;
 	SetExp(0);
 	levelUpExp *= 1.5;

@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 #include <sstream>
+#include "AudioManager.h"
 
 enum class InputStatus
 {
@@ -43,9 +44,12 @@ public:
 
 	static InputResult Input(int minLimit, int maxLimit)
 	{
+
+
 		InputResult result;
 		int input;
 		std::cin >> input;
+		AudioManager::PlaySFX(SFXList::Button_Click);
 		
 		if (std::cin.fail())
 		{

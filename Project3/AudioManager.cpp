@@ -29,7 +29,7 @@ void AudioManager::PlayBGM(BGMList index, bool repeat)
 	{
 		mciSendStringA("play bgm", NULL, 0, NULL);
 	}
-	SetVolume(bgmVolume);
+	SetVolume(defaultVolume);
 }
 
 void AudioManager::PauseMusic()
@@ -50,8 +50,6 @@ void AudioManager::StopMusic()
 
 void AudioManager::SetVolume(int volume)
 {
-	volume = Tools<int>::Clamp(volume, 0, 1000);
-
 	std::string cmd = "setaudio bgm volume to " + std::to_string(volume);
 	mciSendStringA(cmd.c_str(), NULL, 0, NULL);
 }
