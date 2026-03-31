@@ -3,7 +3,7 @@
 
 constexpr int defaultGold = 200;
 constexpr int maxHP = 100;
-constexpr int defaultRestTicket = 0;
+constexpr int defaultRestTicket = 10;
 
 Character::Character()
 {
@@ -32,16 +32,32 @@ void Character::InitializeCharacter(std::string name)
 	{
 		SetAtk(5);
 		SetDef(10);
+		for (int i = 0; i < 3; i++)
+		{
+			GetInventory()->AddDice(DiceID::D1_6);
+		}
 	}
 	else if (name == "마법사")
 	{
 		SetAtk(10);
 		SetDef(5);
+		for (int i = 0; i < 2; i++)
+		{
+			GetInventory()->AddDice(DiceID::D1_10);
+		}
 	}
 	else if (name == "고점맨")
 	{
 		SetAtk(1);
 		SetDef(0);
+
+		GetInventory()->AddDice(DiceID::D1_24);
+	}
+	else if (name == "테스트용")
+	{
+		//SetAtk();
+		//SetDef();
+		//GetInventory()->AddDice(DiceID::D1_24);
 	}
 
 	SetHP(maxHP);

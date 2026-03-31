@@ -119,21 +119,12 @@ void RefurbishManager::Run()
 		Character* character = GameManager::GetInstance().GetCharacter();
 
 		renderer.RenderRestMenu();
-		int select;
-
-		std::cin >> select;
-
-		if (!select)
-		{
-			break;
-		}
-		else if (std::cin.fail())
-		{
-			std::cin.clear();
-			std::cin.ignore((std::numeric_limits<std::streamsize>::max)(), '\n');
-			continue;
-		}
-
+		
+		
+		InputResult input = Tools<int>::Input(0, (int)RestOption::Heal + 1);
+		
+		if (input.status == InputStatus::Exit) break;
+		if (input.status == InputStatus::Fail) continue;
 
 		// [2] 체력 회복 선택의 경우
 		if (character->GetRestTicket() <= 0)
@@ -142,7 +133,7 @@ void RefurbishManager::Run()
 			continue;
 		}
 
-		if (select == (int)RestOption::Heal)
+		if (input.value == (int)RestOption::Heal)
 		{
 			RestResult info = Rest(character);
 
@@ -151,7 +142,7 @@ void RefurbishManager::Run()
 			
 			continue;
 		}
-		if (select == (int)RestOption::Upgrade)
+		if (input.value == (int)RestOption::Upgrade)
 		{
 
 			if (character->GetRestTicket() <= 0)
@@ -161,42 +152,20 @@ void RefurbishManager::Run()
 			}
 			std::vector<DiceSlot> storege = character->GetInventory()->GetDiceStorege();
 			renderer.RenderDiceUpgradeList(storege);
+			InputResult input = Tools<int>::Input(0, (int)RestOption::Heal + 1);
 
-			int index;
-			std::cin >> index;
-
-			if (std::cin.fail())
-			{
-				std::cin.clear();
-				std::cin.ignore((std::numeric_limits<std::streamsize>::max)(), '\n');
-				continue;
-			}
-			else if (!index)
-			{
-				break;
-			}
-			if (index > storege.size())
-			{
-				continue;
-			}
-
+			if (input.status == InputStatus::Exit) continue;
+			if (input.status == InputStatus::Fail) continue;
+			
 			// 강화 종류 선택, min or max
 			renderer.RenderDiceUpgradeOption();
 
-			std::cin >> select;
+			InputResult option = Tools<int>::Input(0, (int)RestOption::Heal + 1);
 
-			if (std::cin.fail())
-			{
-				std::cin.clear();
-				std::cin.ignore((std::numeric_limits<std::streamsize>::max)(), '\n');
-				continue;
-			}
-			else if (!select)
-			{
-				break;
-			}
+			if (option.status == InputStatus::Exit) continue;
+			if (option.status == InputStatus::Fail) continue;
 
-			UpgradeResult info = UpgradeDice(index - 1, (UpgradeType)select, character);
+			UpgradeResult info = UpgradeDice(option.value - 1, (UpgradeType)option.value, character);
 			renderer.RenderUpgradeResult(info.status, info.upgradeLevel, info.upgradeLevel + 1);
 
 

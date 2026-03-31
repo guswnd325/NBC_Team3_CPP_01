@@ -62,22 +62,15 @@ void GameManager::CreateCharacter()
 	{
 	case 1:
 		job = "전사";
-		for (int i = 0; i < 3; i++)
-		{
-			player->GetInventory()->AddDice(DiceID::D1_6);
-		}
 		break;
 	case 2:
 		job = "마법사";
-		for (int i = 0; i < 2; i++)
-		{
-			player->GetInventory()->AddDice(DiceID::D1_10);
-		}
 		break;
 	case 3:
 		job = "고점맨";
-			player->GetInventory()->AddDice(DiceID::D1_24);
 		break;
+	case 4:
+		job = "테스트용";
 	default:
 		break;
 	}

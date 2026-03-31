@@ -19,28 +19,13 @@ void Inventory::Run()
 
 		renderer.RenderInventory(slots, gearStorege, diceStorege);
 
-		int select;
+		InputResult input = Tools<int>::Input(0, gearStorege.size());
 
-		std::cin >> select;
+		if (input.status == InputStatus::Fail) continue;
+		if (input.status == InputStatus::Exit) break;
+		if (input.status == InputStatus::IndexOver) continue;
 
-		if (std::cin.fail())
-		{
-			std::cin.clear();
-			std::cin.ignore((std::numeric_limits<std::streamsize>::max)(), '\n');
-			continue;
-		}
-		else if (!select)
-		{
-			break;
-		}
-
-		else if ( select > gearStorege.size())
-		{
-			continue;
-		}
-
-		// 장착 또는 교체
-		EquipResult result = EquipByIndex(select-1);
+		EquipResult result = EquipByIndex(input.value - 1);
 		renderer.RenderEquipResult(result);
 	}
 }
