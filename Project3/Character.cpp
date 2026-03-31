@@ -2,7 +2,7 @@
 #include "Renderer.h"
 #include "GameManager.h"
 
-constexpr int defaultGold = 1000000;
+constexpr int defaultGold = 0;
 constexpr int maxHP = 100;
 constexpr int defaultHP = 100;
 constexpr int defaultRestTicket = 0;
@@ -64,12 +64,13 @@ void Character::InitializeCharacter(std::string name)
 	}
 	else if (name == "테스트용")
 	{
-		//SetAtk(100);
-		//SetDef(100);
-		
+		SetAtk(100);
+		SetDef(100);
+		restTicket = 100;
+		SetGold(99999);
 		for (int i = 0; i < 10; i++)
 		{
-			//GetInventory()->AddDice(DiceID::D1_24);
+			GetInventory()->AddDice(DiceID::D5_24);
 		}
 	}
 
