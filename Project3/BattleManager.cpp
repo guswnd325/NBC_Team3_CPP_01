@@ -73,9 +73,14 @@ BattleResult BattleManager::Run(Character* player, Monster* monster)
 
             int gainedExp = monster->GetExp();
             player->SetExp(player->GetExp() + gainedExp);
+            Renderer::GetInstance().AddBattleLog("°æÇèÄ¡ " + std::to_string(gainedExp) + " È¹µæ! (ÇöÀç °æÇèÄ¡ : " + std::to_string(player->GetExp()) + ")");
 
-            Renderer::GetInstance().AddBattleLog("°æÇèÄ¡ " + std::to_string(gainedExp) + " È¹µæ");
-
+            if (player->GetExp() >= player->GetLevelUpExp())
+            {
+                player->LevelUp();
+                Renderer::GetInstance().AddSystemLog("Level Up! (" + std::to_string(player->GetLevel()) + ")");
+            }    
+                
             GiveReward(player, monster);
             return BattleResult::PlayerWin;
         }
