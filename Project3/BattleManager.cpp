@@ -63,6 +63,7 @@ BattleResult BattleManager::Run(Character* player, Monster* monster, CombatManag
             Renderer::GetInstance().AddBattleLog("플레이어가 사망했습니다...");
             AudioManager::GetInstance().StopMusic();
             AudioManager::GetInstance().PlayBGM(BGMList::Jane, false);
+            combatManager->ShowCredit();
             Sleep(3000);
             return BattleResult::PlayerDead;
         }
