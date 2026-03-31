@@ -16,11 +16,14 @@ BattleResult BattleManager::Run(Character* player, Monster* monster)
 
         std::cout << std::endl;
 
-        if (1 == input.value)
+        switch (input.value)
+        {
+        case 1:
         {
             StartBattle(player, monster);
-        }
-        else if (2 == input.value)
+            break;
+        }  
+        case 2:
         {
             int monsterRoll = 0;
 
@@ -35,11 +38,34 @@ BattleResult BattleManager::Run(Character* player, Monster* monster)
                 Renderer::GetInstance().AddBattleLog("도망에 실패! " + monster->GetName() + "이(가) 공격합니다!");
                 CalculateDamage(monster, player, monsterRoll);
             }
+
+            break;
         }
-        else
+        case 3:
+        {
+            Renderer::GetInstance().AddBattleLog("탐사에서 도망쳤습니다! ㅋ");
+            Sleep(3000);
+            return BattleResult::Escaped;
+        }
+        default:
         {
             Renderer::GetInstance().AddBattleLog("잘못된 입력입니다. 1 또는 2를 입력해주세요.");
             Sleep(3000);
+            break;
+        }
+        }
+
+        if (1 == input.value)
+        {
+            
+        }
+        else if (2 == input.value)
+        {
+            
+        }
+        else
+        {
+            
             continue;
         }
 
