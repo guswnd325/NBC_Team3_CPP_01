@@ -1,0 +1,142 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Comment CommentText="                       싱글톤 패턴">
+    <Position X="11.75" Y="1" Height="0.306" Width="2.686" />
+  </Comment>
+  <Comment CommentText="                                팩토리 패턴">
+    <Position X="2.732" Y="6.876" Height="0.291" Width="3.506" />
+  </Comment>
+  <Comment CommentText="                                                                                     퍼사드 패턴">
+    <Position X="9.25" Y="2.75" Height="0.291" Width="7.755" />
+  </Comment>
+  <Class Name="Actor" Collapsed="true">
+    <Position X="6.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAgAAAAABAAAgAAAAAAAkAAIAAIEAAAAwABAQAAABoA=</HashCode>
+      <FileName>Actor.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Character" Collapsed="true">
+    <Position X="5.25" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>oAAIAQAAAACAAAAAABAACAEBAAGAAAICAAiAAAAQKAA=</HashCode>
+      <FileName>Character.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Monster" Collapsed="true">
+    <Position X="7.25" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>hAEAAAQAgAAgAAQAgIAABAAGACABBAMQCwAAQAAAUAg=</HashCode>
+      <FileName>Monster.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AudioManager" Collapsed="true">
+    <Position X="14" Y="1.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAAAAAAAAAEAAAQARAAAAACQAAAgAACAQAA=</HashCode>
+      <FileName>AudioManager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BaseItem" Collapsed="true">
+    <Position X="2" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAACAAAgBEAAAgAoAAAAFAAEgAAAAAIAABgA=</HashCode>
+      <FileName>BaseItem.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DiceManager">
+    <Position X="9.25" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAIAAAAACIQQAAAABAAAIAAEACAAAAACBA=</HashCode>
+      <FileName>DiceManager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MonsterManager">
+    <Position X="4.75" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAAAAAAAAAAAAAAAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>MonsterManager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ItemSpawnManager">
+    <Position X="2.75" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAA=</HashCode>
+      <FileName>ItemSpawnManager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ShopManager">
+    <Position X="11.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACCAAAAAACAAAAAAAAAgAAAAAAAAAAIQAAAEAI=</HashCode>
+      <FileName>ShopManager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Renderer" Collapsed="true">
+    <Position X="10.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QKKgICAgKEIAAOkAAYAAAALQBAEMARgKQCCiJMBAYIE=</HashCode>
+      <FileName>Renderer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RefurbishManager">
+    <Position X="13.25" Y="3.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAADACAgAAgAAAAAAAAAAAI=</HashCode>
+      <FileName>RefurbishManager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BattleManager">
+    <Position X="11" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAAAAAAgIAAAAAAABIAACCAAAAAAAAAAAAAAAAAQI=</HashCode>
+      <FileName>BattleManager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Inventory">
+    <Position X="15.25" Y="3.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>MAAIAAAAABAAAAAQAAAAAAAEAAAAAAAAAACAAhAaEAI=</HashCode>
+      <FileName>Inventory.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CombatManager">
+    <Position X="9.25" Y="3.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAACQAAAAAAACAABEAAAAJAAAAAAAFAAAYAAACoAI=</HashCode>
+      <FileName>CombatManager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GameManager" Collapsed="true">
+    <Position X="12.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAQAAAAAAAAACAAAAAAgDAAAAQAFAAAwAABwAAI=</HashCode>
+      <FileName>GameManager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Sword" Collapsed="true">
+    <Position X="0.75" Y="5.25" Width="1.5" />
+    <InheritanceLine Type="BaseItem">
+      <InheritanceModifierLabel ManuallyPlaced="true">
+        <Position X="0.082" Y="0.084" />
+      </InheritanceModifierLabel>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>BaseItem.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Halo" Collapsed="true">
+    <Position X="3.25" Y="5.25" Width="1.5" />
+    <InheritanceLine Type="BaseItem">
+      <InheritanceModifierLabel ManuallyPlaced="true">
+        <Position X="0.021" Y="0.086" />
+      </InheritanceModifierLabel>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>BaseItem.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="맑은 고딕" Size="9" />
+</ClassDiagram>

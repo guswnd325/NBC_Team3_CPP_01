@@ -184,6 +184,9 @@
     <Media Include="Upgrade_Dice.wav" />
     <Media Include="Victory.wav" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="CD.cd" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
