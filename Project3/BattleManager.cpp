@@ -158,10 +158,12 @@ void BattleManager::StartBattle(Character* player, Monster* monster)
     
     if (playerRoll >= monsterRoll) {
         Renderer::GetInstance().AddBattleLog("플레이어 승리! 공격 개시.");
+        AudioManager::GetInstance().PlaySFX(SFXList::Hit);
         CalculateDamage(player, monster, playerRoll, true);
     }
     else {
         Renderer::GetInstance().AddBattleLog(monster->GetName() + " 승리! 반격 당함.");
+        AudioManager::GetInstance().PlaySFX(SFXList::Hit);
         CalculateDamage(monster, player, monsterRoll, false);
     }
 }
