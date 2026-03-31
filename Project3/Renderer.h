@@ -2,59 +2,82 @@
 #include "Character.h"
 #include "Monster.h"
 #include "RefurbishStatus.h"
+#include "Inventory.h"
+#include "buyStatus.h"
 #include <vector>
 #include <string>
 #include <Windows.h>
 #include <unordered_map>
-#include "Inventory.h"
-#include "buyStatus.h"
+
+
+#define GOLD         "\033[38;2;218;165;32m"
+#define BRIGHT_GREEN "\033[92m"
+#define WHITE        "\033[37m"
+#define RED          "\033[31m"
+#define RESET        "\033[0m"
+#define YELLOW       "\033[33m"
+#define CYAN         "\033[36m"
+#define GRAY         "\033[90m"
 
 class BaseItem;
 
 class Renderer
 {
 public:
+    static Renderer& GetInstance();
 
-    void RenderMenu();                            // 메뉴 출력
-    void RenderRestMenu(); // 휴식소 메인 메뉴
+    void MoveCursor(int x, int y);
+    void ClearZone(int startY, int height);
+    void RenderLog(const std::string& message);
+
+public:
+    void PrintTop(int width);
+    void PrintDivider(int width);
+    void PrintBottom(int width);
+    void PrintCenterLine(const std::string& text, int width, std::string color = WHITE);
+    void PrintLeftLine(const std::string& text, int width, std::string color = WHITE);
+
+public:
+    void RenderMenu();
+    void RenderRewardSelect();
+    void RenderRestMenu();
     void RenderCreatePlayer();
     void RenderMainMenu();
-    void RenderRewardSelect();
+    void RenderBattleStart(Monster* monster);
     void RenderBattleAction();
-    void Clear();                                 // 화면 초기화
+    void RenderStatus(Character* player);
+    void RenderShopItemList(const std::vector<BaseItem*>& itemLists, int playerGold);
+    void RenderInventory(BaseItem* slots[], const std::vector<ItemSlot>& gearStorage, const std::vector<DiceSlot>& diceStorage);
+
+public:
+    void RenderBuyResult(BuyStatus status, BaseItem* item, int currentGold);
+    void RenderAreaChoices(const std::vector<std::string>& choices, const std::unordered_map<std::string, std::string>& displayMap);
+    void RenderDiceUpgradeList(const std::vector<DiceSlot>& storage);
+    void RenderHealResult(int healValue, int prevHP, int curHP, int maxHP);
+    void RenderUpgradeResult(UpgradeStatus status, int prevLevel, int curLevel);
+    void RenderEquipResult(const EquipResult& result);
+    void RenderDiceUpgradeOption();
+    void RenderTicketInsufficient();
+
+public:
+    void Clear();
     void Delay(int ms);
+    static int GetVisualLength(const std::string& str); // static 유지
     void PrintTyping(const std::string& text, int speed = 30);
 
-    static int GetVisualLength(const std::string& str);
-    static void PrintCenterLine(const std::string& text, int width, std::string color = "\033[37m");
-    static void PrintLeftLine(const std::string& text, int width, std::string color = "\033[37m");
-
-    static void PrintTop(int width);
-    static void PrintDivider(int width);
-    static void PrintBottom(int width);
 
 public:
     Renderer();
     ~Renderer();
-
-    void RenderInventory(BaseItem* slots[], const std::vector<ItemSlot>& gearStorage, const std::vector<DiceSlot>& diceStorage);
-    void RenderShopItemList(const std::vector<BaseItem*>& itemLists, int playerGold);
-    void RenderBuyResult(BuyStatus status, BaseItem* item, int currentGold);
-    void RenderAreaChoices(const std::vector<std::string>& choices, const std::unordered_map<std::string, std::string>& displayMap);
-    void RenderDiceUpgradeList(const std::vector<DiceSlot>& storage); // 강화 가능 주사위 목록
-    void RenderHealResult(int healValue, int prevHP, int curHP,int maxHP); // 회복 결과 출력
-    void RenderBattleStart(Monster* monster);  // 전투 시작 화면 출력
-    void RenderUpgradeResult(UpgradeStatus status, int prevLevel, int curLevel); // 강화 결과 출력
-    void RenderStatus(Character* player);   // 플레이어 상태 출력
-    void RenderEquipResult(const EquipResult& result);
-    void RenderDiceUpgradeOption();
-    void RenderTicketInsufficient();
-    //void RenderBattleLog(const string& message);  // 전투 로그 출력
-
-public:
-    static Renderer& GetInstance();
-
     Renderer(const Renderer&) = delete;
     Renderer& operator=(const Renderer&) = delete;
+
+public:
+    // 레이아웃 상수 (클래스 내부에서 관리)
+    static const int UI_WIDTH = 100;
+    static const int ZONE_SCREEN_Y = 0;
+    static const int ZONE_LOG_Y = 17;
+    static const int ZONE_PLAYER_Y = 24;
 };
+
 
