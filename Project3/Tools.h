@@ -3,6 +3,20 @@
 #include <vector>
 #include <sstream>
 
+enum class InputStatus
+{
+	Fail,
+	IndexOver,
+	Success,
+	Exit
+};
+
+struct InputResult
+{
+	InputStatus status;
+	int value;
+};
+
 template <typename T>
 class Tools
 {
@@ -12,18 +26,6 @@ public:
 		if (origin < min) return min;
 		else if (origin > max) return max;
 		else return origin;
-	}
-
-	static std::vector<T> Split(std::string input, char delimiter) {
-		std::vector<std::string> answer;
-		std::string temp;
-		std::stringstream ss(input);
-
-		while (std::getline(ss, temp, delimiter)) {
-			answer.push_back(temp);
-		}
-
-		return answer;
 	}
 
 	// 문자열로 받은 값들이 숫자인지 확인하는 함수
@@ -38,5 +40,36 @@ public:
 		}
 		return true;
 	}
+
+	static InputResult Input(int minLimit, int maxLimit)
+	{
+		InputResult result;
+		int input;
+		std::cin >> input;
+		
+		if (std::cin.fail())
+		{
+			std::cin.clear();
+			std::cin.ignore((std::numeric_limits<std::streamsize>::max)(), '\n');
+			result.status = InputStatus::Fail;
+			return result;
+		}
+		else if (!(input >= minLimit && input <= maxLimit))
+		{
+			result.status = InputStatus::IndexOver;
+			return result;
+		}
+		else if (input == 0)
+		{
+			result.status = InputStatus::Exit;
+		}
+		else
+		{
+			result.status = InputStatus::Success;
+			result.value = input;
+			return result;
+		}
+	}
+
 
 };
