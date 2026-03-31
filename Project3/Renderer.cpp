@@ -196,7 +196,7 @@ void Renderer::RenderMainMenu() {
     // --- [하단: 행동 선택지 구역] ---
     PrintDivider(Renderer::UI_WIDTH);
     PrintLeftLine("[1] 탐  사 (지역 조사)    [2] 상  점 (아이템 매매)", Renderer::UI_WIDTH, YELLOW);
-    PrintLeftLine("[3] 장비창 (인벤토리)    [4] 휴  식 (회복 및 강화)", Renderer::UI_WIDTH, YELLOW);
+    PrintLeftLine("[3] 장비창 (인벤토리)     [4] 휴  식 (회복 및 강화)", Renderer::UI_WIDTH, YELLOW);
 
     PrintBottom(Renderer::UI_WIDTH); // [박스 끝]
 
@@ -459,93 +459,116 @@ void Renderer::RenderDiceUpgradeList(const std::vector<DiceSlot>& storage) {
 }
 
 void Renderer::RenderHealResult(int healValue, int prevHP, int curHP, int maxHP) {
-    // 결과를 상단 구역에만 덮어쓰기 (전체 화면이 깜빡이지 않음)
-    ClearZone(Renderer::ZONE_SCREEN_Y, 16);
+    Clear();
     MoveCursor(0, Renderer::ZONE_SCREEN_Y);
 
     PrintTop(Renderer::UI_WIDTH);
-    PrintCenterLine("[ 회복 결과 ]", Renderer::UI_WIDTH, WHITE);
+    PrintCenterLine("[ 휴식 및 치료 완료 ]", Renderer::UI_WIDTH, BRIGHT_GREEN);
     PrintDivider(Renderer::UI_WIDTH);
 
-    for (int i = 0; i < 2; i++) PrintLeftLine("", Renderer::UI_WIDTH);
-
+    PrintLeftLine("", Renderer::UI_WIDTH);
     if (prevHP >= maxHP) {
-        PrintCenterLine("이미 체력이 가득 차 있습니다!", Renderer::UI_WIDTH, YELLOW);
+        PrintCenterLine("이미 최상의 컨디션입니다!", Renderer::UI_WIDTH, YELLOW);
         PrintCenterLine("현재 HP: " + std::to_string(maxHP) + " / " + std::to_string(maxHP), Renderer::UI_WIDTH, WHITE);
     }
     else {
-        std::string msg = "체력이 " + std::to_string(healValue) + "만큼 회복되었습니다!";
+        PrintCenterLine("따뜻한 휴식으로 체력을 회복했습니다.", Renderer::UI_WIDTH, WHITE);
+        PrintLeftLine("", Renderer::UI_WIDTH);
+
+        std::string msg = "체력 [ +" + std::to_string(healValue) + " ] 회복 완료!";
         PrintCenterLine(msg, Renderer::UI_WIDTH, BRIGHT_GREEN);
 
-        // HP 게이지 바 느낌의 시각적 효과 추가 가능
-        std::string hpMsg = "HP: " + std::to_string(prevHP) + " -> " + std::to_string(curHP);
+        std::string hpMsg = "HP 변화: " + std::to_string(prevHP) + " - " + std::to_string(curHP) + " / " + std::to_string(maxHP);
         PrintCenterLine(hpMsg, Renderer::UI_WIDTH, WHITE);
-
-        if (curHP >= maxHP) {
-            PrintCenterLine("[ FULL HP !! ]", Renderer::UI_WIDTH, CYAN);
-        }
     }
 
-    for (int i = 0; i < 3; i++) PrintLeftLine("", Renderer::UI_WIDTH);
-    PrintBottom(Renderer::UI_WIDTH);
+    // 높이 유지를 위한 공백 (전투 화면 등과 높이를 맞춤)
+    for (int i = 0; i < 10; i++) PrintLeftLine("", Renderer::UI_WIDTH);
 
-    Delay(1500); // 2000은 조금 길게 느껴질 수 있어 1500 추천
-}
-
-void Renderer::RenderUpgradeResult(UpgradeStatus status, int prevLevel, int curLevel) {
-    // 상단 구역에 강화 결과 연출
-    ClearZone(Renderer::ZONE_SCREEN_Y, 16);
-    MoveCursor(0, Renderer::ZONE_SCREEN_Y);
-
-    PrintTop(Renderer::UI_WIDTH);
-
-    if (status == UpgradeStatus::Success) {
-        PrintCenterLine("[ 강화 성공! ]", Renderer::UI_WIDTH, YELLOW);
-        PrintDivider(Renderer::UI_WIDTH);
-        for (int i = 0; i < 3; i++) PrintLeftLine("", Renderer::UI_WIDTH);
-
-        std::string msg = "강화 레벨: [Lv." + std::to_string(prevLevel) + "] >>> [Lv." + std::to_string(curLevel) + "]";
-        PrintCenterLine(msg, Renderer::UI_WIDTH, WHITE);
-        PrintCenterLine("주사위가 더욱 강력해졌습니다!", Renderer::UI_WIDTH, BRIGHT_GREEN);
-    }
-    else {
-        PrintCenterLine("[ 강화 불가 ]", Renderer::UI_WIDTH, RED);
-        PrintDivider(Renderer::UI_WIDTH);
-        for (int i = 0; i < 4; i++) PrintLeftLine("", Renderer::UI_WIDTH);
-
-        PrintCenterLine("이미 최대 강화 레벨에 도달했습니다.", Renderer::UI_WIDTH, WHITE);
-    }
-
-    for (int i = 0; i < 3; i++) PrintLeftLine("", Renderer::UI_WIDTH);
+    PrintDivider(Renderer::UI_WIDTH);
+    PrintCenterLine("잠시 후 메뉴로 돌아갑니다...", Renderer::UI_WIDTH, GRAY);
     PrintBottom(Renderer::UI_WIDTH);
 
     Delay(1500);
 }
-void Renderer::RenderTicketInsufficient() {
-    // 로그 구역이나 상단 구역에 잠깐 띄우기
-    ClearZone(Renderer::ZONE_SCREEN_Y, 16);
+
+void Renderer::RenderUpgradeResult(UpgradeStatus status, int prevLevel, int curLevel) {
+    Clear();
     MoveCursor(0, Renderer::ZONE_SCREEN_Y);
+
     PrintTop(Renderer::UI_WIDTH);
-    for (int i = 0; i < 5; i++) PrintLeftLine("", Renderer::UI_WIDTH);
-    PrintCenterLine("! 티켓이 부족합니다 !", Renderer::UI_WIDTH, RED);
-    PrintCenterLine("휴식권이 있어야 해당 행동을 할 수 있습니다.", Renderer::UI_WIDTH, WHITE);
+    if (status == UpgradeStatus::Success) {
+        PrintCenterLine("[ 강 화 성 공 ]", Renderer::UI_WIDTH, YELLOW);
+        PrintDivider(Renderer::UI_WIDTH);
+        PrintLeftLine("", Renderer::UI_WIDTH);
+        PrintCenterLine("주사위의 잠재력이 해방되었습니다!", Renderer::UI_WIDTH, BRIGHT_GREEN);
+        PrintLeftLine("", Renderer::UI_WIDTH);
+
+        std::string msg = "강화 등급: [ Lv." + std::to_string(prevLevel) + " ] >>> [ Lv." + std::to_string(curLevel) + " ]";
+        PrintCenterLine(msg, Renderer::UI_WIDTH, WHITE);
+    }
+    else {
+        PrintCenterLine("[ 강화 불가 ]", Renderer::UI_WIDTH, RED);
+        PrintDivider(Renderer::UI_WIDTH);
+        PrintLeftLine("", Renderer::UI_WIDTH);
+        PrintCenterLine("이 주사위는 이미 한계치에 도달했습니다.", Renderer::UI_WIDTH, WHITE);
+        PrintLeftLine("", Renderer::UI_WIDTH);
+    }
+
+    for (int i = 0; i < 11; i++) PrintLeftLine("", Renderer::UI_WIDTH);
+
+    PrintDivider(Renderer::UI_WIDTH);
+    PrintCenterLine("대장장이가 장비를 정리합니다...", Renderer::UI_WIDTH, GRAY);
+    PrintBottom(Renderer::UI_WIDTH);
+
+    Delay(1500);
+}
+
+void Renderer::RenderTicketInsufficient() {
+    Clear();
+    MoveCursor(0, Renderer::ZONE_SCREEN_Y);
+
+    PrintTop(Renderer::UI_WIDTH);
+    PrintCenterLine("! 출입 제한 !", Renderer::UI_WIDTH, RED);
+    PrintDivider(Renderer::UI_WIDTH);
+
     for (int i = 0; i < 6; i++) PrintLeftLine("", Renderer::UI_WIDTH);
+
+    PrintCenterLine("필요한 [ 휴식권 ]이 부족합니다.", Renderer::UI_WIDTH, RED);
+    PrintCenterLine("마을에서 준비를 더 마친 뒤에 다시 오십시오.", Renderer::UI_WIDTH, WHITE);
+
+    for (int i = 0; i < 7; i++) PrintLeftLine("", Renderer::UI_WIDTH);
+
     PrintBottom(Renderer::UI_WIDTH);
     Delay(1500);
 }
 
 void Renderer::RenderDiceUpgradeOption() {
-    // 하단 입력 구역에 강화 옵션 고정
-    ClearZone(Renderer::ZONE_PLAYER_Y, 8);
-    MoveCursor(0, Renderer::ZONE_PLAYER_Y);
+    Clear();
+    MoveCursor(0, Renderer::ZONE_SCREEN_Y);
+
     PrintTop(Renderer::UI_WIDTH);
-    PrintCenterLine("[ 강화 옵션 선택 ]", Renderer::UI_WIDTH, WHITE);
-    PrintLeftLine(" [1] 최소값 +1 증가    [2] 최대값 +1 증가", Renderer::UI_WIDTH, CYAN);
-    PrintLeftLine(" [0] 취소하고 돌아가기", Renderer::UI_WIDTH, WHITE);
+    PrintCenterLine("[ 강화 경로 선택 ]", Renderer::UI_WIDTH, CYAN);
+    PrintDivider(Renderer::UI_WIDTH);
+
+    PrintLeftLine("", Renderer::UI_WIDTH);
+    PrintCenterLine("어떤 방향으로 주사위를 개조하시겠습니까?", Renderer::UI_WIDTH, WHITE);
+    PrintLeftLine("", Renderer::UI_WIDTH);
+    PrintDivider(Renderer::UI_WIDTH);
+
+    PrintLeftLine("", Renderer::UI_WIDTH);
+    PrintLeftLine("  [1] 최소값 +1 증가 - 안정적인 최소 성능을 보장합니다.", Renderer::UI_WIDTH, YELLOW);
+    PrintLeftLine("", Renderer::UI_WIDTH);
+    PrintLeftLine("  [2] 최대값 +1 증가 - 더 높은 고점의 데미지를 노립니다.", Renderer::UI_WIDTH, RED);
+    PrintLeftLine("", Renderer::UI_WIDTH);
+    PrintLeftLine("  [0] 취소하고 돌아가기", Renderer::UI_WIDTH, GRAY);
+
+    for (int i = 0; i < 6; i++) PrintLeftLine("", Renderer::UI_WIDTH);
+
     PrintBottom(Renderer::UI_WIDTH);
 
     MoveCursor(0, Renderer::ZONE_PLAYER_Y + 4);
-    std::cout << BRIGHT_GREEN << " > 옵션 선택 : " << RESET;
+    std::cout << BRIGHT_GREEN << " > 옵션 선택 입력 : " << RESET;
 }
 
 void Renderer::RenderShopItemList(const std::vector<BaseItem*>& itemLists, int playerGold) {
@@ -602,40 +625,59 @@ void Renderer::RenderShopItemList(const std::vector<BaseItem*>& itemLists, int p
 }
 
 void Renderer::RenderBuyResult(BuyStatus status, BaseItem* item, int playerGold) {
-    ClearZone(Renderer::ZONE_SCREEN_Y, 16);
+    // 1. 화면 전체 초기화 (잔상 제거 및 일관된 배경 확보)
+    Clear();
     MoveCursor(0, Renderer::ZONE_SCREEN_Y);
-    PrintTop(Renderer::UI_WIDTH);
 
+    // [박스 시작]
+    PrintTop(Renderer::UI_WIDTH);
+    PrintCenterLine("[ 상점 이용 결과 ]", Renderer::UI_WIDTH, WHITE);
+    PrintDivider(Renderer::UI_WIDTH);
+
+    // 2. 결과 메시지 설정
     std::string message = "";
     std::string color = WHITE;
+    std::string subMessage = "";
 
     switch (status) {
     case BuyStatus::Success:
-        message = " [" + item->GetName() + "] 구매 성공! ";
+        message = "[ 구매 성공! ]";
+        if (item) subMessage = "[" + item->GetName() + "] (을)를 가방에 넣었습니다.";
         color = BRIGHT_GREEN;
         break;
     case BuyStatus::InsufficientGold:
-        message = "!! 골드가 부족합니다 !!";
+        message = "!! 골드 부족 !!";
+        if (item) subMessage = "필요 골드: " + std::to_string(item->GetPrice()) + " G (현재: " + std::to_string(playerGold) + " G)";
         color = RED;
         break;
     case BuyStatus::Possessed:
-        message = "!! 이미 보유 중인 아이템입니다 !!";
+        message = "!! 중복 소유 !!";
+        subMessage = "이미 가방에 동일한 아이템이 있습니다.";
         color = YELLOW;
         break;
     default:
-        message = "구매할 수 없습니다.";
+        message = "!! 구매 실패 !!";
+        subMessage = "알 수 없는 이유로 거래가 중단되었습니다.";
         color = RED;
         break;
     }
 
-    for (int i = 0; i < 5; i++) PrintLeftLine("", Renderer::UI_WIDTH);
-    PrintCenterLine(message, Renderer::UI_WIDTH, color);
-    if (status == BuyStatus::InsufficientGold && item) {
-        PrintCenterLine("필요 골드: " + std::to_string(item->GetPrice()) + " G", Renderer::UI_WIDTH, WHITE);
-    }
-    for (int i = 0; i < 5; i++) PrintLeftLine("", Renderer::UI_WIDTH);
-    PrintBottom(Renderer::UI_WIDTH);
+    // 3. 중앙 배치 연출
+    for (int i = 0; i < 6; i++) PrintLeftLine("", Renderer::UI_WIDTH);
 
+    PrintCenterLine(message, Renderer::UI_WIDTH, color);
+    if (!subMessage.empty()) {
+        PrintCenterLine(subMessage, Renderer::UI_WIDTH, WHITE);
+    }
+
+    // 높이 유지를 위한 하단 공백
+    for (int i = 0; i < 7; i++) PrintLeftLine("", Renderer::UI_WIDTH);
+
+    PrintDivider(Renderer::UI_WIDTH);
+    PrintCenterLine("잠시 후 상점 목록으로 돌아갑니다...", Renderer::UI_WIDTH, GRAY);
+    PrintBottom(Renderer::UI_WIDTH); // [박스 끝]
+
+    // 4. 짧은 대기 후 복귀
     Delay(1500);
 }
 
@@ -708,54 +750,64 @@ void Renderer::RenderInventory(BaseItem* slots[], const std::vector<ItemSlot>& g
 }
 
 void Renderer::RenderEquipResult(const EquipResult& result) {
-    // 1. 상단 화면 구역(ZONE_SCREEN_Y)만 갱신하여 결과 출력
-    ClearZone(Renderer::ZONE_SCREEN_Y, 16);
+    // 1. 화면 전체 초기화 (잔상 및 쪼개진 박스 방지)
+    Clear();
     MoveCursor(0, Renderer::ZONE_SCREEN_Y);
 
+    // [박스 시작]
     PrintTop(Renderer::UI_WIDTH);
     PrintCenterLine("[ 장비 변경 알림 ]", Renderer::UI_WIDTH, WHITE);
     PrintDivider(Renderer::UI_WIDTH);
 
-    // 내용물 출력을 위한 여백
-    for (int i = 0; i < 4; i++) PrintLeftLine("", Renderer::UI_WIDTH);
-
-    std::string message = "";
+    // 2. 메시지 및 색상 설정
+    std::string mainMsg = "";
+    std::string subMsg = "";
     std::string color = YELLOW;
 
-    // 안전한 아이템 이름 가져오기
+    // 안전한 아이템 이름 처리
     std::string itemName = (result.item != nullptr) ? result.item->GetName() : "알 수 없는 아이템";
 
     switch (result.status) {
     case EquipStatus::Equip:
-        message = " [" + itemName + "] 장착 완료! ";
+        mainMsg = "[ 장착 성공 ]";
+        subMsg = "[" + itemName + "] (을)를 성공적으로 착용했습니다.";
         color = BRIGHT_GREEN;
         break;
     case EquipStatus::Changed:
-        message = " [" + result.prevItem + "] >> [" + itemName + "] ";
-        PrintCenterLine(message, Renderer::UI_WIDTH, YELLOW);
-        message = "장비가 성공적으로 교체되었습니다.";
-        color = WHITE;
+        mainMsg = "[ 장비 교체 완료 ]";
+        // 이전 장비와 새 장비의 대비를 시각적으로 표현
+        subMsg = "[" + result.prevItem + "]  -->  [" + itemName + "]";
+        color = CYAN;
         break;
     case EquipStatus::Overlap:
-        message = "!! 이미 [" + itemName + "]을(를) 착용 중입니다 !!";
+        mainMsg = "!! 이미 착용 중 !!";
+        subMsg = "동일한 장비 [" + itemName + "] (을)를 이미 사용하고 있습니다.";
         color = RED;
         break;
     default:
-        message = "장착할 수 없는 아이템이거나 오류가 발생했습니다.";
+        mainMsg = "!! 장착 불가 !!";
+        subMsg = "해당 아이템을 장착하는 과정에서 오류가 발생했습니다.";
         color = GRAY;
         break;
     }
 
-    PrintCenterLine(message, Renderer::UI_WIDTH, color);
+    // 3. 중앙 연출 구역
+    for (int i = 0; i < 6; i++) PrintLeftLine("", Renderer::UI_WIDTH);
 
-    // 하단 여백 채우기
-    for (int i = 0; i < 4; i++) PrintLeftLine("", Renderer::UI_WIDTH);
-    PrintBottom(Renderer::UI_WIDTH);
+    PrintCenterLine(mainMsg, Renderer::UI_WIDTH, color);
+    PrintLeftLine("", Renderer::UI_WIDTH); // 메시지 사이 간격
+    PrintCenterLine(subMsg, Renderer::UI_WIDTH, WHITE);
 
-    // 결과 확인을 위한 대기 (1.5초가 적당합니다)
+    // 높이 유지를 위한 하단 공백
+    for (int i = 0; i < 7; i++) PrintLeftLine("", Renderer::UI_WIDTH);
+
+    PrintDivider(Renderer::UI_WIDTH);
+    PrintCenterLine("잠시 후 소지품 창으로 돌아갑니다...", Renderer::UI_WIDTH, GRAY);
+    PrintBottom(Renderer::UI_WIDTH); // [박스 끝]
+
+    // 4. 결과 확인 대기
     Delay(1500);
 }
-
 void Renderer::Clear() { system("cls"); }
 void Renderer::Delay(int ms) { Sleep(ms); }
 
