@@ -57,6 +57,12 @@ BattleResult BattleManager::Run(Character* player, Monster* monster)
 
         if (monster->IsDead())
         {
+            if (monster->GetType() == MonsterType::MaxRabbit)
+            {
+                std::cout << "\n" << monster->GetName() << "을(를) 처치했습니다!" << std::endl;
+                return BattleResult::PlayerClear;
+            }
+
             // TODO: Renderer::GetInstance().RenderBattleOver(monster)
             std::cout << "\n" << monster->GetName() << "을(를) 처치했습니다!" << std::endl;
 

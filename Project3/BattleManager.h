@@ -9,6 +9,7 @@ enum class BattleResult
     PlayerWin,
     PlayerDead,
     Escaped,
+    PlayerClear
 };
 
 class BattleManager

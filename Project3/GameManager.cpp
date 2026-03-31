@@ -119,6 +119,11 @@ void GameManager::StartGame()
 				std::cout << "게임 오버..." << std::endl;
 				return; // StartGame() 종료 → 메인화면으로
 			}
+			if (result == BattleResult::PlayerClear)
+			{
+				std::cout << "게임 클리어..." << std::endl;
+				return;
+			}
 			break;
 		}
 		case 2:
