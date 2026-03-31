@@ -757,7 +757,7 @@ void Renderer::RenderUpgradeResult(UpgradeStatus status, int prevLevel, int curL
         title = "UPGRADE SUCCESS";
         titleColor = BRIGHT_GREEN;
 
-        upgradeContent.push_back(std::string(BRIGHT_GREEN) + "  [ 강 화 성 공 ]" + RESET);
+        upgradeContent.push_back(std::string(BRIGHT_GREEN) + "  [ 강화 성공 ]" + RESET);
         upgradeContent.push_back(divider);
         upgradeContent.push_back("");
         upgradeContent.push_back("  주사위의 " + std::string(BRIGHT_YELLOW) + "잠재력이 해방" + RESET + "되었습니다!");
