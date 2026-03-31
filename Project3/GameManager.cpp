@@ -51,7 +51,7 @@ void GameManager::CreateCharacter()
 
 	while ((int)playerExist)
 	{
-		InputResult input = Tools<int>::Input(1, 3);
+		InputResult input = Tools<int>::Input(1, 4);
 
 		switch (input.value)
 		{
@@ -66,6 +66,8 @@ void GameManager::CreateCharacter()
 			break;
 		case 4:
 			job = "테스트용";
+			break;
+
 		default:
 		{
 			Renderer::GetInstance().AddSystemLog("잘못된 입력입니다. 제공된 번호로 입력해주세요!");
@@ -117,6 +119,7 @@ void GameManager::StartGame()
 		{
 		case 1:
 		{
+			AudioManager::PlayBGM(BGMList::Exploer);
 			AudioManager::PlaySFX(SFXList::FootStep);
 			Renderer::GetInstance().ClearSystemLogs();
 			BattleResult result = combatManager->Run(player);
@@ -148,6 +151,7 @@ void GameManager::StartGame()
 
 		case 4:
 			Renderer::GetInstance().ClearSystemLogs();
+			AudioManager::PlayBGM(BGMList::Rest);
 			refurbishManager->Run();
 
 			break;

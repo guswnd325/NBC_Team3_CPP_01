@@ -2,7 +2,7 @@
 #include "Renderer.h"
 #include "GameManager.h"
 
-constexpr int defaultGold = 0;
+constexpr int defaultGold = 1000000;
 constexpr int maxHP = 100;
 constexpr int defaultHP = 100;
 constexpr int defaultRestTicket = 0;
@@ -64,9 +64,13 @@ void Character::InitializeCharacter(std::string name)
 	}
 	else if (name == "테스트용")
 	{
-		//SetAtk();
-		//SetDef();
-		//GetInventory()->AddDice(DiceID::D1_24);
+		//SetAtk(100);
+		//SetDef(100);
+		
+		for (int i = 0; i < 10; i++)
+		{
+			//GetInventory()->AddDice(DiceID::D1_24);
+		}
 	}
 
 }
@@ -114,9 +118,18 @@ int Character::GetRestTicket() const
 void Character::LevelUp()
 {
 	AudioManager::PlaySFX(SFXList::LevelUp);
-	level++;
-	SetExp(0);
-	levelUpExp *= 1.5;
+	
+	while (true)
+	{
+		if (GetExp() > levelUpExp)
+		{
+			SetExp(GetExp() - levelUpExp);
+			level++;
+			levelUpExp *= 1.5;
+		}
+		else break;
+	}
+
 }
 
 float Character::GetLevelUpExp() const

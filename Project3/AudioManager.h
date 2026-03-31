@@ -30,6 +30,8 @@ static const std::string bgmPaths[] =
     "Nest.wav",
 
     "Village.wav",
+    "Go_Exploer.wav",
+    "Rest.wav",
 };
 
 enum class BGMList
@@ -50,6 +52,8 @@ enum class BGMList
     Nest,
 
     Village,
+    Exploer,
+    Rest,
 };
 
 static const std::string sfxPaths[] =

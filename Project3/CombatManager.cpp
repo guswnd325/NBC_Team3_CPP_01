@@ -18,12 +18,11 @@ void CombatManager::GenerateAreaChoices()
     }
 }
 
-void CombatManager::UnlockAreas(int level)
+void CombatManager::UnlockAreas(int level, bool isNewUnlock)
 {
     
     std::vector<std::string> previousAreas = unlockedAreas;
 
-    
     unlockedAreas.clear();
     for (auto& pair : areaUnlockLevel)
     {
@@ -41,13 +40,26 @@ void CombatManager::UnlockAreas(int level)
                 
                 if (level > 1)
                 {
-                    
+                    // 실제로 해금.      
                     std::string displayName = areaDisplayname[areaKey];
-                    Renderer::GetInstance().AddSystemLog("새로운 지역 해금: [" + displayName + "]!");
+                    Renderer::GetInstance().AddSystemLog("새로운 지역 해금: [" + displayName + "]!", BRIGHT_YELLOW);
+                    Renderer::GetInstance().RenderRewardSelect(std::vector<std::string>());
                 }
             }
         }
     }
+
+    if (isNewUnlock)
+    {
+        Renderer::GetInstance().Delay(sleepTime_fast);
+        Renderer::GetInstance().ClearSystemLogs();
+    }
+
+}
+
+std::string CombatManager::GetCurrentAreaName()
+{
+    return currentAreaName;
 }
 
 void CombatManager::DisplayChoices()
@@ -65,6 +77,7 @@ std::string CombatManager::SelectArea() {
             }
             if (input >= 1 && input <= 3) {
                 std::cin.ignore((std::numeric_limits<std::streamsize>::max)(), '\n');
+                Renderer::GetInstance().ClearSystemLogs();
                 return currentChoices[input - 1];
             }
         }
@@ -95,6 +108,9 @@ BattleResult CombatManager::Run(Character* player)
     GenerateAreaChoices();
     DisplayChoices();
     std::string selectedArea = SelectArea();
+    
+    currentAreaName = areaDisplayname[selectedArea];
+    // 맵 이름 돚거
 
     if (selectedArea.empty()) // 0 입력 시 마을로
         return BattleResult::Escaped; // 혹은 별도의 ReturnToTown 값

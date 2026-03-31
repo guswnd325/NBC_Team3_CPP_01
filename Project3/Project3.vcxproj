@@ -179,6 +179,7 @@
     <Media Include="Forest.wav" />
     <Media Include="Game_Complete.wav" />
     <Media Include="Go_Exploer.mp3" />
+    <Media Include="Go_Exploer.wav" />
     <Media Include="Heal.wav" />
     <Media Include="Hit.wav" />
     <Media Include="Jungle.wav" />
@@ -188,6 +189,7 @@
     <Media Include="Mountain.wav" />
     <Media Include="Nest.wav" />
     <Media Include="Ocean.wav" />
+    <Media Include="Rest.wav" />
     <Media Include="Reward_Fail.wav" />
     <Media Include="Shop.wav" />
     <Media Include="Temple.wav" />

@@ -13,7 +13,7 @@ BattleResult BattleManager::Run(Character* player, Monster* monster, CombatManag
     Renderer::GetInstance().ClearBattleLogs();
     Renderer::GetInstance().AddBattleLog(monster->GetName() + "(이)가 나타났다!", BRIGHT_YELLOW);
     Renderer::GetInstance().RenderBattleAction(monster, player, std::vector<std::string>());
-    Sleep(1500);
+    Sleep(sleepTime_slow);
 
     while (true)
     {
@@ -38,16 +38,16 @@ BattleResult BattleManager::Run(Character* player, Monster* monster, CombatManag
             if (TryEscape(player, monster, monsterRoll))
             {
                 AudioManager::PlaySFX(SFXList::Game_Complete);
-                Renderer::GetInstance().AddBattleLog("도망에 성공했습니다!", BRIGHT_GREEN);
+                Renderer::GetInstance().AddBattleLog("도망에 성공했습니다!", playerMsgColor);
                 Renderer::GetInstance().RenderBattleAction(monster, player, {});
-                Sleep(3000);
+                Sleep(sleepTime_slow);
 
                 return BattleResult::Escaped;
             }
             else
             {
                 AudioManager::PlaySFX(SFXList::Reward_Fail);
-                Renderer::GetInstance().AddBattleLog("도망에 실패! " + monster->GetName() + "이(가) 공격합니다!", BRIGHT_RED);
+                Renderer::GetInstance().AddBattleLog("도망에 실패! " + monster->GetName() + "이(가) 공격합니다!", monsterMsgColor);
                 Renderer::GetInstance().RenderBattleAction(monster, player, {});
 
                 CalculateDamage(monster, player, monsterRoll,false);
@@ -59,7 +59,7 @@ BattleResult BattleManager::Run(Character* player, Monster* monster, CombatManag
         {
             Renderer::GetInstance().AddBattleLog("잘못된 입력입니다. 1 또는 2를 입력해주세요.", BRIGHT_YELLOW);
             Renderer::GetInstance().RenderBattleAction(monster, player, {});
-            Sleep(3000);
+            Sleep(sleepTime_slow);
             break;
         }
         }
@@ -68,43 +68,53 @@ BattleResult BattleManager::Run(Character* player, Monster* monster, CombatManag
         if (player->IsDead())
         {
             player->PlayerDead();
-            Renderer::GetInstance().AddBattleLog("플레이어가 사망했습니다...", BRIGHT_RED);
+            Renderer::GetInstance().AddBattleLog("플레이어가 사망했습니다...", monsterMsgColor);
             Renderer::GetInstance().RenderBattleAction(monster, player, {});
             AudioManager::GetInstance().StopMusic();
             AudioManager::GetInstance().PlayBGM(BGMList::Jane, false);
             combatManager->ShowCredit();
-            Sleep(3000);
+            Sleep(2000);
             return BattleResult::PlayerDead;
         }
 
         if (monster->IsDead())
         {
+            AudioManager::PlaySFX(SFXList::Game_Complete);
             if (monster->GetType() == MonsterType::MaxRabbit)
             {
-                Renderer::GetInstance().AddBattleLog(monster->GetName() + "을(를) 처치했습니다!", BRIGHT_GREEN);
+                Renderer::GetInstance().AddBattleLog(monster->GetName() + "을(를) 처치했습니다!", playerMsgColor);
                 Renderer::GetInstance().RenderBattleAction(monster, player, {});
 
-                Sleep(3000);
+                Sleep(2000);
                 return BattleResult::PlayerClear;
             }
 
-            Renderer::GetInstance().AddBattleLog(monster->GetName() + "을(를) 처치했습니다!", BRIGHT_GREEN);
+            Renderer::GetInstance().AddBattleLog(monster->GetName() + "을(를) 처치했습니다!", playerMsgColor);
             Renderer::GetInstance().RenderBattleAction(monster, player, {});
 
             int gainedExp = monster->GetExp();
             player->SetExp(player->GetExp() + gainedExp);
-            Renderer::GetInstance().AddBattleLog("경험치 " + std::to_string(gainedExp) + " 획득! (현재 경험치 : " + std::to_string(player->GetExp()) + ")", BRIGHT_GREEN);
-            Renderer::GetInstance().RenderBattleAction(monster, player, {});
 
+            int prevLevel = player->GetLevel();
             if (player->GetExp() >= player->GetLevelUpExp())
             {
                 player->LevelUp();
-                Renderer::GetInstance().AddSystemLog("Level Up! (" + std::to_string(player->GetLevel()) + ")");
+            }
+
+            Renderer::GetInstance().AddBattleLog("경험치 " + std::to_string(gainedExp) + " 획득! [ 현재 경험치 : " + std::to_string(player->GetExp()) + " ]", BRIGHT_YELLOW);
+            
+            Renderer::GetInstance().RenderBattleAction(monster, player, {});
+
+            if (prevLevel < player->GetLevel())
+            {
+                AudioManager::PlaySFX(SFXList::LevelUp);
+                Renderer::GetInstance().AddSystemLog("레벨 업! [ Lv." + std::to_string(player->GetLevel()) + " ]", BRIGHT_YELLOW);
+                // >> 레벨 업 ! 
                 Renderer::GetInstance().RenderBattleAction(monster, player, {});
-                combatManager->UnlockAreas(player->GetLevel());
+                combatManager->UnlockAreas(player->GetLevel(), true);
             }    
                 
-            Sleep(3000);
+            Sleep(sleepTime_slow);
             GiveReward(player, monster);
             Renderer::GetInstance().ClearSystemLogs();
 
@@ -154,14 +164,14 @@ void BattleManager::StartBattle(Character* player, Monster* monster)
         Sleep(40 + (i * 10));
     }
     DrawDiceDirectly(playerRoll);
-    Renderer::GetInstance().AddBattleLog("플레이어 주사위 결과: [" + std::to_string(playerRoll) + "]", BRIGHT_GREEN);
-    Sleep(800);
+    Renderer::GetInstance().AddBattleLog("플레이어 주사위 결과: [" + std::to_string(playerRoll) + "]", playerMsgColor);
+    Sleep(sleepTime_fast);
 
     
     ClearDiceDirectly();
 
     // [몬스터 배틀 로그에 추가]
-    Renderer::GetInstance().AddBattleLog(monster->GetName() + "이(가) " + std::to_string(monster->GetDiceCount()) + "개의 주사위를 굴립니다!", BRIGHT_RED);
+    //Renderer::GetInstance().AddBattleLog(monster->GetName() + "이(가) " + std::to_string(monster->GetDiceCount()) + "개의 주사위를 굴립니다!", BRIGHT_YELLOW);
     Renderer::GetInstance().RenderBattleAction(monster, player, {}); 
 
     AudioManager::GetInstance().PlaySFX(SFXList::Dice_Roll);
@@ -173,18 +183,18 @@ void BattleManager::StartBattle(Character* player, Monster* monster)
     DrawDiceDirectly(monsterRoll);
 
     // 결과 로그 추가
-    Renderer::GetInstance().AddBattleLog(monster->GetName() + "의 주사위 결과: [" + std::to_string(monsterRoll) + "]", BRIGHT_RED);
-    Sleep(800);
+    Renderer::GetInstance().AddBattleLog(monster->GetName() + "의 주사위 결과: [" + std::to_string(monsterRoll) + "]", monsterMsgColor);
+    Sleep(sleepTime_fast);
     Renderer::GetInstance().RenderBattleAction(monster, player, {});
 
     
     if (playerRoll >= monsterRoll) {
-        Renderer::GetInstance().AddBattleLog("플레이어 승리! 공격 개시.", BRIGHT_GREEN);
+        Renderer::GetInstance().AddBattleLog("플레이어 승리, 공격 개시!", playerMsgColor);
         AudioManager::GetInstance().PlaySFX(SFXList::Hit);
         CalculateDamage(player, monster, playerRoll, true);
     }
     else {
-        Renderer::GetInstance().AddBattleLog(monster->GetName() + " 승리! 반격 당함.", BRIGHT_RED);
+        Renderer::GetInstance().AddBattleLog(monster->GetName() + " 승리! 반격 당함", monsterMsgColor);
         AudioManager::GetInstance().PlaySFX(SFXList::Hit);
         CalculateDamage(monster, player, monsterRoll, false);
     }
@@ -207,14 +217,14 @@ bool BattleManager::TryEscape(Character* player, Monster* monster, int& outMonst
         Sleep(40 + (i * 10));
     }
     DrawDiceDirectly(playerRoll);
-    Renderer::GetInstance().AddBattleLog("플레이어 주사위 결과: [" + std::to_string(playerRoll) + "]", BRIGHT_GREEN);
-    Sleep(800);
+    Renderer::GetInstance().AddBattleLog("플레이어 주사위 결과: [" + std::to_string(playerRoll) + "]", playerMsgColor);
+    Sleep(sleepTime_fast);
 
 
     ClearDiceDirectly();
 
     // [몬스터 배틀 로그에 추가]
-    Renderer::GetInstance().AddBattleLog(monster->GetName() + "이(가) " + std::to_string(monster->GetDiceCount()) + "개의 주사위를 굴립니다!", BRIGHT_RED);
+    //Renderer::GetInstance().AddBattleLog(monster->GetName() + "이(가) " + std::to_string(monster->GetDiceCount()) + "개의 주사위를 굴립니다!", monsterMsgColor);
     Renderer::GetInstance().RenderBattleAction(monster, player, {});
 
     AudioManager::GetInstance().PlaySFX(SFXList::Dice_Roll);
@@ -226,8 +236,8 @@ bool BattleManager::TryEscape(Character* player, Monster* monster, int& outMonst
     DrawDiceDirectly(monsterRoll);
 
     // 결과 로그 추가
-    Renderer::GetInstance().AddBattleLog(monster->GetName() + "의 주사위 결과: [" + std::to_string(monsterRoll) + "]", BRIGHT_RED);
-    Sleep(800);
+    Renderer::GetInstance().AddBattleLog(monster->GetName() + "의 주사위 결과: [" + std::to_string(monsterRoll) + "]", monsterMsgColor);
+    Sleep(sleepTime_fast);
 
     Renderer::GetInstance().RenderBattleAction(monster, player, {});
 
@@ -254,7 +264,7 @@ void BattleManager::CalculateDamage(Actor* attacker, Actor* defender, int Roll, 
     if (defenderIsMonster) {
         Monster* m = static_cast<Monster*>(defender);
 
-        int startY = Renderer::ZONE_SCREEN_Y + 6;
+        int startY = Renderer::ZONE_SCREEN_Y + 7;
 
         
         EffectManager::PlayMonsterHitEffect(m->GetVisual(), 0, startY, 60);
@@ -282,7 +292,7 @@ void BattleManager::CalculateDamage(Actor* attacker, Actor* defender, int Roll, 
         );
     }
 
-    Sleep(1500); // 데미지 로그 확인 시간
+    Sleep(sleepTime_slow); // 데미지 로그 확인 시간
 
 }
 
@@ -324,16 +334,18 @@ void BattleManager::GiveNormalReward(Character* player, Monster* monster)
     player->SetRestTicket(current + 1);
 
     AudioManager::PlaySFX(SFXList::Buy_Item);
-    Renderer::GetInstance().AddSystemLog("골드 " + std::to_string(gold) + " 획득!" + " (현재 골드 : " + std::to_string(player->GetGold()) + ")");
-    Renderer::GetInstance().AddSystemLog("휴식권 1회 획득! (현재 휴식권 : " + std::to_string(player->GetRestTicket()) + ")");
+    Renderer::GetInstance().AddSystemLog("골드 " + std::to_string(gold) + " 획득!" + " (현재 골드 : " + std::to_string(player->GetGold()) + ")", BRIGHT_YELLOW);
+    Renderer::GetInstance().AddSystemLog("휴식권 1회 획득! (현재 휴식권 : " + std::to_string(player->GetRestTicket()) + ")", BRIGHT_YELLOW);
     Renderer::GetInstance().RenderRewardSelect(std::vector<std::string>());
 
-    Sleep(3000);
+    Sleep(sleepTime_slow);
 }
 
 void BattleManager::GiveRiskyReward(Character* player, Monster* monster)
 {
-    Renderer::GetInstance().AddSystemLog("[ 리스크 보상 도전! ]");
+    Renderer::GetInstance().ClearSystemLogs();
+
+    Renderer::GetInstance().AddSystemLog("[ 리스크 보상 도전! ]", BRIGHT_YELLOW);
     Renderer::GetInstance().RenderRewardSelect(std::vector<std::string>());
 
     AudioManager::GetInstance().PlaySFX(SFXList::Dice_Roll);
@@ -344,14 +356,14 @@ void BattleManager::GiveRiskyReward(Character* player, Monster* monster)
         Sleep(40 + (i * 10));
     }
     DrawDiceDirectly(playerRoll);
-    Renderer::GetInstance().AddSystemLog("플레이어 주사위 결과: [" + std::to_string(playerRoll) + "]");
-    Sleep(800);
+    Renderer::GetInstance().AddSystemLog("플레이어 주사위 결과: [" + std::to_string(playerRoll) + "]", playerMsgColor);
+    Sleep(sleepTime_fast);
 
 
     ClearDiceDirectly();
 
     // [몬스터 배틀 로그에 추가]
-    Renderer::GetInstance().AddSystemLog(monster->GetName() + "이(가) " + std::to_string(monster->GetDiceCount()) + "개의 주사위를 굴립니다!");
+    //Renderer::GetInstance().AddSystemLog(monster->GetName() + "이(가) " + std::to_string(monster->GetDiceCount()) + "개의 주사위를 굴립니다!");
     Renderer::GetInstance().RenderRewardSelect(std::vector<std::string>());
 
     AudioManager::GetInstance().PlaySFX(SFXList::Dice_Roll);
@@ -363,22 +375,22 @@ void BattleManager::GiveRiskyReward(Character* player, Monster* monster)
     DrawDiceDirectly(monsterGetDice);
 
     // 결과 로그 추가
-    Renderer::GetInstance().AddSystemLog(monster->GetName() + "의 주사위 결과: [" + std::to_string(monsterGetDice) + "]");
-    Sleep(800);
+    Renderer::GetInstance().AddSystemLog(monster->GetName() + "의 주사위 결과: [" + std::to_string(monsterGetDice) + "]", monsterMsgColor);
+    Sleep(sleepTime_fast);
 
     if (playerRoll >= monsterGetDice)
     {
         AudioManager::PlaySFX(SFXList::Game_Complete);
-        Renderer::GetInstance().AddSystemLog("성공!");
+        Renderer::GetInstance().AddSystemLog("성공!", BRIGHT_YELLOW);
         Renderer::GetInstance().RenderRewardSelect(std::vector<std::string>());
         player->GetInventory()->AddDice(monster->GetRewardDiceID());
     }
     else
     {
         AudioManager::PlaySFX(SFXList::Reward_Fail);
-        Renderer::GetInstance().AddSystemLog("실패!");
+        Renderer::GetInstance().AddSystemLog("실패!", RED);
         Renderer::GetInstance().RenderRewardSelect(std::vector<std::string>());
     }
 
-    Sleep(3000);
+    Sleep(sleepTime_slow);
 }

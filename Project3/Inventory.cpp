@@ -75,6 +75,7 @@ EquipResult Inventory::EquipByIndex(int index)
 		slots[(int)type] = gear;
 		result.item = gear;
 		result.status = EquipStatus::Equip;
+		gear->Equip(GameManager::GetInstance().GetCharacter());
 	}
 
 	if (slots[(int)type]->GetName() == gear->GetName())
@@ -86,7 +87,11 @@ EquipResult Inventory::EquipByIndex(int index)
 	else 
 	{
 		result.prevItem = slots[(int)type]->GetName();
+		slots[(int)type]->UnEquip(GameManager::GetInstance().GetCharacter());
+		slots[(int)type] = nullptr;
 		slots[(int)type] = gear;
+		gear->Equip(GameManager::GetInstance().GetCharacter());
+
 		result.item = gear;
 		result.status = EquipStatus::Changed;
 	}
@@ -102,6 +107,7 @@ EquipStatus Inventory::EquipByBaseItem(BaseItem* gear)
 	{
 		slots[(int)type] = nullptr;
 		slots[(int)type] = gear;
+		gear->Equip(GameManager::GetInstance().GetCharacter());
 		return EquipStatus::Equip;
 	}
 
@@ -111,8 +117,11 @@ EquipStatus Inventory::EquipByBaseItem(BaseItem* gear)
 	}
 	else // 장비 장착 중이지만, 다른 장비로 교체하는 경우
 	{
+		slots[(int)type]->UnEquip(GameManager::GetInstance().GetCharacter());
 		slots[(int)type] = nullptr;
 		slots[(int)type] = gear;
+		gear->Equip(GameManager::GetInstance().GetCharacter());
+
 		return EquipStatus::Changed;
 	}
 }

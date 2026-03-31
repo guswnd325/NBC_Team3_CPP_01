@@ -1,13 +1,14 @@
 #pragma once
+#include <vector>
+#include <string>
+#define NOMINMAX            // max/min 매크로 방지
+#include <Windows.h>
+#include <unordered_map>
 #include "Character.h"
 #include "Monster.h"
 #include "RefurbishStatus.h"
 #include "Inventory.h"
 #include "buyStatus.h"
-#include <vector>
-#include <string>
-#include <Windows.h>
-#include <unordered_map>
 
 #define GOLD          "\033[38;2;218;165;32m"
 #define BRIGHT_GREEN  "\033[92m"
@@ -25,6 +26,7 @@
 #define DARK_GRAY   "\033[90m"
 #define BRIGHT_WHITE    "\033[97m"
 #define REST "\033[0m"
+#define DEEP_GRAY "\033[2;30m"
 
 struct LogEntry {
     std::string message;
@@ -41,7 +43,7 @@ public:
     std::vector<LogEntry> battleLogs;
     const int MAX_LOGS = 5;
 
-    std::vector<std::string> systemLogs;
+    std::vector<LogEntry> systemLogs;
     const int MAX_MENU_LOGS = 4;
 
 public:
@@ -66,7 +68,15 @@ public:
     void RenderSplitScreen(const std::vector<std::string>& leftContent,
         const std::vector<std::string>& diceFrame,
         const std::string& title,
-        bool isBattleMode = false);
+        bool isBattleMode = false,
+        std::string color = CYAN);
+
+    // 인벤토리 렌더링 수정 테스트 용도 Sub 
+    void RenderSplitScreenSub(const std::vector<std::string>& leftContent,
+        const std::vector<std::string>& diceFrame,
+        const std::string& title,
+        bool isBattleMode = false,
+        std::string color = CYAN);
 
 public:
     // [중요] 모든 주요 화면 출력 함수에 diceFrame 인자를 추가했습니다.
@@ -117,6 +127,6 @@ public:
 
     void ClearBattleLogs() { battleLogs.clear(); }
 
-    void AddSystemLog(std::string msg);
+    void AddSystemLog(std::string msg, std::string color = WHITE);
     void ClearSystemLogs();
 };

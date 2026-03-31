@@ -7,6 +7,12 @@
 
 class CombatManager;
 
+constexpr DWORD sleepTime_fast = 800;
+constexpr DWORD sleepTime_slow = 1200;
+
+const std::string playerMsgColor = BRIGHT_GREEN;
+const std::string monsterMsgColor = BRIGHT_RED;
+
 enum class BattleResult
 {
     PlayerWin,

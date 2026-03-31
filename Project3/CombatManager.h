@@ -13,6 +13,8 @@
 
 class Renderer;
 
+static std::string currentAreaName;
+
 class CombatManager
 {
 private:
@@ -41,16 +43,16 @@ private:
     std::vector<std::string> unlockedAreas;
     std::unordered_map<std::string, std::string> areaDisplayname =
     {
-        {"Forest", " ½£ "},
-        {"Desert", " »ç¸·"},
-        {"Cave", " µ¿±¼"},
-        {"Temple", " ½ÅÀü"},
-        {"Jungle", " Á¤±Û"},
-        {"Mine", " Æó±¤"},
-        {"Ocean", " ÇØÀú"},
+        {"Forest", "½£"},
+        {"Desert", "»ç¸·"},
+        {"Cave", "µ¿±¼"},
+        {"Temple", "½ÅÀü"},
+        {"Jungle", "Á¤±Û"},
+        {"Mine", "Æó±¤"},
+        {"Ocean", "ÇØÀú"},
         {"Alley", "µŞ°ñ¸ñ"},
-        {"Mountain", " »ê "},
-        {"Nest", " µÕÁö"}
+        {"Mountain", "»ê"},
+        {"Nest", "µÕÁö"}
     };
 
     std::vector<std::string> currentChoices;
@@ -67,7 +69,8 @@ public:
     std::string SelectArea();
 
     BattleResult Run(Character* player);
+    static std::string GetCurrentAreaName();
     void ReduceHp(Actor* actor, Actor* monster);
-    void UnlockAreas(int level);
+    void UnlockAreas(int level, bool flag = false);
     void ShowCredit();
 };
