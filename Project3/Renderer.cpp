@@ -16,7 +16,7 @@ Renderer::Renderer() {
     HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
     CONSOLE_CURSOR_INFO cursorInfo;
     GetConsoleCursorInfo(hOut, &cursorInfo);
-    cursorInfo.bVisible = FALSE; 
+    cursorInfo.bVisible = FALSE;
     SetConsoleCursorInfo(hOut, &cursorInfo);
 
 
@@ -928,29 +928,25 @@ void Renderer::RenderBuyResult(BuyStatus status, BaseItem* item, int playerGold)
     Delay(1500);
 }
 
-void Renderer::RenderInventory(int level,int CurExp, int MaxLevelExp, BaseItem* slots[], const std::vector<ItemSlot>& gearStorage,
+void Renderer::RenderInventory(int level, int CurExp, int MaxLevelExp, BaseItem* slots[], const std::vector<ItemSlot>& gearStorage,
     const std::vector<DiceSlot>& diceStorage, const std::vector<std::string>& diceFrame)
 {
+    // 1. 왼쪽 영역 (invContent): 상태, 장착 장비, 주사위 정보
     std::vector<std::string> invContent;
-    // 구분선 길이를 통일하기 위해 변수로 관리
     std::string divider = std::string(GRAY) + " ------------------------------------------" + RESET;
 
     invContent.push_back("");
-    // 모든 섹션 제목의 들여쓰기를 공백 2칸으로 통일
+    // [ CHARACTER STATUS ]
     invContent.push_back(std::string(BRIGHT_YELLOW) + "  [ CHARACTER STATUS ]" + RESET);
     invContent.push_back("  - 현재 레벨 : " + std::string(BRIGHT_WHITE) + "LV. " + std::to_string(level) + RESET);
-    std::string expInfo = "  - 경 험 치   : " + std::string(BRIGHT_CYAN) + std::to_string(CurExp) + RESET +
-        " / " + std::to_string(MaxLevelExp);
-    invContent.push_back(expInfo);
+    invContent.push_back("  - 경 험 치   : " + std::string(BRIGHT_CYAN) + std::to_string(CurExp) + RESET + " / " + std::to_string(MaxLevelExp));
     invContent.push_back(divider);
 
     // [섹션 1] 현재 장착 장비
     invContent.push_back(std::string(BRIGHT_CYAN) + "  [ 현재 장착 장비 ]" + RESET);
-    // 한글 글자 수를 맞추기 위해 공백을 제거하거나 통일 (무기, 헬멧... 2글자로 통일)
     const char* slotNames[] = { "무기", "헬멧", "갑옷", "신발", "반지" };
-
     for (int i = 0; i < 5; i++) {
-        std::string line = "  - " + std::string(slotNames[i]) + "   : "; // 공백 3칸으로 콜론 위치 고정
+        std::string line = "  - " + std::string(slotNames[i]) + "   : ";
         if (slots[i] != nullptr) {
             line += std::string(BRIGHT_YELLOW) + slots[i]->GetName() + RESET;
         }
@@ -961,21 +957,7 @@ void Renderer::RenderInventory(int level,int CurExp, int MaxLevelExp, BaseItem* 
     }
     invContent.push_back(divider);
 
-    // [섹션 2] 소지 장비
-    invContent.push_back(std::string(BRIGHT_GREEN) + "  [ 소지 중인 장비 ]" + RESET);
-    if (gearStorage.empty()) {
-        invContent.push_back(std::string(DARK_GRAY) + "    (비어 있음)" + RESET);
-    }
-    else {
-        for (int i = 0; i < std::min((int)gearStorage.size(), 5); i++) {
-            std::string idx = std::string(BRIGHT_GREEN) + "[" + std::to_string(i + 1) + "] " + RESET;
-            std::string count = std::string(GRAY) + " (x" + std::to_string(gearStorage[i].count) + ")" + RESET;
-            invContent.push_back("    " + idx + gearStorage[i].item->GetName() + count);
-        }
-    }
-    invContent.push_back(divider);
-
-    // [섹션 3] 소지 주사위
+    // [섹션 2] 소지 주사위 (왼쪽 하단으로 배치)
     invContent.push_back(std::string(BRIGHT_YELLOW) + "  [ 소지 중인 주사위 ]" + RESET);
     if (diceStorage.empty()) {
         invContent.push_back(std::string(DARK_GRAY) + "    (비어 있음)" + RESET);
@@ -983,19 +965,43 @@ void Renderer::RenderInventory(int level,int CurExp, int MaxLevelExp, BaseItem* 
     else {
         std::string dRow = "    ";
         for (const auto& ds : diceStorage) {
-            dRow += std::string(BRIGHT_YELLOW) + ds.dice->DiceIdToString() + RESET +
-                "(" + std::to_string(ds.count) + ") ";
+            dRow += std::string(BRIGHT_YELLOW) + ds.dice->DiceIdToString() + RESET + "(" + std::to_string(ds.count) + ") ";
         }
         invContent.push_back(dRow);
     }
     invContent.push_back(divider);
-
-    // 종료 메뉴
-    invContent.push_back("");
     invContent.push_back("  " + std::string(WHITE) + "[0] 마을로 돌아가기 (RETURN)" + RESET);
 
-    RenderSplitScreen(invContent, diceFrame, "ADVENTURER'S BACKPACK", false);
 
+    // 2. 오른쪽 영역 (rightContent): 원래 diceFrame 자리에 소지 장비 목록을 넣음
+    std::vector<std::string> rightContent;
+    rightContent.push_back("");
+    rightContent.push_back(std::string(BRIGHT_GREEN) + "  [ INVENTORY : 소지 장비 ]" + RESET);
+    rightContent.push_back(std::string(GRAY) + "  ----------------------------" + RESET);
+    rightContent.push_back("");
+
+    if (gearStorage.empty()) {
+        rightContent.push_back(std::string(DARK_GRAY) + "    (소지품이 비어 있습니다.)" + RESET);
+    }
+    else {
+        // 오른쪽 영역은 높이가 넉넉하므로 최대 10개까지 출력 가능
+        for (int i = 0; i < (int)gearStorage.size(); i++) {
+            if (i >= 12) { // 너무 많으면 잘라줌
+                rightContent.push_back(std::string(GRAY) + "      ..." + RESET);
+                break;
+            }
+            std::string idx = std::string(BRIGHT_GREEN) + "[" + std::to_string(i + 1) + "] " + RESET;
+            std::string itemName = gearStorage[i].item->GetName();
+            std::string count = std::string(GRAY) + " x" + std::to_string(gearStorage[i].count) + RESET;
+
+            rightContent.push_back("    " + idx + itemName + count);
+        }
+    }
+
+    // 3. 공용 엔진 호출 (오른쪽 매개변수에 diceFrame 대신 rightContent를 전달)
+    RenderSplitScreen(invContent, rightContent, "ADVENTURER'S BACKPACK", false);
+
+    // 4. 입력 위치 고정
     MoveCursor(0, 48);
     std::cout << BRIGHT_GREEN << " > 장비 번호 선택 : " << RESET;
 }
@@ -1030,10 +1036,11 @@ void Renderer::RenderEquipResult(const EquipResult& result) {
         equipContent.push_back(" 기존 장비를 해제하고 교체했습니다.");
         equipContent.push_back("");
         equipContent.push_back(std::string(GRAY) + " 이전: [" + result.prevItem + "]" + RESET);
+        equipContent.push_back(std::string(YELLOW) + "  | " + RESET);
         equipContent.push_back(std::string(YELLOW) + "  V " + RESET);
         equipContent.push_back(" 현재: " + std::string(BRIGHT_CYAN) + "[" + itemName + "]" + RESET);
 
-      
+
         break;
 
     case EquipStatus::Overlap:
@@ -1068,7 +1075,7 @@ void Renderer::RenderEquipResult(const EquipResult& result) {
     Delay(1500);
 }
 void Renderer::Clear() {
-   
+
     system("cls");
 }
 
