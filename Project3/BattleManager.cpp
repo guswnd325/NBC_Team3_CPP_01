@@ -95,8 +95,6 @@ void BattleManager::DrawDiceDirectly(int num) {
         int vLen = Renderer::GetInstance().GetVisualLength(frame[i]);
         std::cout << frame[i] << std::string(std::max(0, 35 - vLen), ' ');
     }
-
-   .
     Renderer::GetInstance().MoveCursor(0, 35); 
 }
 
