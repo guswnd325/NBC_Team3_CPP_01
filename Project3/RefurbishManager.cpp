@@ -87,7 +87,7 @@ RestResult RefurbishManager::Rest(Character *character)
 	}
 
 
-	else if (character->GetHP() >= 100)
+	else if (character->GetHP() >= MAX_HP)
 	{
 		// 최대 체력임
 		result.result = HealStatus::MaxHP;
@@ -137,6 +137,16 @@ void RefurbishManager::Run()
 		{
 			RestResult info = Rest(character);
 
+			if (info.result == HealStatus::Success)
+			{
+				AudioManager::PlaySFX(SFXList::Heal);
+			}
+			else
+			{
+				AudioManager::PlaySFX(SFXList::Error);
+				info.healValue = 0;
+			}
+			
 			int hp = character->GetHP();
 			renderer.RenderHealResult(info.healValue,  hp - info.healValue, hp, MAX_HP);
 			

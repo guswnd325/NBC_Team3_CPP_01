@@ -3,6 +3,7 @@
 
 constexpr int defaultGold = 3000;
 constexpr int maxHP = 100;
+constexpr int defaultHP = 100;
 constexpr int defaultRestTicket = 20;
 
 Character::Character()
@@ -27,7 +28,9 @@ void Character::InitializeCharacter(std::string name)
 광대 : (1~24) 주사위 1개, HP=100, ATK=1, DEF=0
 	*/
 
-	SetHP(maxHP);
+	SetHP(defaultHP);
+	SetName(name);
+
 	if (name == "전사")
 	{
 		SetAtk(5);
@@ -60,8 +63,6 @@ void Character::InitializeCharacter(std::string name)
 		//GetInventory()->AddDice(DiceID::D1_24);
 	}
 
-	SetHP(maxHP);
-	SetName(name);
 }
 
 Inventory * Character::GetInventory()
