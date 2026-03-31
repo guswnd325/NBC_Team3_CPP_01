@@ -184,21 +184,15 @@ void Monster::InitializeMonster() {
 
 int Monster::RollAttackDice() {
 	int total = 0;
-
 	std::random_device rd;
 	std::mt19937 gen(rd());
 	std::uniform_int_distribution<int> dis(1, diceSides);
 
-	std::cout << GetName() << "이(가) 주사위 " << diceCount << "개를 굴립니다: ";
-
+	// 내부의 모든 std::cout을 삭제합니다.
 	for (int i = 0; i < diceCount; ++i) {
-		int roll = dis(gen);
-		total += roll;
-		std::cout << "[" << roll << "] ";
+		total += dis(gen);
 	}
-
-	std::cout << " (총합: " << total << ")" << std::endl;
-	return total;
+	return total; // 결과값만 깔끔하게 반환
 }
 
 void Monster::SetRewards(int gold, int recover, DiceID diceID, int challenge) {

@@ -82,11 +82,13 @@ BattleResult BattleManager::Run(Character* player, Monster* monster)
     }
 }
 
+
+//렌더러 최대한 변경하지 않기 위한 바로 주사위 프레임을 사용하는 함수
 void BattleManager::DrawDiceDirectly(int num) {
     std::vector<std::string> frame = diceManager.GetDiceFrame(num);
 
     int startX = 63;
-    int startY = Renderer::ZONE_SCREEN_Y + 4; // 위치 점프가 있다면 +4~6 사이로 조정
+    int startY = Renderer::ZONE_SCREEN_Y + 4; 
 
     for (int i = 0; i < (int)frame.size(); i++) {
         Renderer::GetInstance().MoveCursor(startX, startY + i);
@@ -94,9 +96,8 @@ void BattleManager::DrawDiceDirectly(int num) {
         std::cout << frame[i] << std::string(std::max(0, 35 - vLen), ' ');
     }
 
-    // [핵심 추가] 주사위를 다 그린 후 커서를 화면 맨 하단이나 구석으로 치웁니다.
-    // 이렇게 하면 이후 발생하는 일반 std::cout이 주사위 칸을 침범하지 못합니다.
-    Renderer::GetInstance().MoveCursor(0, 35); // 로그창 아래 빈 공간으로 유도
+   .
+    Renderer::GetInstance().MoveCursor(0, 35); 
 }
 
 // ---------------------------------------------------------------
@@ -113,7 +114,7 @@ void BattleManager::ClearDiceDirectly() {
 
 void BattleManager::StartBattle(Character* player, Monster* monster)
 {
-    // [1] 전투 시작 전 전체 화면 갱신 (틀을 잡고 로그 초기화)
+    
     Renderer::GetInstance().RenderBattleAction(monster, player, {});
 
     // --- 플레이어 턴 ---
@@ -122,47 +123,43 @@ void BattleManager::StartBattle(Character* player, Monster* monster)
         DrawDiceDirectly(rand() % 20 + 1);
         Sleep(40 + (i * 10));
     }
-    DrawDiceDirectly(playerRoll); // 최종 결과 고정
-
-    // 로그만 추가 (화면은 아직 갱신하지 않음 - 깜빡임 방지)
-    Renderer::GetInstance().AddBattleLog("플레이어 주사위: [" + std::to_string(playerRoll) + "]");
+    DrawDiceDirectly(playerRoll);
+    Renderer::GetInstance().AddBattleLog("플레이어 주사위 결과: [" + std::to_string(playerRoll) + "]");
     Sleep(800);
 
-    // --- 몬스터 턴 준비 ---
-    ClearDiceDirectly(); // 주사위 칸만 슥 지우기
+    
+    ClearDiceDirectly();
 
-    // [팁] 몬스터가 주사위 굴린다는 로그를 미리 반영하기 위해 전체 렌더링 1회
-    // 이때 주사위 위치가 살짝 튈 수 있지만, 어차피 비운 상태({})라 자연스럽습니다.
-    Renderer::GetInstance().RenderBattleAction(monster, player, {});
+    // [몬스터 배틀 로그에 추가]
+    Renderer::GetInstance().AddBattleLog(monster->GetName() + "이(가) " + std::to_string(monster->GetDiceCount()) + "개의 주사위를 굴립니다!");
+    Renderer::GetInstance().RenderBattleAction(monster, player, {}); 
 
-    // --- 몬스터 턴 ---
-    // monster->RollAttackDice() 내부에서 "주사위 2개 굴림" 등의 std::cout이 있어도
-    // 위에서 커서를 치워뒀기 때문에 안전합니다.
-    int monsterRoll = monster->RollAttackDice();
+
+    int monsterRoll = monster->RollAttackDice(); 
     for (int i = 0; i < 10; i++) {
         DrawDiceDirectly(rand() % 12 + 1);
         Sleep(40 + (i * 10));
     }
-    DrawDiceDirectly(monsterRoll); // 최종 결과 고정
+    DrawDiceDirectly(monsterRoll);
 
-    Renderer::GetInstance().AddBattleLog(monster->GetName() + " 주사위: [" + std::to_string(monsterRoll) + "]");
+    // 결과 로그 추가
+    Renderer::GetInstance().AddBattleLog(monster->GetName() + "의 주사위 결과: [" + std::to_string(monsterRoll) + "]");
     Sleep(800);
 
-    // [최종 동기화] 판정 전 모든 로그와 상태를 화면에 맞춤 (깜빡임 1번)
+    
     Renderer::GetInstance().RenderBattleAction(monster, player, {});
 
-    // --- 판정 및 데미지 계산 ---
-    if (playerRoll >= monsterRoll)
-    {
-        Renderer::GetInstance().AddBattleLog("플레이어가 승리하여 공격합니다!");
+    
+    if (playerRoll >= monsterRoll) {
+        Renderer::GetInstance().AddBattleLog("플레이어 승리! 공격 개시.");
         CalculateDamage(player, monster, playerRoll, true);
     }
-    else
-    {
-        Renderer::GetInstance().AddBattleLog(monster->GetName() + "이(가) 승리하여 공격합니다!");
+    else {
+        Renderer::GetInstance().AddBattleLog(monster->GetName() + " 승리! 반격 당함.");
         CalculateDamage(monster, player, monsterRoll, false);
     }
 }
+
 // ---------------------------------------------------------------
 // 도망 - 플레이어 주사위 > 몬스터 주사위일 때만 성공
 // ---------------------------------------------------------------
