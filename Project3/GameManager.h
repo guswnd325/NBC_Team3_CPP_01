@@ -7,9 +7,10 @@
 #include "RefurbishManager.h"
 #include "AudioManager.h"
 
-enum class Player
+enum class PlayerExist
 {
-
+    PlayerExistFalse,
+    PlayerExistTrue
 };
 
 

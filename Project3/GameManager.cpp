@@ -43,16 +43,12 @@ void GameManager::CreateCharacter()
 	Renderer::GetInstance().Clear();
 	Renderer::GetInstance().RenderCreatePlayer();
 
-	while (true)
+	std::string job;
+
+	PlayerExist playerExist = PlayerExist::PlayerExistTrue;
+
+	while ((int)playerExist)
 	{
-		if (player != nullptr)
-		{
-			delete player;
-			player = nullptr;
-		}
-
-		std::string job;
-
 		InputResult input = Tools<int>::Input(1, 3);
 
 		switch (input.value)
@@ -71,15 +67,23 @@ void GameManager::CreateCharacter()
 		default:
 		{
 			Renderer::GetInstance().AddSystemLog("잘못된 입력입니다. 제공된 번호로 입력해주세요!");
-			Sleep(3000);
 			continue;
 		}
 		}
 
+		if (player != nullptr)
+		{
+			delete player;
+			player = nullptr;
+		}
+
 		player = new Character();
 		player->InitializeCharacter(job);
+
+		playerExist = PlayerExist::PlayerExistFalse;
 	}
-	
+
+
 }
 
 Character* GameManager::GetCharacter() const
