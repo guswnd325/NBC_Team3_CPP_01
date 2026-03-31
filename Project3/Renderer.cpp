@@ -214,33 +214,58 @@ void Renderer::RenderMenu(const std::vector<std::string>& diceFrame) {
 
     menuContent.push_back("");
     // 1. 타이틀 로고 중앙 정렬
-    menuContent.push_back(center(R"(      .-------.      ____  _ ____ _____      )"));
-    menuContent.push_back(center(R"(     /   o   / |    |  _ \(_) ___||  __|     )"));
-    menuContent.push_back(center(R"(     /  o    / o|    | | | | | |   | |__       )"));
-    menuContent.push_back(center(R"(    /   o   / o |    | |_| | | |___|  __|      )"));
-    menuContent.push_back(center(R"(    '-------' o /    |____/|_|\____|____|      )"));
-    menuContent.push_back(center(R"( | o     |  /      _  ____ ____ _  _ ___ )"));
-    menuContent.push_back(center(R"(  |    o  | /      /_\ | __ |___ |\ |  |    )"));
-    menuContent.push_back(center(R"(  | o     |/      /_  \|__] |___ | \|  |    )"));
-    menuContent.push_back(center(R"(  '-------'                                 )"));
+    menuContent.push_back("");
+    menuContent.push_back(center(std::string(BRIGHT_WHITE) + R"(      _______                                           )" + RESET));
+    menuContent.push_back(center(std::string(BRIGHT_WHITE) + R"(     /\      \     _____  _____ _____ ______            )" + RESET));
+    menuContent.push_back(center(std::string(BRIGHT_WHITE) + R"(    /  \   o  \   |  __ \|_   _/ ____|  ____|           )" + RESET));
+    menuContent.push_back(center(std::string(BRIGHT_WHITE) + R"(   /    \______\  | |  | | | || |    | |__              )" + RESET));
+    menuContent.push_back(center(std::string(BRIGHT_WHITE) + R"(   \    /      /  | |  | | | || |    |  __|             )" + RESET));
+    menuContent.push_back(center(std::string(BRIGHT_WHITE) + R"(    \  /   o  /   | |__| |_| || |____| |____            )" + RESET));
+    menuContent.push_back(center(std::string(BRIGHT_WHITE) + R"(     \/______/    |_____/|_____\_____|______|           )" + RESET));
+    menuContent.push_back(center(R"(                                _  ____ ____ _  _ ___ )"));
+    menuContent.push_back(center(R"(                                 /_\ | __ |___ |\ |  |    )"));
+    menuContent.push_back(center(R"(                                /   \|__] |___ | \|  |    )"));
+    menuContent.push_back(center(R"(                               )"));
     menuContent.push_back("");
     menuContent.push_back(""); // 로고와 버튼 사이 간격 추가
 
-    // 2. 버튼 설정 및 중앙 정렬
     std::string startBtn = std::string(BRIGHT_GREEN) + "[1] 게임 시작" + RESET;
     std::string exitBtn = std::string(RED) + "[2] 게임 종료" + RESET;
+    menuContent.push_back(center(startBtn + "          " + exitBtn));
 
-    // 버튼 두 개를 합친 문자열을 만들고 통째로 중앙 정렬
-    // "          " 부분을 조절하여 버튼 사이의 간격을 넓히거나 좁힐 수 있습니다.
-    std::string buttons = startBtn + "          " + exitBtn;
-    menuContent.push_back(center(buttons));
 
-    // 3. 엔진 호출
-    RenderSplitScreen(menuContent, diceFrame, "DICE ADVENTURE : THE ROGUELIKE", false);
+    std::vector<std::string> guideContent;
+    int RW = 35; // 오른쪽 영역의 대략적인 폭 (환경에 따라 30~40 사이로 조절하세요)
 
-    // 4. 입력 위치 및 콘솔 크기 대응
-    // 하단 테두리 선(PrintBottom)이 겹치지 않게 MoveCursor 위치를 넉넉히 잡으세요.
-    // system("mode con cols=120 lines=55") 기준 47~50이 적당합니다.
+    // 오른쪽 전용 중앙 정렬 람다
+    auto centerRight = [&](std::string text) {
+        int len = GetVisualLength(text);
+        int space = (RW - len) / 2;
+        return (space > 0) ? std::string(space, ' ') + text : text;
+        };
+
+    // 2. 오른쪽 영역 (게임 가이드 구성)
+    guideContent.push_back("");
+    guideContent.push_back(centerRight(std::string(BRIGHT_YELLOW) + "* 게임 가이드 *" + RESET));
+    guideContent.push_back(centerRight(std::string(GRAY) + "----------------------------" + RESET));
+    guideContent.push_back("");
+
+    // 가이드 항목들 (해시태그 강조)
+    guideContent.push_back(" " + std::string(BRIGHT_CYAN) + "#탐사" + RESET + " 골드/EXP/주사위 획득");
+    guideContent.push_back(" " + std::string(BRIGHT_GREEN) + "#해금" + RESET + " 레벨업 시 새 지역 오픈");
+    guideContent.push_back(" " + std::string(BRIGHT_YELLOW) + "#강화" + RESET + " 주사위 눈 상향");
+    guideContent.push_back(" " + std::string(BRIGHT_MAGENTA) + "#회복" + RESET + " 주사위로 HP 회복");
+    guideContent.push_back(" " + std::string(BRIGHT_RED) + "#전투" + RESET + " 주사위 합 + 스탯 대결");
+    guideContent.push_back(" " + std::string(BRIGHT_WHITE) + "#보상" + RESET + " 일반(안정) vs 리스크(주사위)");
+
+    guideContent.push_back("");
+    guideContent.push_back(std::string(GRAY) + "   ----------------------------" + RESET);
+    guideContent.push_back("   당신의 운을 믿고 나아가십시오");
+
+    // 3. 엔진 호출 (diceFrame 대신 guideContent 전달)
+    RenderSplitScreen(menuContent, guideContent, "DICE AGENT : THE ROGUELIKE", false);
+
+    // 4. 입력 위치
     MoveCursor(0, 48);
     std::cout << BRIGHT_GREEN << " > 선택 : " << RESET;
 }
@@ -297,9 +322,9 @@ void Renderer::RenderCreatePlayer(const std::vector<std::string>& diceFrame) {
 
 void Renderer::RenderMainMenu(const std::vector<std::string>& diceFrame) {
     std::vector<std::string> townContent;
-    int LW = Renderer::LEFT_WIDTH; // 기준 너비 (60)
+    int LW = Renderer::LEFT_WIDTH; // 60
 
-    // 공백을 계산해서 넣어주는 람다 함수 (편의용)
+    // 왼쪽 영역 중앙 정렬용 람다
     auto center = [&](std::string text) {
         int len = GetVisualLength(text);
         int space = (LW - len) / 2;
@@ -307,30 +332,61 @@ void Renderer::RenderMainMenu(const std::vector<std::string>& diceFrame) {
         return std::string(space, ' ') + text;
         };
 
+    // 1. 왼쪽 영역 (마을 정보 및 메뉴)
     townContent.push_back("");
-    // 집 모양 아트 (가운데 정렬)
-    townContent.push_back(center("      _ ^ _      "));
-    townContent.push_back(center("     / |_| \\     "));
-    townContent.push_back(center("    |_______|    "));
+    townContent.push_back(center(std::string(BRIGHT_YELLOW) + "      _ ^ _      " + RESET));
+    townContent.push_back(center(std::string(BRIGHT_YELLOW) + "     / |_| \\     " + RESET));
+    townContent.push_back(center(std::string(BRIGHT_YELLOW) + "    |_______|    " + RESET));
     townContent.push_back("");
 
-    // 설명 문구 (가운데 정렬)
     townContent.push_back(center("모닥불 소리와 새들의 지저귐이 들리는"));
-    townContent.push_back(center("평화로운 마을 '다이스톤'입니다."));
+    townContent.push_back(center("평화로운 마을 " + std::string(BRIGHT_WHITE) + "'다이스톤'" + RESET + "입니다."));
     townContent.push_back("");
-    townContent.push_back(center("------------------------------------------"));
+    townContent.push_back(center(std::string(GRAY) + "------------------------------------------" + RESET));
     townContent.push_back("");
-    townContent.push_back(center(std::string(BRIGHT_GREEN) + "[1] 탐  사 (지역 조사)" + RESET));
-    townContent.push_back(center(std::string(YELLOW) + "  [2] 상  점 (아이템 구매)" + RESET));
-    townContent.push_back(center(std::string(CYAN) + "[3] 장비창 (인벤토리)" + RESET));
-    townContent.push_back(center(std::string(CYAN) + "   [4] 휴  식 (회복 및 강화)" + RESET));
-    townContent.push_back("");
-    townContent.push_back(center("------------------------------------------"));
-    // 2. 공용 엔진 호출
-    // 마을 화면에서도 오른쪽에 diceFrame(주사위나 마을 전용 로그)을 띄웁니다.
-    RenderSplitScreen(townContent, diceFrame, "평화로운 마을", false);
 
-    // 3. 입력 위치 고정 (UI 하단부)
+    // 마을 메뉴 항목
+    townContent.push_back(center(std::string(BRIGHT_GREEN) + "[1] 탐  사 (지역 조사)" + RESET));
+    townContent.push_back(center(std::string(BRIGHT_YELLOW) + "  [2] 상  점 (아이템 구매)" + RESET));
+    townContent.push_back(center(std::string(BRIGHT_CYAN) + " [3] 장비창 (인벤토리)  " + RESET));
+    townContent.push_back(center(std::string(BRIGHT_MAGENTA) + "   [4] 휴  식 (회복 및 강화)" + RESET));
+
+    townContent.push_back("");
+    townContent.push_back(center(std::string(GRAY) + "------------------------------------------" + RESET));
+
+
+    // 2. 오른쪽 영역 (게임 가이드 구성 - 중앙 정렬)
+    std::vector<std::string> guideContent;
+    int RW = 35; // 오른쪽 영역 폭 기준
+
+    auto centerRight = [&](std::string text) {
+        int len = GetVisualLength(text);
+        int space = (RW - len) / 2;
+        return (space > 0) ? std::string(space, ' ') + text : text;
+        };
+
+    guideContent.push_back("");
+    guideContent.push_back(centerRight(std::string(BRIGHT_YELLOW) + "* 게임 가이드 *" + RESET));
+    guideContent.push_back(centerRight(std::string(GRAY) + "--------------------------" + RESET));
+    guideContent.push_back("");
+
+    // 가이드 항목 (색상별 포인트)
+    guideContent.push_back(" " + std::string(BRIGHT_CYAN) + "#탐사" + RESET + " 골드/EXP/주사위 획득");
+    guideContent.push_back(" " + std::string(BRIGHT_GREEN) + "#해금" + RESET + " 레벨업 시 새 지역 오픈");
+    guideContent.push_back(" " + std::string(BRIGHT_YELLOW) + "#강화" + RESET + " 주사위 눈 상향");
+    guideContent.push_back(" " + std::string(BRIGHT_MAGENTA) + "#회복" + RESET + " 주사위로 HP 회복");
+    guideContent.push_back(" " + std::string(BRIGHT_RED) + "#전투" + RESET + " 주사위 합 + 스탯 대결");
+    guideContent.push_back(" " + std::string(BRIGHT_WHITE) + "#보상" + RESET + " 일반(안정) vs 리스크(주사위)");
+
+    guideContent.push_back("");
+    guideContent.push_back(centerRight(std::string(GRAY) + "--------------------------" + RESET));
+    guideContent.push_back(centerRight("마을에서 전열을 가다듬으세요."));
+
+
+    // 3. 공용 엔진 호출 (diceFrame 대신 guideContent 전달)
+    RenderSplitScreen(townContent, guideContent, "평화로운 마을 : 다이스톤", false);
+
+    // 4. 입력 위치 고정
     MoveCursor(0, Renderer::ZONE_PLAYER_Y + 6);
     std::cout << BRIGHT_GREEN << " > 행동을 선택해라 : " << RESET;
 }
@@ -981,8 +1037,8 @@ void Renderer::RenderInventory(int level, int CurExp, int MaxLevelExp, int restT
                 statInfo = " (" + std::string(BRIGHT_CYAN) + "방어력 +" + std::to_string(delta.def) + RESET + ")";
             }
             else if (delta.atk != 0 && delta.def != 0) {
-                statInfo = " (" + std::string(RED) + "공+" + std::to_string(delta.atk) + RESET +
-                    " " + std::string(BRIGHT_CYAN) + "방+" + std::to_string(delta.def) + RESET + ")";
+                statInfo = " (" + std::string(RED) + "공격력+" + std::to_string(delta.atk) + RESET +
+                    " " + std::string(BRIGHT_CYAN) + "방어력+" + std::to_string(delta.def) + RESET + ")";
             }
             line += statInfo;
         }
