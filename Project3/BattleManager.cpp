@@ -10,10 +10,13 @@
 // ---------------------------------------------------------------
 BattleResult BattleManager::Run(Character* player, Monster* monster, CombatManager* combatManager)
 {
-    Renderer::GetInstance().ClearBattleLogs();
     Renderer::GetInstance().AddBattleLog(monster->GetName() + "(이)가 나타났다!");
+    Renderer::GetInstance().RenderBattleAction(monster, player, std::vector<std::string>());
+    Sleep(3000);
+
     while (true)
     {
+        Renderer::GetInstance().ClearBattleLogs();
         Renderer::GetInstance().RenderBattleAction(monster, player, std::vector<std::string>());
 
         InputResult input = Tools<int>::Input(1, 2);
@@ -36,13 +39,14 @@ BattleResult BattleManager::Run(Character* player, Monster* monster, CombatManag
                 Renderer::GetInstance().AddBattleLog("도망에 성공했습니다!");
                 Renderer::GetInstance().RenderBattleAction(monster, player, {});
                 Sleep(3000);
+
                 return BattleResult::Escaped;
             }
             else
             {
                 Renderer::GetInstance().AddBattleLog("도망에 실패! " + monster->GetName() + "이(가) 공격합니다!");
-
                 Renderer::GetInstance().RenderBattleAction(monster, player, {});
+
                 CalculateDamage(monster, player, monsterRoll,false);
             }
 
@@ -61,6 +65,7 @@ BattleResult BattleManager::Run(Character* player, Monster* monster, CombatManag
         {
             player->PlayerDead();
             Renderer::GetInstance().AddBattleLog("플레이어가 사망했습니다...");
+            Renderer::GetInstance().RenderBattleAction(monster, player, {});
             AudioManager::GetInstance().StopMusic();
             AudioManager::GetInstance().PlayBGM(BGMList::Jane, false);
             combatManager->ShowCredit();
@@ -73,24 +78,28 @@ BattleResult BattleManager::Run(Character* player, Monster* monster, CombatManag
             if (monster->GetType() == MonsterType::MaxRabbit)
             {
                 Renderer::GetInstance().AddBattleLog(monster->GetName() + "을(를) 처치했습니다!");
+                Renderer::GetInstance().RenderBattleAction(monster, player, {});
                 return BattleResult::PlayerClear;
             }
 
             Renderer::GetInstance().AddBattleLog(monster->GetName() + "을(를) 처치했습니다!");
+            Renderer::GetInstance().RenderBattleAction(monster, player, {});
 
             int gainedExp = monster->GetExp();
             player->SetExp(player->GetExp() + gainedExp);
             Renderer::GetInstance().AddBattleLog("경험치 " + std::to_string(gainedExp) + " 획득! (현재 경험치 : " + std::to_string(player->GetExp()) + ")");
+            Renderer::GetInstance().RenderBattleAction(monster, player, {});
 
             if (player->GetExp() >= player->GetLevelUpExp())
             {
                 player->LevelUp();
                 Renderer::GetInstance().AddSystemLog("Level Up! (" + std::to_string(player->GetLevel()) + ")");
+                Renderer::GetInstance().RenderBattleAction(monster, player, {});
                 combatManager->UnlockAreas(player->GetLevel());
             }    
                 
             GiveReward(player, monster);
-            Renderer::GetInstance().ClearSystemLogs();
+
             return BattleResult::PlayerWin;
         }
     }
@@ -245,7 +254,6 @@ void BattleManager::CalculateDamage(Actor* attacker, Actor* defender, int Roll, 
 
         
         EffectManager::PlayMonsterHitEffect(m->GetVisual(), 0, startY, 60);
-
         
         Renderer::GetInstance().RenderBattleAction(m, (Character*)attacker, {});
     }
