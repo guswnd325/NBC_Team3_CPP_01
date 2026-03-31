@@ -34,12 +34,14 @@ BattleResult BattleManager::Run(Character* player, Monster* monster, CombatManag
             if (TryEscape(player, monster, monsterRoll))
             {
                 Renderer::GetInstance().AddBattleLog("도망에 성공했습니다!");
+                Renderer::GetInstance().RenderBattleAction(monster, player, {});
                 Sleep(3000);
                 return BattleResult::Escaped;
             }
             else
             {
                 Renderer::GetInstance().AddBattleLog("도망에 실패! " + monster->GetName() + "이(가) 공격합니다!");
+                Renderer::GetInstance().RenderBattleAction(monster, player, {});
                 CalculateDamage(monster, player, monsterRoll,false);
             }
 
@@ -84,6 +86,7 @@ BattleResult BattleManager::Run(Character* player, Monster* monster, CombatManag
             }    
                 
             GiveReward(player, monster);
+            Sleep(3000);
             return BattleResult::PlayerWin;
         }
     }
@@ -173,10 +176,40 @@ void BattleManager::StartBattle(Character* player, Monster* monster)
 // ---------------------------------------------------------------
 bool BattleManager::TryEscape(Character* player, Monster* monster, int& outMonsterRoll)
 {
+
     Renderer::GetInstance().AddBattleLog("[ 도망 시도 ]");
 
+    Renderer::GetInstance().RenderBattleAction(monster, player, {});
+
+    AudioManager::GetInstance().PlaySFX(SFXList::Dice_Roll);
+    // --- 플레이어 턴 ---
     int playerRoll = diceManager.Roll(player);
+    for (int i = 0; i < 10; i++) {
+        DrawDiceDirectly(rand() % 20 + 1);
+        Sleep(40 + (i * 10));
+    }
+    DrawDiceDirectly(playerRoll);
+    Renderer::GetInstance().AddBattleLog("플레이어 주사위 결과: [" + std::to_string(playerRoll) + "]");
+    Sleep(800);
+
+
+    ClearDiceDirectly();
+
+    // [몬스터 배틀 로그에 추가]
+    Renderer::GetInstance().AddBattleLog(monster->GetName() + "이(가) " + std::to_string(monster->GetDiceCount()) + "개의 주사위를 굴립니다!");
+    Renderer::GetInstance().RenderBattleAction(monster, player, {});
+
+    AudioManager::GetInstance().PlaySFX(SFXList::Dice_Roll);
     int monsterRoll = monster->RollAttackDice();
+    for (int i = 0; i < 10; i++) {
+        DrawDiceDirectly(rand() % 12 + 1);
+        Sleep(40 + (i * 10));
+    }
+    DrawDiceDirectly(monsterRoll);
+
+    // 결과 로그 추가
+    Renderer::GetInstance().AddBattleLog(monster->GetName() + "의 주사위 결과: [" + std::to_string(monsterRoll) + "]");
+    Sleep(800);
 
     // 아웃파라미터로 몬스터 roll값 저장
     outMonsterRoll = monsterRoll;
