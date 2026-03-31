@@ -134,6 +134,7 @@
     <ClInclude Include="DiceManager.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="Gears.h" />
+    <ClInclude Include="EffectManager.h" />
     <ClInclude Include="Inventory.h" />
     <ClInclude Include="ItemSpawnManager.h" />
     <ClInclude Include="Monster.h" />
@@ -154,6 +155,7 @@
     <ClCompile Include="CombatManager.cpp" />
     <ClCompile Include="DiceManager.cpp" />
     <ClCompile Include="GameManager.cpp" />
+    <ClCompile Include="EffectManager.cpp" />
     <ClCompile Include="Inventory.cpp" />
     <ClCompile Include="ItemSpawnManager.cpp" />
     <ClCompile Include="main.cpp" />

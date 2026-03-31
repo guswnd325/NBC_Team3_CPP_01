@@ -123,6 +123,9 @@
     <ClInclude Include="buyStatus.h">
       <Filter>소스 파일\Shop</Filter>
     </ClInclude>
+    <ClInclude Include="EffectManager.h">
+      <Filter>소스 파일\Monster</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Character.cpp">
@@ -169,6 +172,9 @@
     </ClCompile>
     <ClCompile Include="AudioManager.cpp">
       <Filter>소스 파일\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="EffectManager.cpp">
+      <Filter>소스 파일\Monster</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

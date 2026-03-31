@@ -1,4 +1,5 @@
 #include "BattleManager.h"
+#include "EffectManager.h" // 추가
 #include <iostream>
 #include <limits>
 #include <string>
@@ -38,7 +39,7 @@ BattleResult BattleManager::Run(Character* player, Monster* monster)
             else
             {
                 Renderer::GetInstance().AddBattleLog("도망에 실패! " + monster->GetName() + "이(가) 공격합니다!");
-                CalculateDamage(monster, player, monsterRoll);
+                CalculateDamage(monster, player, monsterRoll,false);
             }
 
             break;
@@ -95,12 +96,12 @@ void BattleManager::StartBattle(Character* player, Monster* monster)
     if (playerRoll >= monsterRoll)
     {
         Renderer::GetInstance().AddBattleLog("플레이어가 공격합니다!");
-        CalculateDamage(player, monster, playerRoll);
+        CalculateDamage(player, monster, playerRoll, true);
     }
     else
     {
         Renderer::GetInstance().AddBattleLog(monster->GetName() + "이(가) 공격합니다!");
-        CalculateDamage(monster, player, monsterRoll);
+        CalculateDamage(monster, player, monsterRoll, false);
     }
 
     std::cout << std::endl;
@@ -127,14 +128,28 @@ bool BattleManager::TryEscape(Character* player, Monster* monster, int& outMonst
 // ---------------------------------------------------------------
 // 데미지 계산 - 최소 1 보장
 // ---------------------------------------------------------------
-void BattleManager::CalculateDamage(Actor* attacker, Actor* defender, int Roll)
+void BattleManager::CalculateDamage(Actor* attacker, Actor* defender, int Roll, bool defenderIsMonster)
 {
     int damage = std::max(1, attacker->GetAtk() + Roll - defender->GetDef());
     int newHp = std::max(0, defender->GetHP() - damage);
-
     defender->SetHP(newHp);
 
-    Renderer::GetInstance().AddBattleLog(attacker->GetName() + "의 공격! " + defender->GetName() + "에게 " + std::to_string(damage) + " 데미지!" + " (남은 HP : " + std::to_string(defender->GetHP()) + ")");
+    if (defenderIsMonster) {
+        Monster* m = static_cast<Monster*>(defender);
+
+        // Renderer가 이미지를 그리는 시작 줄 계산
+        // ZONE_SCREEN_Y + 상단 UI 5줄
+        int startY = Renderer::ZONE_SCREEN_Y + 5;
+
+        // 이펙트 실행 (이제 startX는 위에서 통째로 그리므로 무시해도 됩니다)
+        EffectManager::PlayMonsterHitEffect(m->GetVisual(), 0, startY, 60);
+
+        // 이펙트 후 전체 화면 리프레시 (로그 등 나머지 UI 복구)
+        Renderer::GetInstance().RenderBattleAction(m, (Character*)attacker);
+    }
+
+    Renderer::GetInstance().AddBattleLog(attacker->GetName() + "의 공격! " +
+        defender->GetName() + "에게 " + std::to_string(damage) + " 데미지!");
 }
 
 // ---------------------------------------------------------------
