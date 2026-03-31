@@ -31,4 +31,8 @@ private:
     void GiveReward(Character* player, Monster* monster);
     void GiveNormalReward(Character* player, Monster* monster);
     void GiveRiskyReward(Character* player, Monster* monster);
+
+    void DrawDiceDirectly(int num);
+
+    void ClearDiceDirectly();
 };

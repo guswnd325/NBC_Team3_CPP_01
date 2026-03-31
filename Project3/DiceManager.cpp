@@ -88,8 +88,6 @@ int DiceManager::Roll(Character* character)
             totalSum += dis(gen);
         }
     }
-
-    DiceAnimationRollNumber(totalSum);
     return totalSum;
 }
 
