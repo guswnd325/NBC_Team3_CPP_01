@@ -34,12 +34,15 @@ BattleResult BattleManager::Run(Character* player, Monster* monster, CombatManag
             if (TryEscape(player, monster, monsterRoll))
             {
                 Renderer::GetInstance().AddBattleLog("도망에 성공했습니다!");
+                Renderer::GetInstance().RenderBattleAction(monster, player, {});
                 Sleep(3000);
                 return BattleResult::Escaped;
             }
             else
             {
                 Renderer::GetInstance().AddBattleLog("도망에 실패! " + monster->GetName() + "이(가) 공격합니다!");
+
+                Renderer::GetInstance().RenderBattleAction(monster, player, {});
                 CalculateDamage(monster, player, monsterRoll,false);
             }
 
@@ -176,8 +179,40 @@ bool BattleManager::TryEscape(Character* player, Monster* monster, int& outMonst
 {
     Renderer::GetInstance().AddBattleLog("[ 도망 시도 ]");
 
+    Renderer::GetInstance().RenderBattleAction(monster, player, {});
+
+    AudioManager::GetInstance().PlaySFX(SFXList::Dice_Roll);
+    // --- 플레이어 턴 ---
     int playerRoll = diceManager.Roll(player);
+    for (int i = 0; i < 10; i++) {
+        DrawDiceDirectly(rand() % 20 + 1);
+        Sleep(40 + (i * 10));
+    }
+    DrawDiceDirectly(playerRoll);
+    Renderer::GetInstance().AddBattleLog("플레이어 주사위 결과: [" + std::to_string(playerRoll) + "]");
+    Sleep(800);
+
+
+    ClearDiceDirectly();
+
+    // [몬스터 배틀 로그에 추가]
+    Renderer::GetInstance().AddBattleLog(monster->GetName() + "이(가) " + std::to_string(monster->GetDiceCount()) + "개의 주사위를 굴립니다!");
+    Renderer::GetInstance().RenderBattleAction(monster, player, {});
+
+    AudioManager::GetInstance().PlaySFX(SFXList::Dice_Roll);
     int monsterRoll = monster->RollAttackDice();
+    for (int i = 0; i < 10; i++) {
+        DrawDiceDirectly(rand() % 12 + 1);
+        Sleep(40 + (i * 10));
+    }
+    DrawDiceDirectly(monsterRoll);
+
+    // 결과 로그 추가
+    Renderer::GetInstance().AddBattleLog(monster->GetName() + "의 주사위 결과: [" + std::to_string(monsterRoll) + "]");
+    Sleep(800);
+
+
+    Renderer::GetInstance().RenderBattleAction(monster, player, {});
 
     // 아웃파라미터로 몬스터 roll값 저장
     outMonsterRoll = monsterRoll;
@@ -254,7 +289,7 @@ void BattleManager::GiveNormalReward(Character* player, Monster* monster)
     int current = player->GetRestTicket();
     player->SetRestTicket(current + 1);
 
-    
+    Renderer::GetInstance().RenderRewardSelect(std::vector<std::string>());
     Renderer::GetInstance().AddSystemLog("골드 " + std::to_string(gold) + " 획득!" + "휴식권 1회 획득! (현재 골드: " + std::to_string(player->GetGold()) + ")");
     Renderer::GetInstance().AddSystemLog("휴식권 1회 획득! (현재 휴식권 : " + std::to_string(player->GetRestTicket()) + ")");
 }
@@ -262,6 +297,7 @@ void BattleManager::GiveNormalReward(Character* player, Monster* monster)
 void BattleManager::GiveRiskyReward(Character* player, Monster* monster)
 {
     Renderer::GetInstance().AddSystemLog("[ 리스크 보상 도전! ]");
+    Renderer::GetInstance().RenderRewardSelect(std::vector<std::string>());
 
     AudioManager::GetInstance().PlaySFX(SFXList::Dice_Roll);
     // --- 플레이어 턴 ---
@@ -296,11 +332,13 @@ void BattleManager::GiveRiskyReward(Character* player, Monster* monster)
     if (playerRoll >= monsterGetDice)
     {
         Renderer::GetInstance().AddSystemLog("성공!");
+        Renderer::GetInstance().RenderRewardSelect(std::vector<std::string>());
         player->GetInventory()->AddDice(monster->GetRewardDiceID());
     }
     else
     {
         Renderer::GetInstance().AddSystemLog("실패!");
+        Renderer::GetInstance().RenderRewardSelect(std::vector<std::string>());
     }
 
     Sleep(3000);
