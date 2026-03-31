@@ -27,6 +27,9 @@ public:
     std::vector<std::string> battleLogs;
     const int MAX_LOGS = 5;
 
+    std::vector<std::string> systemLogs;
+    const int MAX_MENU_LOGS = 4;
+
 public:
     static Renderer& GetInstance();
 
@@ -54,7 +57,7 @@ public:
 
 public:
     void RenderBuyResult(BuyStatus status, BaseItem* item, int currentGold);
-    void RenderAreaChoices(const std::vector<std::string>& choices, const std::unordered_map<std::string, std::string>& displayMap);
+    void RenderAreaChoices(const std::vector<std::string>& choices, const std::unordered_map<std::string, std::string>& displayMap );
     void RenderDiceUpgradeList(const std::vector<DiceSlot>& storage);
     void RenderHealResult(int healValue, int prevHP, int curHP, int maxHP);
     void RenderUpgradeResult(UpgradeStatus status, int prevLevel, int curLevel);
@@ -90,6 +93,9 @@ public:
         }
     }
     void ClearBattleLogs() { battleLogs.clear(); }
+
+    void AddSystemLog(std::string msg);
+    void ClearSystemLogs();
 };
 
 

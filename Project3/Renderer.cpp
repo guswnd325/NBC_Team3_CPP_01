@@ -48,6 +48,19 @@ void Renderer::RenderLog(const std::string& message) {
     PrintLeftLine(" [LOG] " + message, Renderer::UI_WIDTH, GRAY);
     PrintBottom(Renderer::UI_WIDTH);
 }
+
+void Renderer::AddSystemLog(std::string msg) {
+    systemLogs.push_back(msg);
+
+    // 설정한 최대 로그 줄 수(예: 4줄)를 넘으면 가장 오래된 것 삭제
+    if (systemLogs.size() > 4) {
+        systemLogs.erase(systemLogs.begin());
+    }
+}
+
+void Renderer::ClearSystemLogs() {
+    systemLogs.clear();
+}
 int Renderer::GetVisualLength(const std::string& str) {
     int length = 0;
     for (int i = 0; i < str.length(); i++) {
@@ -124,7 +137,7 @@ void Renderer::RenderMenu() {
 
     // --- [하단 메뉴 선택지 구역] ---
     PrintDivider(Renderer::UI_WIDTH);
-    PrintCenterLine("[1] START GAME          [2] EXIT", Renderer::UI_WIDTH, YELLOW);
+    PrintCenterLine("[1] 게임 시작          [2] 게임 종료", Renderer::UI_WIDTH, YELLOW);
 
     PrintBottom(Renderer::UI_WIDTH); // [박스 끝]
 
@@ -329,40 +342,40 @@ void Renderer::RenderAreaChoices(const std::vector<std::string>& choices, const 
     Clear();
     MoveCursor(0, Renderer::ZONE_SCREEN_Y);
 
-    // [박스 시작]
+    // [상단] 타이틀
     PrintTop(Renderer::UI_WIDTH);
     PrintCenterLine("[ 탐험 지역 선택 ]", Renderer::UI_WIDTH, WHITE);
     PrintDivider(Renderer::UI_WIDTH);
 
-    // 1. 안내 및 질문 구역 (상단으로 전진 배치)
+    // [중앙] 메인 콘텐츠 (지역 리스트)
     PrintLeftLine("", Renderer::UI_WIDTH);
-    PrintCenterLine("안전한 길은 없습니다. 당신의 직감을 믿으세요.", Renderer::UI_WIDTH, GRAY);
-    PrintLeftLine("", Renderer::UI_WIDTH);
-
-    PrintDivider(Renderer::UI_WIDTH); // 구분을 위해 선 하나 추가
-    PrintCenterLine("어디로 이동하시겠습니까?", Renderer::UI_WIDTH, CYAN); // 질문을 목록 위로!
-    PrintLeftLine("", Renderer::UI_WIDTH);
-
-    // 2. 지역 목록 구역
     for (int i = 0; i < (int)choices.size(); ++i) {
         std::string korName = displayMap.count(choices[i]) ? displayMap.at(choices[i]) : choices[i];
-        std::string choiceText = "    [" + std::to_string(i + 1) + "] " + korName;
-        PrintLeftLine(choiceText, Renderer::UI_WIDTH, YELLOW);
+        PrintLeftLine("    [" + std::to_string(i + 1) + "] " + korName, Renderer::UI_WIDTH, YELLOW);
     }
 
-    // 3. 하단 여백 및 박스 마감
-    // 목록 뒤에 빈 공간을 충분히 주어 시각적으로 안정감을 줍니다.
-    int contentLines = (int)choices.size() + 7;
-    int targetHeight = 18;
-    for (int i = 0; i < (targetHeight - contentLines); i++) {
+    // 콘텐츠 영역 높이 고정 (예: 6줄)
+    for (int i = 0; i < (6 - (int)choices.size()); i++) PrintLeftLine("", Renderer::UI_WIDTH);
+
+    // [하단] 로그 구역 (이미지 속 전투 로그와 동일한 구조)
+    PrintDivider(Renderer::UI_WIDTH);
+    PrintLeftLine(" [ 시스템 메시지 ]", Renderer::UI_WIDTH, GRAY);
+
+    for (const auto& log : systemLogs) {
+        PrintLeftLine(" >> " + log, Renderer::UI_WIDTH, WHITE);
+    }
+    // 로그 빈 줄 채우기 (높이 유지)
+    for (int i = 0; i < (MAX_MENU_LOGS - (int)systemLogs.size()); i++) {
         PrintLeftLine("", Renderer::UI_WIDTH);
     }
 
-    PrintBottom(Renderer::UI_WIDTH); // [박스 끝]
+    // [최하단] 조작 가이드
+    PrintDivider(Renderer::UI_WIDTH);
+    PrintCenterLine("[0] 마을로 돌아가기", Renderer::UI_WIDTH, RED);
+    PrintBottom(Renderer::UI_WIDTH);
 
-    // 4. 입력창 (박스 바로 아래)
     MoveCursor(0, Renderer::ZONE_PLAYER_Y + 4);
-    std::cout << BRIGHT_GREEN << " > 이동할 지역 번호 입력 : " << RESET;
+    std::cout << BRIGHT_GREEN << " > 지역 번호 입력 : " << RESET;
 }
 
 void Renderer::RenderRestMenu() {
@@ -583,7 +596,7 @@ void Renderer::RenderShopItemList(const std::vector<BaseItem*>& itemLists, int p
     // 헤더 부분도 동일한 간격으로 설정
     // [번호] 7칸, 이름 22칸, 타입 12칸, 가격순
     PrintLeftLine("  [번호]  아이템 이름           |    타입    |   가격", Renderer::UI_WIDTH, CYAN);
-    PrintLeftLine("  --------------------------------------------------", Renderer::UI_WIDTH, GRAY);
+    PrintLeftLine("  -------------------------------------------------------------------------------------", Renderer::UI_WIDTH, GRAY);
 
     int maxDisplay = 10;
     for (int i = 0; i < (int)itemLists.size(); i++) {
@@ -693,7 +706,7 @@ void Renderer::RenderInventory(BaseItem* slots[], const std::vector<ItemSlot>& g
 
     // --- [섹션 1: 장착 슬롯] ---
     PrintLeftLine(" [ 현재 장착 장비 ]", Renderer::UI_WIDTH, CYAN);
-    const char* slotNames[] = { "무기", "헬멧", "갑옷", "신발", "장신구" };
+    const char* slotNames[] = { "무  기", "헬  멧", "갑  옷", "신  발", "장신구" };
     for (int i = 0; i < 5; i++) {
         std::string itemName = (slots[i] != nullptr) ? slots[i]->GetName() : "---";
         PrintLeftLine("  - " + std::string(slotNames[i]) + " : " + itemName, Renderer::UI_WIDTH, (slots[i] ? YELLOW : GRAY));
