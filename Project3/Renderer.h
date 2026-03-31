@@ -24,6 +24,10 @@ class BaseItem;
 class Renderer
 {
 public:
+    std::vector<std::string> battleLogs;
+    const int MAX_LOGS = 5;
+
+public:
     static Renderer& GetInstance();
 
     void MoveCursor(int x, int y);
@@ -44,7 +48,7 @@ public:
     void RenderCreatePlayer();
     void RenderMainMenu();
     void RenderBattleStart(Monster* monster);
-    void RenderBattleAction();
+    void RenderBattleAction(Monster* monster);
     void RenderStatus(Character* player);
     void RenderShopItemList(const std::vector<BaseItem*>& itemLists, int playerGold);
     void RenderInventory(BaseItem* slots[], const std::vector<ItemSlot>& gearStorage, const std::vector<DiceSlot>& diceStorage);
@@ -78,6 +82,15 @@ public:
     static const int ZONE_SCREEN_Y = 0;
     static const int ZONE_LOG_Y = 17;
     static const int ZONE_PLAYER_Y = 24;
+
+    void AddBattleLog(const std::string& log) {
+        battleLogs.push_back(log);
+        // 설정한 줄 수보다 많아지면 가장 오래된 로그(맨 앞) 삭제
+        if (battleLogs.size() > MAX_LOGS) {
+            battleLogs.erase(battleLogs.begin());
+        }
+    }
+    void ClearBattleLogs() { battleLogs.clear(); }
 };
 
 

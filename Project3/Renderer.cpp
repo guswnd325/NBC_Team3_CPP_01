@@ -199,100 +199,125 @@ void Renderer::RenderMainMenu() {
 
 
 void Renderer::RenderBattleStart(Monster* monster) {
-    if (!monster) return;
+    Clear();
+    MoveCursor(0, ZONE_SCREEN_Y);
 
-    // 1. 전체 구역 초기화 (충분한 높이 확보)
-    ClearZone(Renderer::ZONE_SCREEN_Y, 30);
+    PrintTop(UI_WIDTH);
+    PrintCenterLine("!!! BATTLE START !!!", UI_WIDTH, RED);
+    PrintDivider(UI_WIDTH);
+
+    // 몬스터 이미지 영역 (8줄 고정)
+    const auto& visual = monster->GetVisual();
+    for (int i = 0; i < 8; i++) {
+        if (i < visual.size()) {
+            int vLen = GetVisualLength(visual[i]);
+            int pad = (UI_WIDTH - 2 - vLen) / 2;
+            std::cout << GOLD << "│" << RESET << std::string(pad, ' ') << WHITE << visual[i] << RESET << std::string(UI_WIDTH - 2 - vLen - pad, ' ') << GOLD << "│" << RESET << std::endl;
+        }
+        else {
+            PrintLeftLine("", UI_WIDTH);
+        }
+    }
+
+    PrintDivider(UI_WIDTH);
+    std::string stats = " 이름: " + monster->GetName() + " | HP: " + std::to_string(monster->GetHP()) + " | ATK: " + std::to_string(monster->GetAtk());
+    PrintCenterLine(stats, UI_WIDTH, YELLOW);
+
+    // 하단부 공간 미리 확보 (박스 테두리 유지)
+    for (int i = 0; i < 10; i++) PrintLeftLine("", UI_WIDTH);
+    PrintBottom(UI_WIDTH);
+}
+
+
+void Renderer::RenderBattleAction(Monster* monster) {
+    // 1. 화면 초기화 및 시작 위치 고정
+    Clear();
     MoveCursor(0, Renderer::ZONE_SCREEN_Y);
 
     // [박스 시작]
     PrintTop(Renderer::UI_WIDTH);
-    PrintCenterLine("!!! 야생의 몬스터 출현 !!!", Renderer::UI_WIDTH, RED);
+    PrintCenterLine("!!! BATTLE IN PROGRESS !!!", Renderer::UI_WIDTH, RED);
     PrintDivider(Renderer::UI_WIDTH);
 
-    // --- [중앙: 몬스터 비주얼 구역] ---
-    // 몬스터 이미지가 들어갈 공간의 높이를 미리 정합니다 (예: 8줄)
+    // --- [중요: 이 부분이 몬스터를 다시 그리는 곳입니다] ---
     const std::vector<std::string>& visual = monster->GetVisual();
-    int visualHeight = 8;
+    int monsterBoxHeight = 8; // 몬스터가 차지할 고정 높이
 
-    for (int i = 0; i < visualHeight; i++) {
-        if (i < visual.size()) {
-            // 이미지가 있는 줄: 왼쪽 여백(15칸) + 이미지 + 나머지 공백 + 테두리
-            std::string line = visual[i];
-            int leftSpace = 15;
-            int vLen = GetVisualLength(line);
-            int rightSpace = Renderer::UI_WIDTH - 2 - leftSpace - vLen;
-
-            if (rightSpace < 0) rightSpace = 0; // 안전장치
+    for (int i = 0; i < monsterBoxHeight; i++) {
+        if (i < (int)visual.size()) {
+            // 중앙 정렬 출력
+            int vLen = GetVisualLength(visual[i]);
+            int leftPad = (Renderer::UI_WIDTH - 2 - vLen) / 2;
+            int rightPad = Renderer::UI_WIDTH - 2 - vLen - leftPad;
 
             std::cout << GOLD << "│" << RESET
-                << std::string(leftSpace, ' ')
-                << WHITE << line << RESET
-                << std::string(rightSpace, ' ')
+                << std::string(leftPad, ' ')
+                << WHITE << visual[i] << RESET
+                << std::string(rightPad, ' ')
                 << GOLD << "│" << RESET << std::endl;
         }
         else {
-            // 이미지 높이보다 남는 공간은 빈 줄로 채움
+            // 이미지가 없는 줄도 테두리(│)는 그려야 박스가 안 깨집니다.
             PrintLeftLine("", Renderer::UI_WIDTH);
         }
     }
+    // ---------------------------------------------------
 
-    PrintLeftLine("", Renderer::UI_WIDTH); // 이미지 아래 여백
-
-    // 몬스터 정보 출력
+    PrintDivider(Renderer::UI_WIDTH);
+    // 몬스터 정보 (실시간 체력 등)
     std::string stats = " 이름: " + monster->GetName() +
         " | HP: " + std::to_string(monster->GetHP()) +
-        " | ATK: " + std::to_string(monster->GetAtk()) +
-        " | DEF: " + std::to_string(monster->GetDef());
+        " | ATK: " + std::to_string(monster->GetAtk());
     PrintCenterLine(stats, Renderer::UI_WIDTH, YELLOW);
 
-    // --- [중간: 로그 구역 테두리 유지] ---
+    // --- [중간: 누적 전투 로그 구역] ---
     PrintDivider(Renderer::UI_WIDTH);
-    PrintLeftLine(" [전투 로그]", Renderer::UI_WIDTH, GRAY);
-    PrintLeftLine(" >> " + monster->GetName() + "(이)가 앞을 가로막았습니다!", Renderer::UI_WIDTH, WHITE);
+    PrintLeftLine(" [ 실시간 전투 로그 ]", Renderer::UI_WIDTH, GRAY);
 
-    // 박스를 아래로 길게 늘려줍니다 (빈 공간 채우기)
-    for (int i = 0; i < 4; i++) PrintLeftLine("", Renderer::UI_WIDTH);
+    // battleLogs 벡터에 담긴 내용을 순서대로 출력
+    for (const auto& log : battleLogs) {
+        PrintLeftLine(" >> " + log, Renderer::UI_WIDTH, WHITE);
+    }
 
+    // 로그 창 높이 고정 (나머지 빈 줄 채우기)
+    int emptyLogs = MAX_LOGS - (int)battleLogs.size();
+    for (int i = 0; i < emptyLogs; i++) {
+        PrintLeftLine("", Renderer::UI_WIDTH);
+    }
+
+    // --- [하단: 선택지 구역] ---
+    PrintDivider(Renderer::UI_WIDTH);
+    PrintCenterLine("[1] 전 투           [2] 도 망", Renderer::UI_WIDTH, YELLOW);
     PrintBottom(Renderer::UI_WIDTH); // [박스 끝]
 
-    // 2. 하단 입력 구역 (독립된 박스 혹은 위치 고정)
-    MoveCursor(0, Renderer::ZONE_PLAYER_Y);
-    PrintTop(Renderer::UI_WIDTH);
-    PrintCenterLine("[1] 전 투       [2] 도 망", Renderer::UI_WIDTH, YELLOW);
-    PrintBottom(Renderer::UI_WIDTH);
-
+    // 입력 위치 고정
     MoveCursor(0, Renderer::ZONE_PLAYER_Y + 4);
-    std::cout << BRIGHT_GREEN << " > 선택 : " << RESET;
-}
-
-
-void Renderer::RenderBattleAction() {
-    ClearZone(ZONE_PLAYER_Y, 6);
-    MoveCursor(0, ZONE_PLAYER_Y);
-    PrintTop(UI_WIDTH);
-    PrintCenterLine("[1] 전 투    [2] 도 망", UI_WIDTH, WHITE);
-    PrintBottom(UI_WIDTH);
-    MoveCursor(0, ZONE_PLAYER_Y + 4);
-    std::cout << BRIGHT_GREEN << " > 행동을 선택해라 : " << RESET;
+    std::cout << BRIGHT_GREEN << " > 행동 선택 : " << RESET;
 }
 
 void Renderer::RenderRewardSelect() {
-    ClearZone(Renderer::ZONE_SCREEN_Y, 16);
+    // 1. 전체 구역 초기화 (이전 전투 흔적 제거)
+    Clear();
     MoveCursor(0, Renderer::ZONE_SCREEN_Y);
+
     PrintTop(Renderer::UI_WIDTH);
     PrintCenterLine("[ VICTORY ]", Renderer::UI_WIDTH, YELLOW);
     PrintDivider(Renderer::UI_WIDTH);
 
-    PrintCenterLine("전투에서 승리하여 보상을 획득했습니다!", Renderer::UI_WIDTH, WHITE);
-    PrintCenterLine("어떤 보상을 선택하시겠습니까?", Renderer::UI_WIDTH, WHITE);
-    PrintBottom(Renderer::UI_WIDTH);
+    PrintLeftLine("", Renderer::UI_WIDTH);
+    PrintCenterLine("전투에서 승리하여 값진 전리품을 발견했습니다!", Renderer::UI_WIDTH, WHITE);
+    PrintCenterLine("어떤 방식으로 보상을 챙기시겠습니까?", Renderer::UI_WIDTH, WHITE);
+    PrintLeftLine("", Renderer::UI_WIDTH);
 
-    ClearZone(Renderer::ZONE_PLAYER_Y, 8);
-    MoveCursor(0, Renderer::ZONE_PLAYER_Y);
-    PrintTop(Renderer::UI_WIDTH);
-    PrintLeftLine("[1] 일반 보상 (휴식권 1회 + 골드)", Renderer::UI_WIDTH, BRIGHT_GREEN);
-    PrintLeftLine("[2] 리스크 보상 (주사위로 고보상 도전)", Renderer::UI_WIDTH, RED);
+    for (int i = 0; i < 6; i++) {
+        PrintLeftLine("", Renderer::UI_WIDTH);
+    }
+
+    PrintDivider(Renderer::UI_WIDTH);
+    PrintLeftLine(" [1] 일반 보상 (휴식권 1회 + 골드)", Renderer::UI_WIDTH, BRIGHT_GREEN);
+    PrintLeftLine(" [2] 리스크 보상 (주사위로 고보상 도전)", Renderer::UI_WIDTH, RED);
+
+    PrintLeftLine("", Renderer::UI_WIDTH);
     PrintBottom(Renderer::UI_WIDTH);
 
     MoveCursor(0, Renderer::ZONE_PLAYER_Y + 4);
@@ -338,43 +363,43 @@ void Renderer::RenderStatus(Character* player) {
 }
 
 void Renderer::RenderAreaChoices(const std::vector<std::string>& choices, const std::unordered_map<std::string, std::string>& displayMap) {
-    // 1. 화면 전체 구역을 넉넉하게 지우기 (잔상 제거)
-    ClearZone(Renderer::ZONE_SCREEN_Y, 35);
+    Clear();
     MoveCursor(0, Renderer::ZONE_SCREEN_Y);
 
-    // [하나의 거대한 박스 시작]
+    // [박스 시작]
     PrintTop(Renderer::UI_WIDTH);
     PrintCenterLine("[ 탐험 지역 선택 ]", Renderer::UI_WIDTH, WHITE);
     PrintDivider(Renderer::UI_WIDTH);
 
-    // 안내 문구
+    // 1. 안내 및 질문 구역 (상단으로 전진 배치)
     PrintLeftLine("", Renderer::UI_WIDTH);
     PrintCenterLine("안전한 길은 없습니다. 당신의 직감을 믿으세요.", Renderer::UI_WIDTH, GRAY);
     PrintLeftLine("", Renderer::UI_WIDTH);
 
-    // 지역 목록 출력 (여기서 박스가 끊기지 않게 테두리를 유지)
-    for (int i = 0; i < choices.size(); ++i) {
+    PrintDivider(Renderer::UI_WIDTH); // 구분을 위해 선 하나 추가
+    PrintCenterLine("어디로 이동하시겠습니까?", Renderer::UI_WIDTH, CYAN); // 질문을 목록 위로!
+    PrintLeftLine("", Renderer::UI_WIDTH);
+
+    // 2. 지역 목록 구역
+    for (int i = 0; i < (int)choices.size(); ++i) {
         std::string korName = displayMap.count(choices[i]) ? displayMap.at(choices[i]) : choices[i];
-        std::string choiceText = " [" + std::to_string(i + 1) + "] " + korName;
+        std::string choiceText = "    [" + std::to_string(i + 1) + "] " + korName;
         PrintLeftLine(choiceText, Renderer::UI_WIDTH, YELLOW);
     }
 
-    // --- [중간 빈 공간을 테두리로 채워 박스를 아래까지 연장] ---
-    // 이미지에서 보이던 '뻥 뚫린 공간'을 이 루프가 테두리(│)로 메워줍니다.
-    int remainingLines = 15 - (int)choices.size(); // 약 15줄 정도 높이 확보
-    for (int i = 0; i < remainingLines; i++) {
+    // 3. 하단 여백 및 박스 마감
+    // 목록 뒤에 빈 공간을 충분히 주어 시각적으로 안정감을 줍니다.
+    int contentLines = (int)choices.size() + 7;
+    int targetHeight = 18;
+    for (int i = 0; i < (targetHeight - contentLines); i++) {
         PrintLeftLine("", Renderer::UI_WIDTH);
     }
 
-    // --- [하단 질문 구역 구분] ---
-    PrintDivider(Renderer::UI_WIDTH);
-    PrintCenterLine("어디로 이동하시겠습니까?", Renderer::UI_WIDTH, CYAN);
+    PrintBottom(Renderer::UI_WIDTH); // [박스 끝]
 
-    PrintBottom(Renderer::UI_WIDTH); // [박스 끝 - 여기서 딱 한 번 닫음]
-
-    // 2. 입력 위치 고정 (박스 외부)
+    // 4. 입력창 (박스 바로 아래)
     MoveCursor(0, Renderer::ZONE_PLAYER_Y + 4);
-    std::cout << BRIGHT_GREEN << " > 이동할 지역 번호 : " << RESET;
+    std::cout << BRIGHT_GREEN << " > 이동할 지역 번호 입력 : " << RESET;
 }
 
 void Renderer::RenderRestMenu() {
@@ -480,7 +505,7 @@ void Renderer::RenderHealResult(int healValue, int prevHP, int curHP, int maxHP)
         PrintCenterLine(hpMsg, Renderer::UI_WIDTH, WHITE);
 
         if (curHP >= maxHP) {
-            PrintCenterLine("★ FULL HP !! ★", Renderer::UI_WIDTH, CYAN);
+            PrintCenterLine("[ FULL HP !! ]", Renderer::UI_WIDTH, CYAN);
         }
     }
 
