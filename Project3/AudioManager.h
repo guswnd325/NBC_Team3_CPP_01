@@ -15,13 +15,15 @@ constexpr int defaultVolume = 100;
 static const std::string bgmPaths[] =
 {
     "Main_Theme.wav",
-    "Shop.wav"
+    "Shop.wav",
+    "jane.wav"
 };
 
 enum class BGMList
 {
     Main_Theme,
-    Shop
+    Shop,
+    Jane
 };
 
 static const std::string sfxPaths[] =

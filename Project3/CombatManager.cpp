@@ -104,6 +104,33 @@ BattleResult CombatManager::Run(Character* player)
 }
 
 
+void CombatManager::ShowCredit()
+{
+    Renderer::GetInstance().ClearBattleLogs();
+    Renderer::GetInstance().ClearSystemLogs();
+
+    std::vector<std::string> creditText = {
+        "==============================",
+        "         GAME OVER",
+        "==============================",
+        "",
+        "플레이해주셔서 감사합니다.",
+        "",
+        "Developed by Team",
+        "",
+        "Thank you for playing!"
+    };
+
+    for (const auto& line : creditText)
+    {
+        Renderer::GetInstance().AddSystemLog(line);
+        Renderer::GetInstance().RenderRewardSelect(std::vector<std::string>());
+        Sleep(700); // 한 줄씩 천천히 출력
+    }
+
+    Sleep(3000); // 마지막 유지
+}
+
 
 
 

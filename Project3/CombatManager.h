@@ -69,4 +69,5 @@ public:
     BattleResult Run(Character* player);
     void ReduceHp(Actor* actor, Actor* monster);
     void UnlockAreas(int level);
+    void ShowCredit();
 };
