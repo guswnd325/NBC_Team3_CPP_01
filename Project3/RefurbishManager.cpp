@@ -130,6 +130,7 @@ void RefurbishManager::Run()
 
 		if (character->GetRestTicket() <= 0)
 		{
+			AudioManager::PlaySFX(SFXList::Error);
 			renderer.RenderTicketInsufficient();
 			continue;
 		}
