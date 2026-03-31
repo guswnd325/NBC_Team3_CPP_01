@@ -33,27 +33,24 @@ void CombatManager::DisplayChoices()
     Renderer::GetInstance().RenderAreaChoices(currentChoices, areaDisplayname);
 }
 
-//이거 반환 값 그대로 MonsterManager의 SpawnManager에 넣으면 됩니다
 std::string CombatManager::SelectArea() {
     int input;
-
     while (true) {
-        
-       
-        if (std::cin >> input && input >= 1 && input <= 3) {
-            // 입력 성공 시: 버퍼를 비우고 즉시 결과 반환 (함수 종료)
-            std::cin.ignore((std::numeric_limits<std::streamsize>::max)(), '\n');
-            return currentChoices[input - 1];
+        if (std::cin >> input) {
+            if (input == 0) {
+                std::cin.ignore((std::numeric_limits<std::streamsize>::max)(), '\n');
+                return ""; // 빈 문자열 반환 → 호출부에서 마을로 처리
+            }
+            if (input >= 1 && input <= 3) {
+                std::cin.ignore((std::numeric_limits<std::streamsize>::max)(), '\n');
+                return currentChoices[input - 1];
+            }
         }
-
-        std::cout << "잘못된 입력입니다. 1, 2, 3 중 하나를 입력해주세요." << std::endl;
-
-        std::cin.clear(); // 에러 플래그 초기화
-        std::cin.ignore((std::numeric_limits<std::streamsize>::max)(), '\n'); // 잘못된 입력 제거
-
+        Renderer::GetInstance().AddSystemLog("잘못된 입력입니다. 1, 2, 3 중 하나를 선택하세요.");
+        DisplayChoices();
+        std::cin.clear();
+        std::cin.ignore((std::numeric_limits<std::streamsize>::max)(), '\n');
     }
-
-    return currentChoices[input - 1];
 }
 
 void CombatManager::ReduceHp(Actor* attacker, Actor* defender)
@@ -70,17 +67,19 @@ void CombatManager::ReduceHp(Actor* attacker, Actor* defender)
 
 
 //게임 매니저에서 이것만 호출하면 됩니다
-BattleResult  CombatManager::Run(Character* player)
+BattleResult CombatManager::Run(Character* player)
 {
     UnlockAreas(player->GetLevel());
     GenerateAreaChoices();
     DisplayChoices();
     std::string selectedArea = SelectArea();
-    Monster* monster = monsterManager->SpawnMonster(selectedArea);
 
+    if (selectedArea.empty()) // 0 입력 시 마을로
+        return BattleResult::Escaped; // 혹은 별도의 ReturnToTown 값
+
+    Monster* monster = monsterManager->SpawnMonster(selectedArea);
     return battleManager->Run(player, monster);
 }
-
 
 
 

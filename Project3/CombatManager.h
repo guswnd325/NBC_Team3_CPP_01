@@ -11,6 +11,8 @@
 #include "BattleManager.h"
 #include "Actor.h"
 
+class Renderer;
+
 class CombatManager
 {
 private:
