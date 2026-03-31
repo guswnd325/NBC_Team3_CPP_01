@@ -79,7 +79,7 @@ public:
 
     // [수정] 보상, 휴식, 생성 화면도 diceFrame을 받도록 변경
     void RenderRewardSelect(const std::vector<std::string>& diceFrame);
-    void RenderRestMenu(const std::vector<std::string>& diceFrame);
+    void RenderRestMenu(int restTicketCount, const std::vector<std::string>& diceFrame);
     void RenderCreatePlayer(const std::vector<std::string>& diceFrame);
 
     // 결과창 및 단순 정보창 (필요에 따라 diceFrame 추가 가능)

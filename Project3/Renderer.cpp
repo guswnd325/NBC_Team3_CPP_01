@@ -506,11 +506,11 @@ void Renderer::RenderAreaChoices(const std::vector<std::string>& choices,
     std::cout << BRIGHT_GREEN << " > 지역 번호 입력 : " << RESET;
 }
 
-void Renderer::RenderRestMenu(const std::vector<std::string>& diceFrame) {
+void Renderer::RenderRestMenu(int restTicketCount, const std::vector<std::string>& diceFrame) {
     std::vector<std::string> restContent;
     int LW = Renderer::LEFT_WIDTH;
 
-    // 중앙 정렬 람다 (GetVisualLength 활용)
+    // 중앙 정렬 람다
     auto center = [&](std::string text) {
         int len = GetVisualLength(text);
         int space = (LW - len) / 2;
@@ -518,31 +518,36 @@ void Renderer::RenderRestMenu(const std::vector<std::string>& diceFrame) {
         };
 
     restContent.push_back("");
-    // 1. 모닥불 ASCII (빨간색과 노란색 조합으로 불꽃 느낌 극대화)
+    // 1. 모닥불 ASCII (중앙 정렬 유지)
     restContent.push_back(center(std::string(RED) + "(  )  " + YELLOW + "(  )  " + RED + "(  )"));
     restContent.push_back(center(std::string(YELLOW) + " )  (  )  (  ("));
     restContent.push_back(center(std::string(GRAY) + "[____________]"));
     restContent.push_back("");
 
-    // 2. 설명 문구 (포근한 느낌의 WHITE/GRAY)
+    // 2. 설명 문구 및 휴식권 상태 표시
     restContent.push_back(center("타오르는 불꽃이 지친 몸을 달래줍니다."));
-    restContent.push_back(center(std::string(GRAY) + "이곳에서 전열을 가다듬으십시오." + RESET));
+
+    // --- 휴식권 개수 표시 추가 ---
+    std::string ticketInfo = "보유 휴식권 : " + std::string(BRIGHT_MAGENTA) + std::to_string(restTicketCount) + RESET + " 장";
+    restContent.push_back(center(ticketInfo));
+    // ----------------------------
+
     restContent.push_back("");
     restContent.push_back(center(std::string(GRAY) + "------------------------------------------" + RESET));
     restContent.push_back("");
 
     // 3. 메뉴 항목
-    // [1] 주사위 강화: 강해지는 느낌 (YELLOW)
-    restContent.push_back("  " + std::string(YELLOW) + "[1] 주사위 강화" + RESET + " (휴식권 소모)");
-    restContent.push_back(std::string(GRAY) + "      - 주사위의 눈을 영구적으로 업그레이드" + RESET);
+    // [1] 주사위 강화
+    restContent.push_back("  " + std::string(YELLOW) + "[1] 주사위 강화" + RESET + " (휴식권 1개 소모)");
+    restContent.push_back(std::string(GRAY) + "      - 주사위의 잠재력을 이끌어냅니다." + RESET);
     restContent.push_back("");
 
-    // [2] 체력 회복: 생명력의 느낌 (BRIGHT_MAGENTA 또는 RED)
-    restContent.push_back("  " + std::string(BRIGHT_MAGENTA) + "[2] 체력 회복" + RESET + "   (휴식권 소모)");
-    restContent.push_back(std::string(GRAY) + "      - 잃은 체력의 일정량을 회복" + RESET);
+    // [2] 체력 회복
+    restContent.push_back("  " + std::string(BRIGHT_MAGENTA) + "[2] 체력 회복" + RESET + "   (휴식권 1개 소모)");
+    restContent.push_back(std::string(GRAY) + "      - 따뜻한 온기로 체력을 보충합니다." + RESET);
     restContent.push_back("");
 
-    // [0] 돌아가기: 취소/퇴장 느낌 (WHITE/GRAY)
+    // [0] 돌아가기
     restContent.push_back("  " + std::string(WHITE) + "[0] 마을로 돌아가기 (RETURN)" + RESET);
     restContent.push_back("");
     restContent.push_back(center(std::string(GRAY) + "------------------------------------------" + RESET));
