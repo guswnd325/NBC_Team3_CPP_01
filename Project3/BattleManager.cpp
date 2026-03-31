@@ -289,9 +289,11 @@ void BattleManager::GiveNormalReward(Character* player, Monster* monster)
     int current = player->GetRestTicket();
     player->SetRestTicket(current + 1);
 
-    Renderer::GetInstance().RenderRewardSelect(std::vector<std::string>());
     Renderer::GetInstance().AddSystemLog("°ñµå " + std::to_string(gold) + " È¹µæ!" + "ÈÞ½Ä±Ç 1È¸ È¹µæ! (ÇöÀç °ñµå: " + std::to_string(player->GetGold()) + ")");
     Renderer::GetInstance().AddSystemLog("ÈÞ½Ä±Ç 1È¸ È¹µæ! (ÇöÀç ÈÞ½Ä±Ç : " + std::to_string(player->GetRestTicket()) + ")");
+    Renderer::GetInstance().RenderRewardSelect(std::vector<std::string>());
+
+    Sleep(3000);
 }
 
 void BattleManager::GiveRiskyReward(Character* player, Monster* monster)
