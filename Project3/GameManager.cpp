@@ -23,9 +23,8 @@ void GameManager::Run()
 	{
 		renderer.RenderMenu();
 
-		//AudioManager::GetInstance().PlaySFX(SFXList::Button_Click);
-
 		InputResult input = Tools<int>::Input(1, 2);
+		AudioManager::GetInstance().PlaySFX(SFXList::Button_Click);
 
 		switch (input.value)
 		{

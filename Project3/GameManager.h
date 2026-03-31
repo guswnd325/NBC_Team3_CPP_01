@@ -5,6 +5,7 @@
 #include "CombatManager.h"
 #include "ShopManager.h"
 #include "RefurbishManager.h"
+#include "AudioManager.h"
 
 class Renderer;
 
