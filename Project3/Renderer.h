@@ -79,7 +79,7 @@ public:
     void RenderStatus(Character* player, const std::vector<std::string>& diceFrame);
     void RenderBuyResult(BuyStatus status, BaseItem* item, int currentGold);
     void RenderDiceUpgradeList(const std::vector<DiceSlot>& storage, const std::vector<std::string>& diceFrame);
-    void RenderHealResult(int healValue, int prevHP, int curHP, int maxHP);
+    void RenderHealResult(int healValue, int prevHP, int curHP, int maxHP, const std::vector<std::string>& diceFrame);
     void RenderUpgradeResult(UpgradeStatus status, int prevLevel, int curLevel);
     void RenderEquipResult(const EquipResult& result);
     void RenderDiceUpgradeOption(const std::vector<std::string>& diceFrame);

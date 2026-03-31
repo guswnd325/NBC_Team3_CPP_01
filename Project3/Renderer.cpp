@@ -554,49 +554,43 @@ void Renderer::RenderDiceUpgradeList(const std::vector<DiceSlot>& storage, const
     std::cout << BRIGHT_GREEN << " > 강화할 주사위 번호 입력 : " << RESET;
 }
 
-void Renderer::RenderHealResult(int healValue, int prevHP, int curHP, int maxHP) {
+void Renderer::RenderHealResult(int healValue, int prevHP, int curHP, int maxHP, const std::vector<std::string>& diceFrame) {
     // 1. 왼쪽 영역: 치료 결과 정보 구성
     std::vector<std::string> healContent;
+    std::string divider = std::string(GRAY) + " ------------------------------------------" + RESET;
 
     healContent.push_back("");
-    healContent.push_back(" [ 휴식 및 치료 완료 ]");
-    healContent.push_back(" ------------------------------------------");
+    healContent.push_back(std::string(BRIGHT_GREEN) + "  [ 휴식 및 치료 완료 ]" + RESET);
+    healContent.push_back(divider);
     healContent.push_back("");
 
     if (prevHP >= maxHP) {
-        healContent.push_back(" 이미 최상의 컨디션입니다!");
+        healContent.push_back(std::string(BRIGHT_CYAN) + "  이미 최상의 컨디션입니다!" + RESET);
         healContent.push_back("");
-        healContent.push_back(" 현재 HP: " + std::to_string(maxHP) + " / " + std::to_string(maxHP));
+        healContent.push_back("  현재 HP: " + std::string(BRIGHT_WHITE) + std::to_string(maxHP) + RESET + " / " + std::to_string(maxHP));
     }
     else {
-        healContent.push_back(" 따뜻한 휴식으로 체력을 회복했습니다.");
+        healContent.push_back("  따뜻한 휴식으로 체력을 회복했습니다.");
         healContent.push_back("");
-        healContent.push_back(" 체력 [ +" + std::to_string(healValue) + " ] 회복 완료!");
+        // 주사위 결과값(회복량) 강조
+        healContent.push_back("  체력 [ " + std::string(BRIGHT_GREEN) + "+" + std::to_string(healValue) + RESET + " ] 회복 완료!");
         healContent.push_back("");
-        healContent.push_back(" HP 변화: " + std::to_string(prevHP) + " -> " + std::to_string(curHP));
-        healContent.push_back(" 최대 HP: " + std::to_string(maxHP));
+
+        // HP 변화 시각화
+        std::string hpChange = "  HP 변화: " + std::to_string(prevHP) + " -> " + std::string(BRIGHT_GREEN) + std::to_string(curHP) + RESET;
+        healContent.push_back(hpChange);
+        healContent.push_back("  최대 HP: " + std::to_string(maxHP));
     }
 
     healContent.push_back("");
-    healContent.push_back(" ------------------------------------------");
-    healContent.push_back(" 잠시 후 메뉴로 돌아갑니다...");
+    healContent.push_back(divider);
+    healContent.push_back(std::string(DARK_GRAY) + "  잠시 후 메뉴로 돌아갑니다..." + RESET);
 
-    // 2. 오른쪽 영역: 치료 전용 ASCII 아트
-    std::vector<std::string> healArt = {
-        "",
-        "       .--------.       ",
-        "    _  |        |  _    ",
-        "   | |_|        |_| |   ",
-        "   |  _    REC   _  |   ",
-        "   |_| |        | |_|   ",
-        "       |        |       ",
-        "       '--------'       ",
-        "",
-        "    REST & RECOVERED    "
-    };
+    // 2. 오른쪽 영역: 전달받은 주사위 프레임 사용
+    // 기존 healArt 대신 매개변수로 받은 diceFrame을 그대로 사용합니다.
 
     // 3. 공용 엔진 호출 (제목: 치료 결과)
-    RenderSplitScreen(healContent, healArt, "HEAL COMPLETED", false);
+    RenderSplitScreen(healContent, diceFrame, "HEAL COMPLETED", false);
 
     // 4. 결과 확인을 위한 딜레이
     Delay(1500);
@@ -707,28 +701,34 @@ void Renderer::RenderTicketInsufficient() {
 void Renderer::RenderDiceUpgradeOption(const std::vector<std::string>& diceFrame) {
     // 1. 왼쪽 영역: 강화 경로 및 상세 설명 구성
     std::vector<std::string> upgradeOptionContent;
+    std::string divider = std::string(GRAY) + " ------------------------------------------" + RESET;
 
     upgradeOptionContent.push_back("");
-    upgradeOptionContent.push_back(" [ 강화 경로 선택 ]");
-    upgradeOptionContent.push_back(" 어떤 방향으로 주사위를 개조하시겠습니까?");
-    upgradeOptionContent.push_back(" ------------------------------------------");
+    upgradeOptionContent.push_back(std::string(BRIGHT_YELLOW) + "  [ 주사위 강화 경로 선택 ]" + RESET);
+    upgradeOptionContent.push_back("  어떤 방향으로 주사위를 개조하시겠습니까?");
+    upgradeOptionContent.push_back(divider);
     upgradeOptionContent.push_back("");
 
-    upgradeOptionContent.push_back("  [1] 최소값 +1 증가 (MIN UP)");
-    upgradeOptionContent.push_back("      - 저점을 높여 안정적인 성능을 보장합니다.");
+    // [1] 최소값 강화 - 안정적인 느낌 (CYAN)
+    upgradeOptionContent.push_back(std::string(BRIGHT_CYAN) + "  [1] 최소값 +1 증가 (MIN UP)" + RESET);
+    upgradeOptionContent.push_back(std::string(GRAY) + "      - 저점을 높여 안정적인 성능을 보장합니다." + RESET);
     upgradeOptionContent.push_back("");
-    upgradeOptionContent.push_back("  [2] 최대값 +1 증가 (MAX UP)");
-    upgradeOptionContent.push_back("      - 고점을 높여 폭발적인 데미지를 노립니다.");
+
+    // [2] 최대값 강화 - 공격적인 느낌 (MAGENTA / PURPLE)
+    upgradeOptionContent.push_back(std::string(BRIGHT_MAGENTA) + "  [2] 최대값 +1 증가 (MAX UP)" + RESET);
+    upgradeOptionContent.push_back(std::string(GRAY) + "      - 고점을 높여 폭발적인 데미지를 노립니다." + RESET);
     upgradeOptionContent.push_back("");
-    upgradeOptionContent.push_back(" ------------------------------------------");
-    upgradeOptionContent.push_back("  [0] 취소하고 돌아가기 (CANCEL)");
+
+    upgradeOptionContent.push_back(divider);
+
+    // 취소 버튼 - 화이트/회색 계열
+    upgradeOptionContent.push_back("  " + std::string(WHITE) + "[0] 취소하고 돌아가기 (CANCEL)" + RESET);
 
     // 2. 공용 엔진 호출
-    // 오른쪽(diceFrame)에는 현재 강화 중인 주사위나 선택 중인 효과의 미리보기를 띄웁니다.
     RenderSplitScreen(upgradeOptionContent, diceFrame, "DICE REFORGING", false);
 
     // 3. 입력 위치 고정
-    MoveCursor(0, Renderer::ZONE_PLAYER_Y + 4);
+    MoveCursor(0, Renderer::ZONE_PLAYER_Y + 6);
     std::cout << BRIGHT_GREEN << " > 옵션 선택 입력 : " << RESET;
 }
 
@@ -790,66 +790,90 @@ void Renderer::RenderShopItemList(const std::vector<BaseItem*>& itemLists, int p
 }
 
 void Renderer::RenderBuyResult(BuyStatus status, BaseItem* item, int playerGold) {
-    // 1. 왼쪽 영역: 구매 결과 메시지 구성
     std::vector<std::string> buyContent;
     std::vector<std::string> resultArt;
     std::string title = "TRANSACTION RESULT";
-    std::string color = WHITE;
+    std::string color = WHITE; // 기본값
 
     buyContent.push_back("");
 
     switch (status) {
     case BuyStatus::Success:
         color = BRIGHT_GREEN;
-        buyContent.push_back(" [ 구 매 성 공 ! ]");
-        buyContent.push_back(" ------------------------------------------");
+        // 제목과 핵심 메시지에 초록색 적용
+        buyContent.push_back(std::string(color) + " [ 구 매 성 고 ! ]" + RESET);
+        buyContent.push_back(std::string(GRAY) + " ------------------------------------------" + RESET);
         buyContent.push_back("");
-        if (item) buyContent.push_back(" [" + item->GetName() + "] (을)를");
+        if (item) {
+            buyContent.push_back(" [" + std::string(BRIGHT_YELLOW) + item->GetName() + RESET + "] (을)를");
+        }
         buyContent.push_back(" 가방에 안전하게 넣었습니다.");
         buyContent.push_back("");
-        buyContent.push_back(" 남은 골드: " + std::to_string(playerGold) + " G");
+        buyContent.push_back(" 남은 골드: " + std::string(BRIGHT_YELLOW) + std::to_string(playerGold) + " G" + RESET);
 
-        // 성공 시 돈주머니 아트
-        resultArt = { "", "      .----. ", "     |  $$  |", "    '--[  ]--'", "     (  $   )", "      '----' ", "", "   THANK YOU! " };
+        // 돈주머니 아트는 노란색으로 강조
+        resultArt = { "",
+            std::string(BRIGHT_YELLOW) + "      .----. " + RESET,
+            std::string(BRIGHT_YELLOW) + "     |  $$  |" + RESET,
+            std::string(BRIGHT_YELLOW) + "    '--[  ]--'" + RESET,
+            std::string(BRIGHT_YELLOW) + "     (  $   )" + RESET,
+            std::string(BRIGHT_YELLOW) + "      '----' " + RESET,
+            "", "   THANK YOU! " };
         break;
 
     case BuyStatus::InsufficientGold:
-        color = RED;
-        buyContent.push_back(" !! 골 드 부 족 !!");
-        buyContent.push_back(" ------------------------------------------");
+        color = BRIGHT_RED;
+        buyContent.push_back(std::string(color) + " !! 골 드 부 족 !!" + RESET);
+        buyContent.push_back(std::string(GRAY) + " ------------------------------------------" + RESET);
         buyContent.push_back("");
         buyContent.push_back(" 지갑이 가벼워 물건을 살 수 없습니다.");
-        if (item) buyContent.push_back(" 필요 골드: " + std::to_string(item->GetPrice()) + " G");
-        buyContent.push_back(" 현재 골드: " + std::to_string(playerGold) + " G");
+        if (item) {
+            buyContent.push_back(" 필요 골드: " + std::string(BRIGHT_RED) + std::to_string(item->GetPrice()) + " G" + RESET);
+        }
+        buyContent.push_back(" 현재 골드: " + std::string(BRIGHT_YELLOW) + std::to_string(playerGold) + " G" + RESET);
 
-        // 부족 시 빈 지갑 아트
-        resultArt = { "", "      .----. ", "     | EMPTY|", "    '--[  ]--'", "     (      )", "      '----' ", "", "  NEED MORE GOLD" };
+        resultArt = { "",
+            std::string(DARK_GRAY) + "      .----. " + RESET,
+            std::string(DARK_GRAY) + "     | EMPTY|" + RESET,
+            std::string(DARK_GRAY) + "    '--[  ]--'" + RESET,
+            std::string(DARK_GRAY) + "     (      )" + RESET,
+            std::string(DARK_GRAY) + "      '----' " + RESET,
+            "", std::string(RED) + "  너 돈 없어" + RESET };
         break;
 
     case BuyStatus::Possessed:
-        color = YELLOW;
-        buyContent.push_back(" !! 중 복 소 유 !!");
-        buyContent.push_back(" ------------------------------------------");
+        color = BRIGHT_YELLOW;
+        buyContent.push_back(std::string(color) + " !! 중 복 소 유 !!" + RESET);
+        buyContent.push_back(std::string(GRAY) + " ------------------------------------------" + RESET);
         buyContent.push_back("");
         buyContent.push_back(" 이미 동일한 아이템을 가지고 있습니다.");
         buyContent.push_back(" 중복 구매는 허용되지 않습니다.");
 
-        // 중복 시 경고 아트
-        resultArt = { "", "      .----. ", "     |  !!  |", "    '--[  ]--'", "     (  ALREADY )", "      '----' ", "", "   DUPLICATED" };
+        resultArt = { "",
+            std::string(BRIGHT_YELLOW) + "      .----. " + RESET,
+            std::string(BRIGHT_YELLOW) + "     |  !!  |" + RESET,
+            std::string(BRIGHT_YELLOW) + "    '--[  ]--'" + RESET,
+            std::string(BRIGHT_YELLOW) + "     (  ALREADY )" + RESET,
+            std::string(BRIGHT_YELLOW) + "      '----' " + RESET,
+            "", "    DUPLICATED" };
         break;
 
     default:
         color = RED;
-        buyContent.push_back(" !! 구 매 실 패 !!");
-        buyContent.push_back(" ------------------------------------------");
+        buyContent.push_back(std::string(color) + " !! 구 매 실 패 !!" + RESET);
+        buyContent.push_back(std::string(GRAY) + " ------------------------------------------" + RESET);
         buyContent.push_back("");
         buyContent.push_back(" 거래 도중 문제가 발생했습니다.");
-        resultArt = { "", "      XXXXX   ", "      X   X   ", "      XXXXX   ", "", "   ERROR...   " };
+        resultArt = { "",
+            std::string(RED) + "      XXXXX   " + RESET,
+            std::string(RED) + "      X   X   " + RESET,
+            std::string(RED) + "      XXXXX   " + RESET,
+            "", "   ERROR...   " };
         break;
     }
 
     buyContent.push_back("");
-    buyContent.push_back(" ------------------------------------------");
+    buyContent.push_back(std::string(GRAY) + " ------------------------------------------" + RESET);
     buyContent.push_back(" 잠시 후 상점으로 돌아갑니다...");
 
     // 2. 공용 엔진 호출
@@ -859,73 +883,71 @@ void Renderer::RenderBuyResult(BuyStatus status, BaseItem* item, int playerGold)
     Delay(1500);
 }
 
-void Renderer::RenderInventory(int level,BaseItem* slots[], const std::vector<ItemSlot>& gearStorage,
+void Renderer::RenderInventory(int level, BaseItem* slots[], const std::vector<ItemSlot>& gearStorage,
     const std::vector<DiceSlot>& diceStorage, const std::vector<std::string>& diceFrame)
 {
     std::vector<std::string> invContent;
+    // 구분선 길이를 통일하기 위해 변수로 관리
+    std::string divider = std::string(GRAY) + " ------------------------------------------" + RESET;
 
-    invContent.push_back(""); // 한 줄 띄우기
+    invContent.push_back("");
+    // 모든 섹션 제목의 들여쓰기를 공백 2칸으로 통일
     invContent.push_back(std::string(BRIGHT_YELLOW) + "  [ CHARACTER STATUS ]" + RESET);
     invContent.push_back("  - 현재 레벨 : " + std::string(BRIGHT_WHITE) + "LV. " + std::to_string(level) + RESET);
-    invContent.push_back(std::string(GRAY) + " ------------------------------------------" + RESET);
+    invContent.push_back(divider);
 
-    // [섹션 1] 현재 장착 장비 - CYAN 테마 (정보/상태)
-    invContent.push_back(std::string(BRIGHT_CYAN) + " [ 현재 장착 장비 ]" + RESET);
-    const char* slotNames[] = { "무  기", "헬  멧", "갑  옷", "신  발", "장신구" };
+    // [섹션 1] 현재 장착 장비
+    invContent.push_back(std::string(BRIGHT_CYAN) + "  [ 현재 장착 장비 ]" + RESET);
+    // 한글 글자 수를 맞추기 위해 공백을 제거하거나 통일 (무기, 헬멧... 2글자로 통일)
+    const char* slotNames[] = { "무기", "헬멧", "갑옷", "신발", "반지" };
 
     for (int i = 0; i < 5; i++) {
+        std::string line = "  - " + std::string(slotNames[i]) + "   : "; // 공백 3칸으로 콜론 위치 고정
         if (slots[i] != nullptr) {
-            // 장착 중일 때: 밝은 노란색으로 아이템 강조
-            invContent.push_back("  - " + std::string(slotNames[i]) + " : " +
-                std::string(BRIGHT_YELLOW) + slots[i]->GetName() + RESET);
+            line += std::string(BRIGHT_YELLOW) + slots[i]->GetName() + RESET;
         }
         else {
-            // 비어 있을 때: 어두운 회색으로 처리
-            invContent.push_back("  - " + std::string(slotNames[i]) + " : " +
-                std::string(DARK_GRAY) + "---" + RESET);
+            line += std::string(DARK_GRAY) + "---" + RESET;
         }
+        invContent.push_back(line);
     }
-    invContent.push_back(std::string(GRAY) + " ------------------------------------------" + RESET);
+    invContent.push_back(divider);
 
-    // [섹션 2] 소지 장비 - GREEN 테마 (획득물/자원)
-    invContent.push_back(std::string(BRIGHT_GREEN) + " [ 소지 중인 장비 ]" + RESET);
+    // [섹션 2] 소지 장비
+    invContent.push_back(std::string(BRIGHT_GREEN) + "  [ 소지 중인 장비 ]" + RESET);
     if (gearStorage.empty()) {
-        invContent.push_back(std::string(DARK_GRAY) + "   (비어 있음)" + RESET);
+        invContent.push_back(std::string(DARK_GRAY) + "    (비어 있음)" + RESET);
     }
     else {
         for (int i = 0; i < std::min((int)gearStorage.size(), 5); i++) {
-            // 아이템 번호는 초록색, 수량은 회색으로 조절
             std::string idx = std::string(BRIGHT_GREEN) + "[" + std::to_string(i + 1) + "] " + RESET;
             std::string count = std::string(GRAY) + " (x" + std::to_string(gearStorage[i].count) + ")" + RESET;
-
-            invContent.push_back("   " + idx + gearStorage[i].item->GetName() + count);
+            invContent.push_back("    " + idx + gearStorage[i].item->GetName() + count);
         }
     }
-    invContent.push_back(std::string(GRAY) + " ------------------------------------------" + RESET);
+    invContent.push_back(divider);
 
-    // [섹션 3] 소지 주사위 - MAGENTA 테마 (특수 아이템)
-    invContent.push_back(std::string(BRIGHT_YELLOW) + " [ 소지 중인 주사위 ]" + RESET);
+    // [섹션 3] 소지 주사위
+    invContent.push_back(std::string(BRIGHT_YELLOW) + "  [ 소지 중인 주사위 ]" + RESET);
     if (diceStorage.empty()) {
-        invContent.push_back(std::string(DARK_GRAY) + "   (비어 있음)" + RESET);
+        invContent.push_back(std::string(DARK_GRAY) + "    (비어 있음)" + RESET);
     }
     else {
-        std::string dRow = "   ";
+        std::string dRow = "    ";
         for (const auto& ds : diceStorage) {
-            // 주사위 이름은 보라색, 개수는 흰색
             dRow += std::string(BRIGHT_YELLOW) + ds.dice->DiceIdToString() + RESET +
                 "(" + std::to_string(ds.count) + ") ";
         }
         invContent.push_back(dRow);
     }
-    invContent.push_back(std::string(GRAY) + " ------------------------------------------" + RESET);
+    invContent.push_back(divider);
 
     // 종료 메뉴
+    invContent.push_back("");
     invContent.push_back("  " + std::string(WHITE) + "[0] 마을로 돌아가기 (RETURN)" + RESET);
 
-    // 2. 공용 엔진 호출
     RenderSplitScreen(invContent, diceFrame, "ADVENTURER'S BACKPACK", false);
 
-    // 3. 입력 위치 고정 (하단 테두리 밖으로)
     MoveCursor(0, 48);
     std::cout << BRIGHT_GREEN << " > 장비 번호 선택 : " << RESET;
 }
