@@ -2,33 +2,26 @@
 #include "Gears.h"
 #include "BaseItem.h"
 
+ItemSpawnManager::ItemSpawnManager()
+{
+    itemRegistry[Gears::Sword] = []() { return new Sword(); };
+    itemRegistry[Gears::Bow] = []() { return new Bow(); };
+    itemRegistry[Gears::Mace] = []() { return new Mace(); };
+    itemRegistry[Gears::Helmet] = []() { return new Helmet(); };
+    itemRegistry[Gears::Halo] = []() { return new Halo(); };
+    itemRegistry[Gears::PaperArmor] = []() { return new PaperArmor(); };
+    itemRegistry[Gears::BallisticPlate] = []() { return new BallisticPlate(); };
+    itemRegistry[Gears::MilitaryBoots] = []() { return new MilitaryBoots(); };
+    itemRegistry[Gears::DragonscalePlateSabatons] = []() { return new DragonscalePlateSabatons(); };
+    itemRegistry[Gears::TutorTears] = []() { return new TutorTears(); };
+    itemRegistry[Gears::Wing] = []() { return new Wing(); };
+}
+
 BaseItem * ItemSpawnManager::MakeItem(Gears type)
 {
-	switch (type)
-	{
-	case Gears::Sword:
-		return new Sword();
-	case Gears::Bow:
-		return new Bow();
-	case Gears::Mace:
-		return new Mace();
-	case Gears::Helmet:
-		return new Helmet();
-	case Gears::Halo:
-		return new Halo();
-	case Gears::PaperArmor:
-		return new PaperArmor();
-	case Gears::BallisticPlate:
-		return new BallisticPlate();
-	case Gears::MilitaryBoots:
-		return new MilitaryBoots();
-	case Gears::DragonscalePlateSabatons:
-		return new DragonscalePlateSabatons();
-	case Gears::TutorTears:
-		return new TutorTears();
-	case Gears::Wing:
-		return new Wing();
-	}
-
-	return nullptr;
+    auto it = itemRegistry.find(type);
+    if (it != itemRegistry.end()) {
+        return it->second();
+    }
+    return nullptr;
 }

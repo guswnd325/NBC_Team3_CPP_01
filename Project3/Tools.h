@@ -54,15 +54,17 @@ public:
 			result.status = InputStatus::Fail;
 			return result;
 		}
+		else if (input == 0)
+		{
+			result.status = InputStatus::Exit;
+			return result;
+		}
 		else if (!(input >= minLimit && input <= maxLimit))
 		{
 			result.status = InputStatus::IndexOver;
 			return result;
 		}
-		else if (input == 0)
-		{
-			result.status = InputStatus::Exit;
-		}
+		
 		else
 		{
 			result.status = InputStatus::Success;

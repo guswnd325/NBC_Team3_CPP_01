@@ -2,10 +2,16 @@
 
 ShopManager::ShopManager()
 {
+	itemSpawnner = new ItemSpawnManager();
 	for (int i = 1; i < (int)Gears::SlotMax; i++)
 	{
-		itemLists.push_back(ItemSpawnManager::MakeItem(Gears(i)));
+		itemLists.push_back(itemSpawnner->MakeItem(Gears(i)));
 	}
+}
+
+ShopManager::~ShopManager()
+{
+	delete itemSpawnner;
 }
 
 const std::vector<BaseItem*>& ShopManager::GetItemLists()
@@ -26,12 +32,10 @@ void ShopManager::Run(Character* character)
 {
 	while (true)
 	{
-
 		Renderer& renderer = Renderer::GetInstance();
 		renderer.Clear();
 		
 		renderer.RenderShopItemList(itemLists, character->GetGold());
-
 
 		InputResult input = Tools<int>::Input(0, itemLists.size());
 
@@ -61,7 +65,7 @@ bool ShopManager::CheckPossessd(int itemID, Character * character)
 std::pair<BuyStatus, BaseItem *> ShopManager::BuyItem(int index, Character * character)
 {
 	// 구매하고자 하는 아이템
-	BaseItem* item = ItemSpawnManager::MakeItem(Gears(index));
+	BaseItem* item = itemSpawnner->MakeItem(Gears(index));
 
 	int itemPrice = item->GetPrice();
 

@@ -10,9 +10,12 @@
 
 class ShopManager
 {
+private:
     std::vector<BaseItem*> itemLists;
+    ItemSpawnManager *itemSpawnner;
 public:
     ShopManager();
+    ~ShopManager();
     const std::vector<BaseItem*>& GetItemLists();
     bool CheckPossessd(int itemID, Character * character);
     std::streamsize GetMaxLengthByVector(std::vector<BaseItem*>& v);
