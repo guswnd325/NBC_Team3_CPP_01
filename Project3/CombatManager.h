@@ -24,7 +24,7 @@ private:
        {"Mine",     1},   // 초기 해금  (폐광)
        {"Mountain", 1},   // 초기 해금  (산)
        {"Desert",   5},
-       {"Cave",     3},
+       {"Cave",     12}, // 보스전
        {"Alley",    5},
        {"Jungle",   6},
        {"Temple",   100},
