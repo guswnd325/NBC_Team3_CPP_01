@@ -73,4 +73,6 @@ public:
     void ReduceHp(Actor* actor, Actor* monster);
     void UnlockAreas(int level, bool flag = false);
     void ShowCredit();
+
+    void EndingCredit();
 };

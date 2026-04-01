@@ -86,6 +86,7 @@ BattleResult BattleManager::Run(Character* player, Monster* monster, CombatManag
                 Renderer::GetInstance().RenderBattleAction(monster, player, {});
 
                 Sleep(2000);
+                combatManager->EndingCredit();
                 return BattleResult::PlayerClear;
             }
 
