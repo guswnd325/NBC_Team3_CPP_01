@@ -617,6 +617,9 @@ void Renderer::RenderAreaChoices(const std::vector<std::string>& choices,
         else if (areaKey == "Nest") {
             monsterInfo = std::string(BRIGHT_YELLOW) + "드래곤" + RESET;
         }
+        else if (areaKey == "Cave") {
+            monsterInfo = std::string(BRIGHT_YELLOW) + "만렙 토끼" + RESET;
+        }
 
         infoContent.push_back(" " + std::string(BRIGHT_YELLOW) + "- " + korArea + RESET);
         infoContent.push_back("   " + monsterInfo);
