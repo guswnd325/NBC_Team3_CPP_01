@@ -85,6 +85,8 @@ BattleResult BattleManager::Run(Character* player, Monster* monster, CombatManag
                 Renderer::GetInstance().AddBattleLog(monster->GetName() + "을(를) 처치했습니다!", playerMsgColor);
                 Renderer::GetInstance().RenderBattleAction(monster, player, {});
 
+                AudioManager::GetInstance().StopMusic();
+                AudioManager::GetInstance().PlayBGM(BGMList::Ending1, false);
                 Sleep(2000);
                 combatManager->EndingCredit();
                 return BattleResult::PlayerClear;
