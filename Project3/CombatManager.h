@@ -23,11 +23,11 @@ private:
        {"Forest",   1},   // 초기 해금
        {"Mine",     1},   // 초기 해금  (폐광)
        {"Mountain", 1},   // 초기 해금  (산)
-       {"Desert",   2},
-       {"Cave",     5},
+       {"Desert",   5},
+       {"Cave",     3},
        {"Alley",    5},
        {"Jungle",   6},
-       {"Temple",   7},
+       {"Temple",   100},
        {"Ocean",    8},
        {"Nest",     11},
     };
