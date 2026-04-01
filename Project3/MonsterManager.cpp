@@ -13,7 +13,7 @@ Monster* MonsterManager::SpawnMonster(std::string areaName) {
     }
     else if (areaName == "Mine") {
         int r = rand() % 10;
-        selectedType = (r < 5) ? MonsterType::Zombie : MonsterType::Ghost;
+        selectedType = (r < 7) ? MonsterType::Zombie : MonsterType::Ghost;
     }
     else if (areaName == "Ocean")
     {

@@ -29,6 +29,7 @@ public:
 	void LevelUp();
 	float GetLevelUpExp() const;
 	int GetLevel() const;
+	void SetLevel(int value);
 	void EquipGear(int id);
 	void UseDice(DiceID id);
 };

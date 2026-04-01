@@ -64,10 +64,12 @@ void Character::InitializeCharacter(std::string name)
 	}
 	else if (name == "테스트용")
 	{
+		SetLevel(13);
 		SetAtk(99999);
 		SetDef(99999);
 		restTicket = 99999;
 		SetGold(99999);
+
 		for (int i = 0; i < 10; i++)
 		{
 			GetInventory()->AddDice(DiceID::D5_24);
@@ -114,6 +116,11 @@ void Character::SetRestTicket(int value)
 int Character::GetRestTicket() const
 {
 	return restTicket;
+}
+
+void Character::SetLevel(int value)
+{
+	level = value;
 }
 
 void Character::LevelUp()
