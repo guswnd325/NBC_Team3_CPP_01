@@ -13,6 +13,13 @@
 
 ---
 
+## <a id="preview"></a>📸 게임 시연 영상
+[![Dice Agent Demo](https://img.youtube.com/vi/qjk_zNYqlzo/0.jpg)](https://www.youtube.com/watch?v=qjk_zNYqlzo)
+
+*이미지를 클릭하면 시연 영상(YouTube)으로 이동합니다.*
+
+---
+
 ## <a id="dev-env"></a>⚙️ 개발 환경 및 개발 기간
 
 ### 🛠 개발 환경
@@ -66,6 +73,9 @@
 <img width="916" height="531" alt="image" src="https://github.com/user-attachments/assets/a5053e01-d9dc-45a0-9c25-5dd4cf15e75d" />
 <img width="910" height="533" alt="image" src="https://github.com/user-attachments/assets/5b095211-d6e4-4106-bb3f-6a545e2a5114" />
 <img width="910" height="536" alt="image" src="https://github.com/user-attachments/assets/f963fa39-5535-4ad1-a373-e4be0d68c49b" />
+
+## <a id="preview"></a>📸 게임 시연 영상
+시연 영상 : https://www.youtube.com/watch?v=qjk_zNYqlzo&feature=youtu.be
 
 
 
