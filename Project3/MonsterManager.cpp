@@ -24,6 +24,9 @@ Monster* MonsterManager::SpawnMonster(std::string areaName) {
     {
         selectedType = MonsterType::Dragon;
     }
+    else if (areaName == "Cave") {
+        selectedType = MonsterType::MaxRabbit;
+    }
 
     MonsterGrade selectedGrade = MonsterGrade::Normal;
     int roll = rand() % 100;
