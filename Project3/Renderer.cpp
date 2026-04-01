@@ -617,6 +617,9 @@ void Renderer::RenderAreaChoices(const std::vector<std::string>& choices,
         else if (areaKey == "Nest") {
             monsterInfo = std::string(BRIGHT_YELLOW) + "드래곤" + RESET;
         }
+        else if (areaKey == "Cave") {
+            monsterInfo = std::string(BRIGHT_YELLOW) + "만렙 토끼" + RESET;
+        }
 
         infoContent.push_back(" " + std::string(BRIGHT_YELLOW) + "- " + korArea + RESET);
         infoContent.push_back("   " + monsterInfo);
@@ -805,13 +808,11 @@ void Renderer::RenderUpgradeResult(UpgradeStatus status, int prevLevel, int curL
         upgradeContent.push_back(std::string(BRIGHT_RED) + "  [ 강화 불가 ]" + RESET);
         upgradeContent.push_back(divider);
         upgradeContent.push_back("");
-        upgradeContent.push_back("  이 주사위는 이미 " + std::string(BRIGHT_RED) + "한계치" + RESET + "에 도달했습니다.");
+        upgradeContent.push_back(" 해당 옵션으로는  " + std::string(BRIGHT_RED) + "강화" + RESET + "할 수 없습니다.");
         upgradeContent.push_back("");
-        // MAX 레벨 강조
-        upgradeContent.push_back("  현재 등급: [ " + std::string(BRIGHT_YELLOW) + "Lv." + std::to_string(prevLevel) + RESET + " ] " +
-            std::string(BRIGHT_RED) + "(MAX)" + RESET);
+        
         upgradeContent.push_back("");
-        upgradeContent.push_back("  다른 주사위를 강화해 보십시오.");
+        upgradeContent.push_back("  다른 강화 옵션을 선택해주십시오.");
     }
 
     upgradeContent.push_back("");

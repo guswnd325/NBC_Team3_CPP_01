@@ -40,7 +40,7 @@ void Character::InitializeCharacter(std::string name)
 	if (name == "전사")
 	{
 		SetAtk(5);
-		SetDef(10);
+		SetDef(5);
 		for (int i = 0; i < 3; i++)
 		{
 			GetInventory()->AddDice(DiceID::D1_6);
@@ -49,7 +49,7 @@ void Character::InitializeCharacter(std::string name)
 	else if (name == "마법사")
 	{
 		SetAtk(10);
-		SetDef(5);
+		SetDef(2);
 		for (int i = 0; i < 2; i++)
 		{
 			GetInventory()->AddDice(DiceID::D1_10);
@@ -64,10 +64,12 @@ void Character::InitializeCharacter(std::string name)
 	}
 	else if (name == "테스트용")
 	{
-		SetAtk(100);
-		SetDef(100);
-		restTicket = 100;
+		SetLevel(13);
+		SetAtk(99999);
+		SetDef(99999);
+		restTicket = 99999;
 		SetGold(99999);
+
 		for (int i = 0; i < 10; i++)
 		{
 			GetInventory()->AddDice(DiceID::D5_24);
@@ -114,6 +116,11 @@ void Character::SetRestTicket(int value)
 int Character::GetRestTicket() const
 {
 	return restTicket;
+}
+
+void Character::SetLevel(int value)
+{
+	level = value;
 }
 
 void Character::LevelUp()
