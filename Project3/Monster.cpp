@@ -21,8 +21,8 @@ void Monster::InitializeMonster() {
 			R"(    \:::::::::/    )",
 			R"(     '~~_~_~~'     )"
 		};
-		SetHP(40); SetMaxHp(40); SetAtk(2); SetDef(0); SetExp(615 );
-		SetRewards(30, 1, DiceID::D1_2, 8);
+		SetHP(40); SetMaxHp(40); SetAtk(2); SetDef(0); SetExp(15);
+		SetRewards(30, 1, DiceID::D1_2, 14);
 		SetDiceCount(1); SetDiceSides(6);
 		break;
 	case MonsterType::Goblin:
@@ -35,7 +35,7 @@ void Monster::InitializeMonster() {
 			"   '------'     "
 		};
 		SetHP(60); SetMaxHp(60); SetAtk(3); SetDef(2); SetExp(25);
-		SetRewards(60, 1, DiceID::D2_3, 12);
+		SetRewards(60, 1, DiceID::D2_3, 21);
 		SetDiceCount(2); SetDiceSides(4);
 		break;
 	case MonsterType::Ghost:
@@ -49,7 +49,7 @@ void Monster::InitializeMonster() {
 			R"(  '   ~~  ~~  ' )"
 		};
 		SetHP(80); SetMaxHp(80); SetAtk(8); SetDef(4); SetExp(45);
-		SetRewards(90, 1, DiceID::D1_3, 20);
+		SetRewards(90, 1, DiceID::D1_1, 20);
 		SetDiceCount(2); SetDiceSides(5);
 		break;
 	case MonsterType::Zombie:
@@ -63,7 +63,7 @@ void Monster::InitializeMonster() {
 			R"(  _|| | ||_    )"
 		};
 		SetHP(150); SetMaxHp(150); SetAtk(2); SetDef(8); SetExp(60);
-		SetRewards(130, 1, DiceID::D2_3, 16);
+		SetRewards(130, 1, DiceID::D2_3, 30);
 		SetDiceCount(4); SetDiceSides(3);
 		break;
 	case MonsterType::Orc:
@@ -76,8 +76,8 @@ void Monster::InitializeMonster() {
 			R"(  /_\  ||  /_\ )",
 			R"( /   \_||_/   \)"
 		};
-		SetHP(280); SetMaxHp(280); SetAtk(10000/*18*/); SetDef(12); SetExp(120);
-		SetRewards(280, 1, DiceID::D3_8, 30);
+		SetHP(280); SetMaxHp(280); SetAtk(18); SetDef(12); SetExp(120);
+		SetRewards(280, 1, DiceID::D3_8, 50);
 		SetDiceCount(2); SetDiceSides(8);
 		break;
 
@@ -92,7 +92,7 @@ void Monster::InitializeMonster() {
 			R"(|__|   |__|   )"
 		};
 		SetHP(500); SetMaxHp(500); SetAtk(30); SetDef(50); SetExp(300);
-		SetRewards(800, 1, DiceID::D2_4, 44);
+		SetRewards(800, 1, DiceID::D2_17, 100);
 		SetDiceCount(1); SetDiceSides(12);
 		break;
 
@@ -106,7 +106,7 @@ void Monster::InitializeMonster() {
 			R"( / |     | \   )",
 			R"(/__|_   _|__\  )"
 		};
-		SetRewards(250, 1, DiceID::D3_8, 30);
+		SetRewards(250, 1, DiceID::D3_10, 40);
 		SetHP(230); SetMaxHp(230); SetAtk(15); SetDef(12); SetExp(100);
 		SetDiceCount(2); SetDiceSides(8);
 		break;
@@ -139,7 +139,7 @@ void Monster::InitializeMonster() {
 			R"(  /|   |\      )",
 			R"( (_|   |_)     )"
 		};
-		SetRewards(2000, 1, DiceID::D3_6, 50);
+		SetRewards(2000, 1, DiceID::D5_27, 50);
 		SetHP(888); SetMaxHp(888); SetAtk(35); SetDef(50); SetExp(1500);
 		SetDiceCount(10); SetDiceSides(6);
 		break;
@@ -157,7 +157,8 @@ void Monster::InitializeMonster() {
 			R"(   >=|=<        )"
 		};
 		SetHP(320); SetMaxHp(320); SetAtk(10); SetDef(20); SetExp(150);
-		SetRewards(450, 1, DiceID::D2_4, 32);
+		// 3_8 3_10
+		SetRewards(450, 1, DiceID::D4_8, 70);
 		SetDiceCount(4); SetDiceSides(4);
 		break;
 
@@ -174,7 +175,7 @@ void Monster::InitializeMonster() {
 			R"(     ~ ~ ~     )"
 		};
 		SetHP(450); SetMaxHp(450); SetAtk(12); SetDef(25); SetExp(200);
-		SetRewards(600, 1, DiceID::D3_6, 40);
+		SetRewards(600, 1, DiceID::D1_24, 100);
 		SetDiceCount(6); SetDiceSides(4);
 		break;
 	default:

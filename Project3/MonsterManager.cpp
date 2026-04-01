@@ -3,22 +3,24 @@
 
 Monster* MonsterManager::SpawnMonster(std::string areaName) {
     MonsterType selectedType = MonsterType::Slime;
+    int r = rand() % 10;
 
     if (areaName == "Forest") {
-        selectedType = (rand() % 10 < 7) ? MonsterType::Slime : MonsterType::Goblin;
+        selectedType = (r < 7) ? MonsterType::Slime : MonsterType::Goblin;
     }
     else if (areaName == "Desert") {
         selectedType = MonsterType::Golem; 
     }
     else if (areaName == "Mine") {
-        selectedType = (rand() % 10 < 7) ? MonsterType::Zombie : MonsterType::Ghost;
+        int r = rand() % 10;
+        selectedType = (r < 5) ? MonsterType::Zombie : MonsterType::Ghost;
     }
     else if (areaName == "Ocean")
     {
-        selectedType = (rand() % 10 < 9) ? MonsterType::Mermaid : MonsterType::Kraken;
+        selectedType = (r < 9) ? MonsterType::Mermaid : MonsterType::Kraken;
     }
     else if (areaName == "Mountain") {
-        selectedType = (rand() % 10 < 6) ? MonsterType::Orc : MonsterType::Troll;
+        selectedType = (r < 6) ? MonsterType::Orc : MonsterType::Troll;
     }
     else if (areaName == "Nest")
     {
