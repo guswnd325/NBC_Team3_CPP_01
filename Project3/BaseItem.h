@@ -88,7 +88,7 @@ public:
 class TutorTears : public BaseItem
 {
 public:
-	TutorTears() : BaseItem("¤·¤·¤·Æ©ÅÍ´ÔÀÇ ´«¹°", SlotItems::Accessory, StatDelta(5,4), 1103, (int)Gears::TutorTears) {}
+	TutorTears() : BaseItem("°­µ¿¿í Æ©ÅÍ´ÔÀÇ ´«¹°", SlotItems::Accessory, StatDelta(5,4), 1103, (int)Gears::TutorTears) {}
 };
 
 class Wing : public BaseItem

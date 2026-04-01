@@ -116,7 +116,7 @@ public:
 
     void DiceAnimationRollNumber(int result);
 
-    std::vector<std::string>GetDiceFrame(int num);
+    std::vector<std::string>GetDiceFrame(int num, std::string color = "\033[92m");
 
     static int GetRollCount() { return rollCount; }
 

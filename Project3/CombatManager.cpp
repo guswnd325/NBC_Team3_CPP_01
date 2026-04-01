@@ -124,44 +124,56 @@ BattleResult CombatManager::Run(Character* player)
 void CombatManager::ShowCredit()
 {
     int totalRolls = DiceManager::GetRollCount();
-    std::string divider = "\033[90m ------------------------------------------\033[0m";
+    const int DISPLAY_WIDTH = 60; // RenderSplitScreen의 한쪽 영역 대략적 너비
 
-    std::vector<std::string> creditLines = {
+    // [헬퍼 함수] 색상 코드를 제외한 실제 길이를 계산하여 중앙 공백 생성
+    auto GetCenterPadding = [&](std::string text) {
+        int vLen = Renderer::GetInstance().GetVisualLength(text);
+        int pad = (DISPLAY_WIDTH - vLen) / 2;
+        return std::string(std::max(0, pad), ' ');
+        };
+
+    // 각 줄의 내용 정의 (색상 코드 포함)
+    std::vector<std::string> rawLines = {
+        "",
+        "",
+        "",
         "==============================",
-        "         GAME OVER",
+        "GAME OVER",
         "==============================",
-        ""
-        "\033[93m 사실 나도 게임을 이겨본적이 없어...\033[0m",
         "",
-        "\033[93m 총 주사위 굴린 횟수 : \033[97m" + std::to_string(totalRolls) + "회\033[0m",
+        "\033[93m사실 나도 게임을 이겨본적이 없어...\033[0m",
         "",
-        "\033[97m 플레이해주셔서 감사합니다.\033[0m",
+        "\033[93m총 주사위 굴린 횟수 : \033[97m" + std::to_string(totalRolls) + "회\033[0m",
         "",
-        "\033[40m Developed by 3조\033[0m",
+        "\033[97m플레이해주셔서 감사합니다.\033[0m",
+        "",
+        "\033[40mDeveloped by 3조\033[0m",
         ""
     };
 
-    std::vector<std::string> currentContent;  
-    std::vector<std::string> emptyRight;       
+    std::vector<std::string> currentContent;
+    std::vector<std::string> emptyRight;
 
-    for (const auto& line : creditLines)
+    for (const auto& line : rawLines)
     {
-        currentContent.push_back(line);
-        // leftContent를 점점 채워가며 렌더
+        // 빈 줄이 아닐 경우에만 중앙 정렬 공백 추가
+        if (!line.empty()) {
+            currentContent.push_back(GetCenterPadding(line) + line);
+        }
+        else {
+            currentContent.push_back("");
+        }
+
+        // 화면 갱신
         Renderer::GetInstance().RenderSplitScreen(
             currentContent,
             emptyRight,
-            "GAME OVER",
-            false   
+            "THANKS FOR PLAYING",
+            false
         );
-        Sleep(700);
+        Sleep(700); // 한 줄씩 스르륵 나타나는 연출
     }
 
     Sleep(3000);
 }
-
-
-
-
-
-

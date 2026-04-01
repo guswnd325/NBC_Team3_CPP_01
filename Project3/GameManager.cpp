@@ -19,6 +19,7 @@ void GameManager::Run()
 {
 	while (true)
 	{
+		AudioManager::GetInstance().PlayBGM(BGMList::Main_Theme);
 		Renderer::GetInstance().RenderMenu(std::vector<std::string>());
 
 		InputResult input = Tools<int>::Input(1, 2);
@@ -29,6 +30,8 @@ void GameManager::Run()
 			Renderer::GetInstance().Clear();
 			CreateCharacter();
 			Renderer::GetInstance().Clear();
+
+			
 			StartGame();
 			break;
 		case 2:

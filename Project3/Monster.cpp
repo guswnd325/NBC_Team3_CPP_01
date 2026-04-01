@@ -76,7 +76,7 @@ void Monster::InitializeMonster() {
 			R"(  /_\  ||  /_\ )",
 			R"( /   \_||_/   \)"
 		};
-		SetHP(280); SetMaxHp(280); SetAtk(18); SetDef(12); SetExp(120);
+		SetHP(280); SetMaxHp(280); SetAtk(10000/*18*/); SetDef(12); SetExp(120);
 		SetRewards(280, 1, DiceID::D3_8, 30);
 		SetDiceCount(2); SetDiceSides(8);
 		break;

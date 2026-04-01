@@ -125,8 +125,8 @@ BattleResult BattleManager::Run(Character* player, Monster* monster, CombatManag
 
 
 //렌더러 최대한 변경하지 않기 위한 바로 주사위 프레임을 사용하는 함수
-void BattleManager::DrawDiceDirectly(int num) {
-    std::vector<std::string> frame = diceManager.GetDiceFrame(num);
+void BattleManager::DrawDiceDirectly(int num, std::string color) {
+    std::vector<std::string> frame = diceManager.GetDiceFrame(num, color);
 
     int startX = 63;
     int startY = Renderer::ZONE_SCREEN_Y + 4; 
@@ -177,10 +177,10 @@ void BattleManager::StartBattle(Character* player, Monster* monster)
     AudioManager::GetInstance().PlaySFX(SFXList::Dice_Roll);
     int monsterRoll = monster->RollAttackDice(); 
     for (int i = 0; i < 10; i++) {
-        DrawDiceDirectly(rand() % 12 + 1);
+        DrawDiceDirectly(rand() % 12 + 1, "\033[31m");
         Sleep(40 + (i * 10));
     }
-    DrawDiceDirectly(monsterRoll);
+    DrawDiceDirectly(monsterRoll, "\033[31m");
 
     // 결과 로그 추가
     Renderer::GetInstance().AddBattleLog(monster->GetName() + "의 주사위 결과: [" + std::to_string(monsterRoll) + "]", monsterMsgColor);
@@ -230,10 +230,10 @@ bool BattleManager::TryEscape(Character* player, Monster* monster, int& outMonst
     AudioManager::GetInstance().PlaySFX(SFXList::Dice_Roll);
     int monsterRoll = monster->RollAttackDice();
     for (int i = 0; i < 10; i++) {
-        DrawDiceDirectly(rand() % 12 + 1);
+        DrawDiceDirectly(rand() % 12 + 1, "\033[31m");
         Sleep(40 + (i * 10));
     }
-    DrawDiceDirectly(monsterRoll);
+    DrawDiceDirectly(monsterRoll, "\033[31m");
 
     // 결과 로그 추가
     Renderer::GetInstance().AddBattleLog(monster->GetName() + "의 주사위 결과: [" + std::to_string(monsterRoll) + "]", monsterMsgColor);
@@ -369,10 +369,10 @@ void BattleManager::GiveRiskyReward(Character* player, Monster* monster)
     AudioManager::GetInstance().PlaySFX(SFXList::Dice_Roll);
     int monsterGetDice = monster->GetDiceChallengeValue();
     for (int i = 0; i < 10; i++) {
-        DrawDiceDirectly(rand() % 12 + 1);
+        DrawDiceDirectly(rand() % 12 + 1, "\033[31m");
         Sleep(40 + (i * 10));
     }
-    DrawDiceDirectly(monsterGetDice);
+    DrawDiceDirectly(monsterGetDice, "\033[31m");
 
     // 결과 로그 추가
     Renderer::GetInstance().AddSystemLog(monster->GetName() + "의 주사위 결과: [" + std::to_string(monsterGetDice) + "]", monsterMsgColor);

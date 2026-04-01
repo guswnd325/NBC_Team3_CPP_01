@@ -559,7 +559,7 @@ void Renderer::RenderRewardSelect(const std::vector<std::string>& diceFrame) {
 
     // 3. 입력 위치 고정
     MoveCursor(0, Renderer::ZONE_PLAYER_Y + 6);
-    std::cout << BRIGHT_GREEN << " > 보상을 선택해라 : " << RESET;
+    std::cout << BRIGHT_GREEN << " > 보상 선택 : " << RESET;
 }
 
 void Renderer::RenderAreaChoices(const std::vector<std::string>& choices,
@@ -590,8 +590,8 @@ void Renderer::RenderAreaChoices(const std::vector<std::string>& choices,
     // 2. 오른쪽 영역 (infoContent): 지역별 출현 몬스터 정보
     std::vector<std::string> infoContent;
     infoContent.push_back("");
-    infoContent.push_back(std::string(BRIGHT_MAGENTA) + "   < 지역별 출현 정보 >" + RESET);
-    infoContent.push_back(std::string(GRAY) + "  --------------------------" + RESET);
+    infoContent.push_back(std::string(BRIGHT_MAGENTA) + "       [ 지역별 출현 정보 ]" + RESET);
+    infoContent.push_back(std::string(GRAY) + "   ----------------------------" + RESET);
     infoContent.push_back("");
 
     for (const auto& areaKey : choices) {
@@ -624,7 +624,7 @@ void Renderer::RenderAreaChoices(const std::vector<std::string>& choices,
     }
 
     // 3. 공용 엔진 호출 (diceFrame 대신 새로 만든 infoContent 전달)
-    RenderSplitScreen(areaContent, infoContent, "EXPLORATION : WORLD MAP", false);
+    RenderSplitScreen(areaContent, infoContent, "탐사 : 지역 선택", false);
 
     // 4. 입력 위치 고정
     MoveCursor(0, Renderer::ZONE_PLAYER_Y + 6);
@@ -767,7 +767,7 @@ void Renderer::RenderHealResult(int healValue, int prevHP, int curHP, int maxHP,
     // 기존 healArt 대신 매개변수로 받은 diceFrame을 그대로 사용합니다.
 
     // 3. 공용 엔진 호출 (제목: 치료 결과)
-    RenderSplitScreen(healContent, diceFrame, "! 경고 !", false, RED);
+    RenderSplitScreen(healContent, diceFrame, "캠프파이어 : 휴식 공간", false, CYAN);
 
     // 4. 결과 확인을 위한 딜레이
     Delay(1500);

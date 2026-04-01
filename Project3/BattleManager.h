@@ -7,8 +7,8 @@
 
 class CombatManager;
 
-constexpr DWORD sleepTime_fast = 800;
-constexpr DWORD sleepTime_slow = 1200;
+constexpr DWORD sleepTime_fast = 850;
+constexpr DWORD sleepTime_slow = 1300;
 
 const std::string playerMsgColor = BRIGHT_GREEN;
 const std::string monsterMsgColor = BRIGHT_RED;
@@ -41,7 +41,7 @@ private:
     void GiveNormalReward(Character* player, Monster* monster);
     void GiveRiskyReward(Character* player, Monster* monster);
 
-    void DrawDiceDirectly(int num);
+    void DrawDiceDirectly(int num, std::string color = "\033[92m");
 
     void ClearDiceDirectly();
 };
