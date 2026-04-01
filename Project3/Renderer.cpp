@@ -571,32 +571,62 @@ void Renderer::RenderAreaChoices(const std::vector<std::string>& choices,
     std::string divider = std::string(GRAY) + " ------------------------------------------" + RESET;
 
     areaContent.push_back("");
-    // 제목: 푸른색 계열로 탐험/지도 느낌 강조
     areaContent.push_back(std::string(BRIGHT_CYAN) + "  [ 탐험할 지역을 선택하십시오 ]" + RESET);
     areaContent.push_back(divider);
     areaContent.push_back("");
 
     for (int i = 0; i < (int)choices.size(); ++i) {
-        // 한국어 이름이 있으면 가져오고, 없으면 영문 이름 사용
         std::string korName = displayMap.count(choices[i]) ? displayMap.at(choices[i]) : choices[i];
-
-        // 번호는 초록색, 지역 이름은 밝은 노란색으로 강조
         std::string idx = std::string(BRIGHT_GREEN) + "[" + std::to_string(i + 1) + "]" + RESET;
         std::string areaName = std::string(BRIGHT_YELLOW) + korName + RESET;
 
         areaContent.push_back("    " + idx + " " + areaName);
-        areaContent.push_back(""); // 가독성을 위해 한 줄 띔
+        areaContent.push_back("");
     }
 
     areaContent.push_back(divider);
-    // 마을 돌아가기 옵션
     areaContent.push_back("  " + std::string(WHITE) + "[0] 마을로 돌아가기" + RESET);
 
-    // 2. 공용 엔진 호출
-    // 오른쪽(diceFrame)에는 지도나 나침반 등이 들어갑니다.
-    RenderSplitScreen(areaContent, diceFrame, "탐사 : 지역 선택", false);
+    // 2. 오른쪽 영역 (infoContent): 지역별 출현 몬스터 정보
+    std::vector<std::string> infoContent;
+    infoContent.push_back("");
+    infoContent.push_back(std::string(BRIGHT_MAGENTA) + "   < 지역별 출현 정보 >" + RESET);
+    infoContent.push_back(std::string(GRAY) + "  --------------------------" + RESET);
+    infoContent.push_back("");
 
-    // 3. 입력 위치 고정
+    for (const auto& areaKey : choices) {
+        std::string korArea = displayMap.count(areaKey) ? displayMap.at(areaKey) : areaKey;
+        std::string monsterInfo = "";
+
+        // 보내주신 확률 로직 바탕으로 몬스터 매칭
+        if (areaKey == "Forest") {
+            monsterInfo = std::string(WHITE) + "슬라임" + RESET + ", " + std::string(GRAY) + "고블린" + RESET;
+        }
+        else if (areaKey == "Desert") {
+            monsterInfo = std::string(BRIGHT_RED) + "골렘" + RESET;
+        }
+        else if (areaKey == "Mine") {
+            monsterInfo = std::string(WHITE) + "좀비" + RESET + ", " + std::string(BRIGHT_MAGENTA) + "유령" + RESET;
+        }
+        else if (areaKey == "Ocean") {
+            monsterInfo = std::string(CYAN) + "인어" + RESET + ", " + std::string(BRIGHT_RED) + "크라켄" + RESET;
+        }
+        else if (areaKey == "Mountain") {
+            monsterInfo = std::string(WHITE) + "오크" + RESET + ", " + std::string(RED) + "트롤" + RESET;
+        }
+        else if (areaKey == "Nest") {
+            monsterInfo = std::string(BRIGHT_YELLOW) + "드래곤" + RESET;
+        }
+
+        infoContent.push_back(" " + std::string(BRIGHT_YELLOW) + "- " + korArea + RESET);
+        infoContent.push_back("   " + monsterInfo);
+        infoContent.push_back(""); // 지역 간 간격
+    }
+
+    // 3. 공용 엔진 호출 (diceFrame 대신 새로 만든 infoContent 전달)
+    RenderSplitScreen(areaContent, infoContent, "EXPLORATION : WORLD MAP", false);
+
+    // 4. 입력 위치 고정
     MoveCursor(0, Renderer::ZONE_PLAYER_Y + 6);
     std::cout << BRIGHT_GREEN << " > 지역 번호 입력 : " << RESET;
 }
